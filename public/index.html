@@ -178,6 +178,16 @@ async function cohort(){
    ${Object.entries(R.realDataChecks).map(([k,v])=>`<tr><td>Real-data check: ${NM[k]||k}</td><td>${v.real?ci(v.real):'–'} vs program ${v.program}</td><td><b>${v.label}</b> · ${v.source}</td></tr>`).join('')}
    ${Object.entries(R.power).map(([k,v])=>`<tr><td>People needed to confirm (${NM[k]||k})</td><td>${v.peopleForRealEffect} for the real-data size (${v.realEffect}); ${v.peopleForProgramEffect} for the program size (${v.programEffect})</td><td>80% power, from ${v.realPeople} real people today.</td></tr>`).join('')}
    </table></div>`})():''}
+  ${c.mlCompare?(()=>{const M=c.mlCompare,P=M.predictProgram.splits,G=M.predictCgmacros.splits['new people (5-fold)'],B=M.effectBenchmark,Q=M.personalBenchmark,R=M.realEffects,FE='Fixed effects (statistics, used now)',DM='Double ML (gradient boosting)',ci=e=>`${e.est>0?'+':''}${e.est} (${e.lo} to ${e.hi})`,mods=['Linear, per-person intercept (fixed effects)','Random forest','Gradient boosting'],cell=v=>`${v.mae.est} · R² ${v.r2.est}`;return `<div class="card" style="margin-top:14px"><h3>Statistics vs machine learning</h3>
+   <p class="note">Same inputs for every model. ML predicts better for new people and in real data; for effects, an ML method (double ML) recovers planted effects best and agrees with the statistics on the real data, so it is now a cross-check on the advice. Details: ML_COMPARISON.md.</p>
+   <table><tr><th>predict the rise (MAE mg/dL · R²)</th><th>linear (statistics)</th><th>random forest</th><th>gradient boosting</th></tr>
+   ${[['Program, same people, later days',P['later days (same people)']],['Program, new people',P['new people (5-fold)']],['Real adults (CGMacros), new people',G]].map(([l,S])=>`<tr><td>${l}</td>${mods.map(m=>`<td>${cell(S[m])}</td>`).join('')}</tr>`).join('')}</table>
+   <table style="margin-top:10px"><tr><th>recover a planted ${M.plantedEffect} mg/dL effect</th><th>linear confounding: bias · CI covers truth</th><th>nonlinear confounding: bias · CI covers truth</th></tr>
+   ${Object.keys(B.linear).map(k=>`<tr><td>${k}</td>${['linear','nonlinear'].map(s=>`<td>${B[s][k].bias>0?'+':''}${B[s][k].bias} · ${B[s][k].coverage95===null?'no CI':B[s][k].coverage95+'%'}</td>`).join('')}</tr>`).join('')}</table>
+   <table style="margin-top:10px"><tr><th>check</th><th>statistics</th><th>machine learning</th></tr>
+   <tr><td>Personal effects, error vs planted truth (RMSE)</td><td>${Q.rmse['Blend with cohort (empirical Bayes, used now)']} (blend, used now)</td><td>${Q.rmse['S-learner per person (gradient boosting)']} (S-learner)</td></tr>
+   <tr><td>Walk after a meal, real program data</td><td>${ci(R.walk[FE])}</td><td>${ci(R.walk[DM])} (double ML)</td></tr>
+   <tr><td>Dinner at 8 pm or later, real program data</td><td>${ci(R.lateDinner[FE])}</td><td>${ci(R.lateDinner[DM])} (double ML)</td></tr></table></div>`})():''}
   ${c.realWorld?(()=>{const g=c.realWorld.cgmacros,n=c.realWorld.nhanesSurvivors,ci=e=>`${e.est>0?'+':''}${e.est} (${e.lo} to ${e.hi})`;return `<div class="card" style="margin-top:14px"><h3>Does it hold in real people?</h3>
    <table><tr><th>check</th><th>program (synthetic)</th><th>real data</th></tr>
    <tr><td>Late dinner (8 pm+), rise in mg/dL</td><td>${ci(E.lateDinner)}</td><td>${ci(g.lateDinner)} · CGMacros, ${g.lateDinner.people} people</td></tr>

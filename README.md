@@ -17,6 +17,7 @@ Synthetic 12-week program: 500 sensor wearers, 18,218 clean meal curves. Within-
 | Does a late dinner matter? | Dinner at 8 pm or later: **+9.1 mg/dL** (7.1 to 11.2). Each hour later adds more: 6-7 pm +6.3 … 10 pm+ +28.8 vs before 6 pm. |
 | Overnight fast? | Randomized: adding the fast to coaching changed HbA1c by -0.03 points overall (-0.06 to 0.00). Type 2 diabetes looked larger (-0.08), but a formal test can't tell the blood sugar groups apart (Q p = 0.15; Holm-adjusted p = 0.13), so the advice uses the overall number. The fast arm did fast longer: 13.05 vs 12.07 h, with 62% vs 36% of nights at 13 h or more. Night shift (n=28) points the other way, but the CI is wide. Coaching itself vs email tips: -0.17. |
 | Does it hold in real people? | CGMacros (45 real adults): late dinner +4.6 (-1.7 to 11.7) and walk after a meal -4.4 (-11.4 to 1.4). Both point the same way but are not proven. The real walk interval excludes the program's -17.6, so expect a much smaller walk effect in real people; the program's late-dinner +9.1 is still inside the real interval. NHANES survivors, survey-weighted: neither fasting length nor daily movement shows a clear link with HbA1c. |
+| Would machine learning do better? | **For prediction, partly. For the advice's effect sizes, it agrees.** Predicting a new person's rise: gradient boosting R² 0.44 vs 0.35 for linear, and on real CGMacros data a random forest gets 0.30 vs 0.11. For people already known, it's a tie (0.56 vs 0.57). Recovering a planted effect under nonlinear confounding: double ML is off by 0.3, fixed effects by 3.5. On the real program data they agree: walk −18.0 (DML) vs −19.2 (FE), late dinner +9.7 vs +9.0. DML is now a cross-check on the advice; the empirical-Bayes personal blend beat the ML per-person estimate (RMSE 4.7 vs 5.1). See [ML_COMPARISON.md](ML_COMPARISON.md). |
 
 Every recommendation carries a real-data check label (`agrees`, `same direction, not proven`, `no clear signal`, `disagrees`, `not tested`). [ROBUSTNESS.md](ROBUSTNESS.md) lists each check, how it could fail, and what it found.
 
@@ -35,6 +36,11 @@ Status (ok / watch / alert) uses fixed CGM consensus thresholds (time in range, 
 npm install
 # rebuild the data the Worker serves (offline, ~10 s). Dataset extracted outside the repo:
 scripts/build-data.sh ~/projects/emerge-hackathon/c4-data/Challenge4_Dose_and_Timing
+# statistics vs ML benchmark (~2 min on a 20-core Proxmox node; minutes-long, so not on the Mac).
+# Writes public/data/mlcompare.json, which analyze.py then cites; rerun build-data.sh after it.
+uv run --with pandas --with numpy --with scikit-learn python -I scripts/ml_compare.py <dataset_dir> public/data/mlcompare.json
+FEATURES_DIR=<dir> ...ml_compare.py ...   # also writes feature tables for the pycaret leaderboard:
+uv run --python 3.11 --with pycaret python -I scripts/pycaret_compare.py <dir> public/data/pycaret.json
 npx tsc --noEmit          # after `npx wrangler types`
 npx wrangler deploy       # -> https://c4-glucose-guide.<account>.workers.dev
 node scripts/e2e.mjs [baseUrl]   # E2E against the deployment; writes runs/e2e-<time>.json
@@ -60,11 +66,13 @@ It saves the full responses and a summary under `runs/` (`runs/e2e-latest-summar
 
 - `scripts/analyze.py`: synthetic-program analysis → `public/data/{roster,cohort}.json`, `public/data/survivors/*.json`
 - `scripts/realworld.py`: CGMacros + NHANES check → `public/data/realworld.json`
+- `scripts/ml_compare.py`: statistics vs machine learning (prediction, planted effects, personal effects, double ML) → `public/data/mlcompare.json`; see `ML_COMPARISON.md`
+- `scripts/pycaret_compare.py`: pycaret leaderboard of every regression model on the same features → `public/data/pycaret.json`
 - `src/index.ts`: Worker (routes, CORS, Workers AI rewrite with numeric guard)
 - `public/index.html`: standalone demo page (dependency-free SVG charts)
 
 ## Sources
 
 - Gutierrez-Osuna R, Kerr D, Mortazavi B, Das A. *CGMacros* (version 1.0.0). PhysioNet, 2025. https://physionet.org/content/cgmacros/1.0.0/
-- CDC, National Health and Nutrition Examination Survey 2011-2014 with 2019 linked mortality files (public domain). Survey weights not applied.
+- CDC, National Health and Nutrition Examination Survey 2011-2014 with 2019 linked mortality files (public domain). Survey weights and design applied (Rao-Wu bootstrap of PSUs within strata).
 - Synthetic program data: Crane Lab, Sylvester Comprehensive Cancer Center, for this hackathon. Nobody in it is real.

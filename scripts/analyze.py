@@ -338,6 +338,8 @@ def main(data_dir, out_dir):
 
     rw_path = f"{out_dir}/realworld.json"  # from scripts/realworld.py, run first
     realworld = json.load(open(rw_path)) if os.path.exists(rw_path) else None
+    ml_path = f"{out_dir}/mlcompare.json"  # from scripts/ml_compare.py (optional machine-learning cross-check)
+    mlc = json.load(open(ml_path)) if os.path.exists(ml_path) else None
     mr = meal_responses(meals, glu, parts)
     day_workers = mr[mr.work_schedule != "night shift"]
     dinners = day_workers[day_workers.meal_type == "dinner"]
@@ -713,6 +715,17 @@ def main(data_dir, out_dir):
             rob["eValue"]["estimate"], "x (risk ratio)", "cohort",
             f"VanderWeele-Ding E-value; mean difference converted with the within-person residual SD ({r(rob['eValue']['sdUsed'])} mg/dL). "
             f"For the CI bound nearer zero: {r(rob['eValue']['ciBound'])}.")
+        if mlc:
+            for eid, key, what in (("cohort_walk_dml", "walk", "a walk after the meal"), ("cohort_late_dml", "lateDinner", "dinner at 8 pm or later")):
+                dm = mlc["realEffects"][key]["Double ML (gradient boosting)"]
+                fe_ = mlc["realEffects"][key]["Fixed effects (statistics, used now)"]
+                agree = dm["lo"] <= fe_["hi"] and fe_["lo"] <= dm["hi"] and np.sign(dm["est"]) == np.sign(fe_["est"])
+                add(eid, f"Machine-learning cross-check (double ML): rise with {what}, same person", dm["est"], "mg/dL", "cohort",
+                    "Double machine learning: gradient-boosting models remove what carbs, pre-meal sugar, hour and meal type predict, "
+                    "then the effect is fitted on what is left; 3-fold cross-fitting, person-clustered 95% CI. See ML_COMPARISON.md.",
+                    ci=(dm["lo"], dm["hi"]), caveat=f"Statistical estimate with the same inputs: {fe_['est']:+g}. "
+                    + ("The intervals overlap, so the number does not depend on a straight-line model." if agree
+                       else "The two disagree; treat the advice number with extra caution."))
         hz = trial["heterogeneity"]["hba1c_pct"]
         add("trial_fast_heterogeneity", "Randomized: do blood sugar groups differ in the fast effect on HbA1c? (test p-value)", hz["p"], "p", "trial",
             "Cochran Q across the three starting blood sugar groups (2 degrees of freedom). Under 0.05 would mean the groups really differ.",
@@ -791,6 +804,9 @@ def main(data_dir, out_dir):
         for rec in recs:
             if rec["id"] == "walk":
                 rec["evidenceIds"] += ["cohort_walk_negctrl", "cohort_walk_evalue"]
+            ml_eid = {"walk": "cohort_walk_dml", "late_dinner": "cohort_late_dml"}.get(rec["id"])
+            if ml_eid in evid:
+                rec["evidenceIds"].append(ml_eid)
             key, eid = {"walk": ("walk", "real_walk"), "late_dinner": ("lateDinner", "real_late_dinner"),
                         "overnight_fast": ("overnightFast", "real_fast")}.get(rec["id"], (None, None))
             if rec["basis"] == "rule" or key is None or key not in real_checks or eid not in evid:
@@ -926,6 +942,7 @@ def main(data_dir, out_dir):
         },
         "statusCounts": status_counts,
         "realWorld": realworld,
+        "mlCompare": mlc,
         "methods": __doc__.split("Methods (all numbers in evidence[] come from here):")[1].strip(),
     }
     with open(f"{out_dir}/cohort.json", "w") as f:

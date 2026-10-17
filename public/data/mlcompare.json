@@ -1,0 +1,564 @@
+{
+ "generated": "2026-10-17",
+ "seed": 20261017,
+ "plantedEffect": -10.0,
+ "treatShare": 0.1,
+ "predictProgram": {
+  "label": "Program data, before eating (no walk)",
+  "meals": 18218,
+  "people": 500,
+  "splits": {
+   "later days (same people)": {
+    "Person average (baseline)": {
+     "mae": {
+      "est": 20.3,
+      "lo": 19.41,
+      "hi": 21.27
+     },
+     "rmse": {
+      "est": 27.73,
+      "lo": 26.16,
+      "hi": 29.14
+     },
+     "r2": {
+      "est": 0.2,
+      "lo": 0.14,
+      "hi": 0.25
+     }
+    },
+    "Linear, per-person intercept (fixed effects)": {
+     "mae": {
+      "est": 15.0,
+      "lo": 14.28,
+      "hi": 15.68
+     },
+     "rmse": {
+      "est": 20.39,
+      "lo": 19.36,
+      "hi": 21.45
+     },
+     "r2": {
+      "est": 0.57,
+      "lo": 0.53,
+      "hi": 0.6
+     }
+    },
+    "Ridge, per-person intercept": {
+     "mae": {
+      "est": 14.99,
+      "lo": 14.24,
+      "hi": 15.7
+     },
+     "rmse": {
+      "est": 20.39,
+      "lo": 19.26,
+      "hi": 21.39
+     },
+     "r2": {
+      "est": 0.57,
+      "lo": 0.52,
+      "hi": 0.6
+     }
+    },
+    "Random forest": {
+     "mae": {
+      "est": 15.13,
+      "lo": 14.43,
+      "hi": 15.77
+     },
+     "rmse": {
+      "est": 21.37,
+      "lo": 20.17,
+      "hi": 22.51
+     },
+     "r2": {
+      "est": 0.52,
+      "lo": 0.48,
+      "hi": 0.56
+     }
+    },
+    "Gradient boosting": {
+     "mae": {
+      "est": 14.73,
+      "lo": 14.08,
+      "hi": 15.37
+     },
+     "rmse": {
+      "est": 20.51,
+      "lo": 19.47,
+      "hi": 21.45
+     },
+     "r2": {
+      "est": 0.56,
+      "lo": 0.5,
+      "hi": 0.6
+     }
+    }
+   },
+   "new people (5-fold)": {
+    "Person average (baseline)": {
+     "mae": {
+      "est": 23.58,
+      "lo": 22.77,
+      "hi": 24.61
+     },
+     "rmse": {
+      "est": 32.06,
+      "lo": 30.51,
+      "hi": 34.03
+     },
+     "r2": {
+      "est": 0.0,
+      "lo": 0.0,
+      "hi": 0.0
+     }
+    },
+    "Linear, per-person intercept (fixed effects)": {
+     "mae": {
+      "est": 18.45,
+      "lo": 17.9,
+      "hi": 19.1
+     },
+     "rmse": {
+      "est": 25.78,
+      "lo": 24.59,
+      "hi": 27.05
+     },
+     "r2": {
+      "est": 0.35,
+      "lo": 0.33,
+      "hi": 0.37
+     }
+    },
+    "Ridge, per-person intercept": {
+     "mae": {
+      "est": 18.45,
+      "lo": 17.84,
+      "hi": 19.28
+     },
+     "rmse": {
+      "est": 25.78,
+      "lo": 24.64,
+      "hi": 27.12
+     },
+     "r2": {
+      "est": 0.35,
+      "lo": 0.33,
+      "hi": 0.37
+     }
+    },
+    "Random forest": {
+     "mae": {
+      "est": 17.13,
+      "lo": 16.45,
+      "hi": 17.78
+     },
+     "rmse": {
+      "est": 24.18,
+      "lo": 22.91,
+      "hi": 25.29
+     },
+     "r2": {
+      "est": 0.43,
+      "lo": 0.41,
+      "hi": 0.46
+     }
+    },
+    "Gradient boosting": {
+     "mae": {
+      "est": 16.91,
+      "lo": 16.23,
+      "hi": 17.55
+     },
+     "rmse": {
+      "est": 23.94,
+      "lo": 22.68,
+      "hi": 25.22
+     },
+     "r2": {
+      "est": 0.44,
+      "lo": 0.42,
+      "hi": 0.46
+     }
+    }
+   }
+  }
+ },
+ "predictProgramWithWalk": {
+  "label": "Program data, with walk length",
+  "meals": 18218,
+  "people": 500,
+  "splits": {
+   "later days (same people)": {
+    "Person average (baseline)": {
+     "mae": {
+      "est": 20.3,
+      "lo": 19.36,
+      "hi": 21.22
+     },
+     "rmse": {
+      "est": 27.73,
+      "lo": 26.21,
+      "hi": 29.26
+     },
+     "r2": {
+      "est": 0.2,
+      "lo": 0.15,
+      "hi": 0.25
+     }
+    },
+    "Linear, per-person intercept (fixed effects)": {
+     "mae": {
+      "est": 14.55,
+      "lo": 13.85,
+      "hi": 15.11
+     },
+     "rmse": {
+      "est": 19.78,
+      "lo": 18.82,
+      "hi": 20.76
+     },
+     "r2": {
+      "est": 0.59,
+      "lo": 0.55,
+      "hi": 0.62
+     }
+    },
+    "Ridge, per-person intercept": {
+     "mae": {
+      "est": 14.54,
+      "lo": 13.9,
+      "hi": 15.2
+     },
+     "rmse": {
+      "est": 19.78,
+      "lo": 18.77,
+      "hi": 20.85
+     },
+     "r2": {
+      "est": 0.59,
+      "lo": 0.54,
+      "hi": 0.63
+     }
+    },
+    "Random forest": {
+     "mae": {
+      "est": 14.87,
+      "lo": 14.17,
+      "hi": 15.67
+     },
+     "rmse": {
+      "est": 21.04,
+      "lo": 19.8,
+      "hi": 22.44
+     },
+     "r2": {
+      "est": 0.54,
+      "lo": 0.49,
+      "hi": 0.57
+     }
+    },
+    "Gradient boosting": {
+     "mae": {
+      "est": 14.03,
+      "lo": 13.46,
+      "hi": 14.69
+     },
+     "rmse": {
+      "est": 19.49,
+      "lo": 18.59,
+      "hi": 20.76
+     },
+     "r2": {
+      "est": 0.6,
+      "lo": 0.55,
+      "hi": 0.64
+     }
+    }
+   },
+   "new people (5-fold)": {
+    "Person average (baseline)": {
+     "mae": {
+      "est": 23.58,
+      "lo": 22.73,
+      "hi": 24.52
+     },
+     "rmse": {
+      "est": 32.06,
+      "lo": 30.53,
+      "hi": 33.69
+     },
+     "r2": {
+      "est": 0.0,
+      "lo": 0.0,
+      "hi": 0.0
+     }
+    },
+    "Linear, per-person intercept (fixed effects)": {
+     "mae": {
+      "est": 18.24,
+      "lo": 17.55,
+      "hi": 18.84
+     },
+     "rmse": {
+      "est": 25.46,
+      "lo": 24.14,
+      "hi": 26.79
+     },
+     "r2": {
+      "est": 0.37,
+      "lo": 0.35,
+      "hi": 0.39
+     }
+    },
+    "Ridge, per-person intercept": {
+     "mae": {
+      "est": 18.24,
+      "lo": 17.56,
+      "hi": 18.99
+     },
+     "rmse": {
+      "est": 25.46,
+      "lo": 24.1,
+      "hi": 26.99
+     },
+     "r2": {
+      "est": 0.37,
+      "lo": 0.34,
+      "hi": 0.39
+     }
+    },
+    "Random forest": {
+     "mae": {
+      "est": 16.83,
+      "lo": 16.15,
+      "hi": 17.52
+     },
+     "rmse": {
+      "est": 23.74,
+      "lo": 22.45,
+      "hi": 25.27
+     },
+     "r2": {
+      "est": 0.45,
+      "lo": 0.43,
+      "hi": 0.47
+     }
+    },
+    "Gradient boosting": {
+     "mae": {
+      "est": 16.59,
+      "lo": 15.96,
+      "hi": 17.1
+     },
+     "rmse": {
+      "est": 23.46,
+      "lo": 22.22,
+      "hi": 24.49
+     },
+     "r2": {
+      "est": 0.46,
+      "lo": 0.44,
+      "hi": 0.49
+     }
+    }
+   }
+  }
+ },
+ "predictCgmacros": {
+  "label": "CGMacros real adults, before eating",
+  "meals": 1338,
+  "people": 45,
+  "splits": {
+   "new people (5-fold)": {
+    "Person average (baseline)": {
+     "mae": {
+      "est": 28.83,
+      "lo": 26.14,
+      "hi": 32.37
+     },
+     "rmse": {
+      "est": 37.71,
+      "lo": 33.58,
+      "hi": 42.69
+     },
+     "r2": {
+      "est": -0.01,
+      "lo": -0.05,
+      "hi": 0.0
+     }
+    },
+    "Linear, per-person intercept (fixed effects)": {
+     "mae": {
+      "est": 26.54,
+      "lo": 23.95,
+      "hi": 29.24
+     },
+     "rmse": {
+      "est": 35.32,
+      "lo": 31.28,
+      "hi": 39.36
+     },
+     "r2": {
+      "est": 0.11,
+      "lo": -0.01,
+      "hi": 0.2
+     }
+    },
+    "Ridge, per-person intercept": {
+     "mae": {
+      "est": 26.49,
+      "lo": 23.8,
+      "hi": 29.85
+     },
+     "rmse": {
+      "est": 35.31,
+      "lo": 31.34,
+      "hi": 39.84
+     },
+     "r2": {
+      "est": 0.11,
+      "lo": -0.01,
+      "hi": 0.19
+     }
+    },
+    "Random forest": {
+     "mae": {
+      "est": 23.68,
+      "lo": 21.51,
+      "hi": 26.05
+     },
+     "rmse": {
+      "est": 31.3,
+      "lo": 27.99,
+      "hi": 34.6
+     },
+     "r2": {
+      "est": 0.3,
+      "lo": 0.2,
+      "hi": 0.37
+     }
+    },
+    "Gradient boosting": {
+     "mae": {
+      "est": 24.34,
+      "lo": 21.93,
+      "hi": 27.17
+     },
+     "rmse": {
+      "est": 32.58,
+      "lo": 28.83,
+      "hi": 36.77
+     },
+     "r2": {
+      "est": 0.24,
+      "lo": 0.12,
+      "hi": 0.35
+     }
+    }
+   }
+  }
+ },
+ "effectBenchmark": {
+  "linear": {
+   "Naive difference": {
+    "mean": 0.93,
+    "bias": 10.93,
+    "rmse": 10.97,
+    "mcSd": 0.9,
+    "coverage95": 0.0
+   },
+   "Fixed effects (statistics, used now)": {
+    "mean": -8.96,
+    "bias": 1.04,
+    "rmse": 1.23,
+    "mcSd": 0.68,
+    "coverage95": 65.0
+   },
+   "S-learner (gradient boosting)": {
+    "mean": -8.99,
+    "bias": 1.01,
+    "rmse": 1.22,
+    "mcSd": 0.7,
+    "coverage95": null
+   },
+   "Double ML (gradient boosting)": {
+    "mean": -10.2,
+    "bias": -0.2,
+    "rmse": 0.68,
+    "mcSd": 0.66,
+    "coverage95": 85.0
+   }
+  },
+  "nonlinear": {
+   "Naive difference": {
+    "mean": 2.0,
+    "bias": 12.0,
+    "rmse": 12.1,
+    "mcSd": 1.56,
+    "coverage95": 0.0
+   },
+   "Fixed effects (statistics, used now)": {
+    "mean": -6.5,
+    "bias": 3.5,
+    "rmse": 3.57,
+    "mcSd": 0.74,
+    "coverage95": 0.0
+   },
+   "S-learner (gradient boosting)": {
+    "mean": -8.64,
+    "bias": 1.36,
+    "rmse": 1.45,
+    "mcSd": 0.54,
+    "coverage95": null
+   },
+   "Double ML (gradient boosting)": {
+    "mean": -9.75,
+    "bias": 0.25,
+    "rmse": 0.67,
+    "mcSd": 0.63,
+    "coverage95": 95.0
+   }
+  },
+  "meals": 16679,
+  "reps": 20
+ },
+ "personalBenchmark": {
+  "peopleScoredPerRep": 298,
+  "reps": 10,
+  "rmse": {
+   "Own data only (OLS)": 10.97,
+   "Blend with cohort (empirical Bayes, used now)": 4.66,
+   "S-learner per person (gradient boosting)": 5.06
+  },
+  "plantedSpreadSd": 5.0
+ },
+ "realEffects": {
+  "walk": {
+   "Fixed effects (statistics, used now)": {
+    "est": -19.2,
+    "lo": -20.5,
+    "hi": -17.9
+   },
+   "Double ML (gradient boosting)": {
+    "est": -18.0,
+    "lo": -19.2,
+    "hi": -16.7
+   }
+  },
+  "lateDinner": {
+   "Fixed effects (statistics, used now)": {
+    "est": 9.0,
+    "lo": 6.8,
+    "hi": 11.2
+   },
+   "Double ML (gradient boosting)": {
+    "est": 9.7,
+    "lo": 7.4,
+    "hi": 12.0
+   }
+  },
+  "note": "Same covariates for both (carbs, pre-meal sugar, hour, meal type for walks; carbs and pre-meal sugar for late dinners). FE here adds pre-meal sugar and hour, so it can differ slightly from the advice numbers."
+ },
+ "seconds": 112
+}
