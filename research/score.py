@@ -42,7 +42,8 @@ def held_out(pid):
 
 def cg_frame(d):
     """CGMacros meals and their 2-hour rise (same rules as scripts/ml_compare.py), keeping timestamps."""
-    mm = pd.read_csv(f"{d}/CGMacros/cgmacros_minute_by_minute.csv", parse_dates=["timestamp"])
+    mm = pd.read_csv(f"{d}/CGMacros/cgmacros_minute_by_minute.csv", parse_dates=["timestamp"],
+                     usecols=["participant_id", "timestamp", "glucose_libre_mg_dl", "heart_rate", "fitbit_mets_x10"])
     meals = pd.read_csv(f"{d}/CGMacros/cgmacros_meals.csv", parse_dates=["timestamp"])
     meals["meal_type"] = meals.meal_type.str.lower().str.replace(r"snacks?( 1)?", "snack", regex=True)
     meals = meals.sort_values(["participant_id", "timestamp"])
