@@ -22,9 +22,9 @@
    }
   ],
   "updatedAt": "2024-08-01T19:15:00",
-  "careTeamToday": false,
-  "todayReason": "Glucose: High most of the day: 63% in range, average 178 mg/dL",
-  "priority": 2,
+  "careTeamToday": true,
+  "todayReason": "Glucose: Often very high: 10.9% of readings above 250 (target under 5%)",
+  "priority": 1,
   "dataType": "synthetic",
   "module": "C4 Glucose Guide"
  },
@@ -51,9 +51,9 @@
    }
   ],
   "updatedAt": "2025-05-11T23:45:00",
-  "careTeamToday": false,
-  "todayReason": "Glucose: High most of the day: 64% in range, average 177 mg/dL",
-  "priority": 2,
+  "careTeamToday": true,
+  "todayReason": "Glucose: Often very high: 6.3% of readings above 250 (target under 5%)",
+  "priority": 1,
   "dataType": "synthetic",
   "module": "C4 Glucose Guide"
  },
@@ -177,9 +177,9 @@
    }
   ],
   "updatedAt": "2024-12-29T23:45:00",
-  "careTeamToday": false,
-  "todayReason": "Glucose: High most of the day: 69% in range, average 172 mg/dL",
-  "priority": 2,
+  "careTeamToday": true,
+  "todayReason": "Glucose: Often very high: 5.7% of readings above 250 (target under 5%)",
+  "priority": 1,
   "dataType": "synthetic",
   "module": "C4 Glucose Guide"
  },
@@ -206,9 +206,9 @@
    }
   ],
   "updatedAt": "2024-04-07T23:45:00",
-  "careTeamToday": false,
-  "todayReason": "Glucose: High most of the day: 15% in range, average 212 mg/dL",
-  "priority": 2,
+  "careTeamToday": true,
+  "todayReason": "Glucose: Often very high: 14.9% of readings above 250 (target under 5%)",
+  "priority": 1,
   "dataType": "synthetic",
   "module": "C4 Glucose Guide"
  },
@@ -240,9 +240,9 @@
    }
   ],
   "updatedAt": "2024-07-28T23:45:00",
-  "careTeamToday": false,
-  "todayReason": "Glucose: High most of the day: 1% in range, average 235 mg/dL",
-  "priority": 2,
+  "careTeamToday": true,
+  "todayReason": "Glucose: Often very high: 28.9% of readings above 250 (target under 5%)",
+  "priority": 1,
   "dataType": "synthetic",
   "module": "C4 Glucose Guide"
  },
@@ -308,9 +308,9 @@
    }
   ],
   "updatedAt": "2025-10-05T23:45:00",
-  "careTeamToday": false,
-  "todayReason": "Glucose: High most of the day: 40% in range, average 198 mg/dL",
-  "priority": 2,
+  "careTeamToday": true,
+  "todayReason": "Glucose: Often very high: 9.9% of readings above 250 (target under 5%)",
+  "priority": 1,
   "dataType": "synthetic",
   "module": "C4 Glucose Guide"
  },

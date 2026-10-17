@@ -6860,5 +6860,650 @@
   },
   "note": "Same DML as the program, on CGMacros (calories, carbs, protein, fat, fiber; no sugar column)."
  },
- "seconds": 155
+ "fairness": {
+  "race_ethnicity": {
+   "label": "Race and ethnicity",
+   "groups": [
+    {
+     "group": "Asian",
+     "people": 15,
+     "meals": 544,
+     "forecastMae": {
+      "est": 12.5,
+      "lo": 10.59,
+      "hi": 14.44
+     },
+     "walk": null,
+     "lateDinner": null,
+     "note": "fewer than 20 people: effects not estimated"
+    },
+    {
+     "group": "Black",
+     "people": 110,
+     "meals": 3800,
+     "forecastMae": {
+      "est": 14.15,
+      "lo": 13.24,
+      "hi": 15.1
+     },
+     "walk": {
+      "est": -15.02,
+      "lo": -17.51,
+      "hi": -12.54,
+      "se": 1.27,
+      "people": 110,
+      "rows": 3800,
+      "residSd": 20.36
+     },
+     "lateDinner": {
+      "est": 6.12,
+      "lo": 1.32,
+      "hi": 10.91,
+      "se": 2.45,
+      "people": 104,
+      "rows": 1014,
+      "residSd": 22.05
+     }
+    },
+    {
+     "group": "Hispanic or Latino",
+     "people": 261,
+     "meals": 9942,
+     "forecastMae": {
+      "est": 13.95,
+      "lo": 13.22,
+      "hi": 14.6
+     },
+     "walk": {
+      "est": -18.51,
+      "lo": -20.75,
+      "hi": -16.27,
+      "se": 1.14,
+      "people": 261,
+      "rows": 9942,
+      "residSd": 20.15
+     },
+     "lateDinner": {
+      "est": 10.16,
+      "lo": 7.27,
+      "hi": 13.06,
+      "se": 1.48,
+      "people": 245,
+      "rows": 2497,
+      "residSd": 23.03
+     }
+    },
+    {
+     "group": "Other or more than one",
+     "people": 19,
+     "meals": 782,
+     "forecastMae": {
+      "est": 13.06,
+      "lo": 10.9,
+      "hi": 15.51
+     },
+     "walk": null,
+     "lateDinner": null,
+     "note": "fewer than 20 people: effects not estimated"
+    },
+    {
+     "group": "White",
+     "people": 95,
+     "meals": 3150,
+     "forecastMae": {
+      "est": 14.45,
+      "lo": 13.45,
+      "hi": 15.57
+     },
+     "walk": {
+      "est": -16.45,
+      "lo": -19.38,
+      "hi": -13.52,
+      "se": 1.49,
+      "people": 95,
+      "rows": 3150,
+      "residSd": 20.6
+     },
+     "lateDinner": {
+      "est": 9.19,
+      "lo": 4.41,
+      "hi": 13.96,
+      "se": 2.44,
+      "people": 91,
+      "rows": 853,
+      "residSd": 22.18
+     }
+    }
+   ],
+   "walkDiffersP": 0.1183644865143533,
+   "lateDinnerDiffersP": 0.36902754885447936
+  },
+  "sex": {
+   "label": "Sex",
+   "groups": [
+    {
+     "group": "female",
+     "people": 293,
+     "meals": 10717,
+     "forecastMae": {
+      "est": 12.68,
+      "lo": 12.11,
+      "hi": 13.3
+     },
+     "walk": {
+      "est": -15.44,
+      "lo": -17.22,
+      "hi": -13.65,
+      "se": 0.91,
+      "people": 293,
+      "rows": 10717,
+      "residSd": 18.29
+     },
+     "lateDinner": {
+      "est": 7.47,
+      "lo": 4.88,
+      "hi": 10.06,
+      "se": 1.32,
+      "people": 272,
+      "rows": 2763,
+      "residSd": 20.85
+     }
+    },
+    {
+     "group": "male",
+     "people": 207,
+     "meals": 7501,
+     "forecastMae": {
+      "est": 15.87,
+      "lo": 15.12,
+      "hi": 16.67
+     },
+     "walk": {
+      "est": -20.29,
+      "lo": -22.74,
+      "hi": -17.83,
+      "se": 1.25,
+      "people": 207,
+      "rows": 7501,
+      "residSd": 22.19
+     },
+     "lateDinner": {
+      "est": 13.12,
+      "lo": 9.7,
+      "hi": 16.54,
+      "se": 1.75,
+      "people": 199,
+      "rows": 1930,
+      "residSd": 24.69
+     }
+    }
+   ],
+   "walkDiffersP": 0.0017079648825604424,
+   "lateDinnerDiffersP": 0.009950489891626743
+  },
+  "age_band": {
+   "label": "Age",
+   "groups": [
+    {
+     "group": "60-69",
+     "people": 141,
+     "meals": 5096,
+     "forecastMae": {
+      "est": 15.33,
+      "lo": 14.31,
+      "hi": 16.44
+     },
+     "walk": {
+      "est": -18.77,
+      "lo": -21.51,
+      "hi": -16.04,
+      "se": 1.39,
+      "people": 141,
+      "rows": 5096,
+      "residSd": 22.28
+     },
+     "lateDinner": {
+      "est": 9.5,
+      "lo": 4.39,
+      "hi": 14.61,
+      "se": 2.61,
+      "people": 132,
+      "rows": 1269,
+      "residSd": 25.12
+     }
+    },
+    {
+     "group": "70+",
+     "people": 186,
+     "meals": 6785,
+     "forecastMae": {
+      "est": 13.62,
+      "lo": 12.82,
+      "hi": 14.39
+     },
+     "walk": {
+      "est": -14.73,
+      "lo": -16.68,
+      "hi": -12.78,
+      "se": 0.99,
+      "people": 186,
+      "rows": 6785,
+      "residSd": 19.27
+     },
+     "lateDinner": {
+      "est": 9.68,
+      "lo": 6.18,
+      "hi": 13.18,
+      "se": 1.79,
+      "people": 183,
+      "rows": 1848,
+      "residSd": 21.53
+     }
+    },
+    {
+     "group": "under 60",
+     "people": 173,
+     "meals": 6337,
+     "forecastMae": {
+      "est": 13.32,
+      "lo": 12.52,
+      "hi": 14.22
+     },
+     "walk": {
+      "est": -19.35,
+      "lo": -22.11,
+      "hi": -16.58,
+      "se": 1.41,
+      "people": 173,
+      "rows": 6337,
+      "residSd": 19.13
+     },
+     "lateDinner": {
+      "est": 8.89,
+      "lo": 5.84,
+      "hi": 11.94,
+      "se": 1.55,
+      "people": 156,
+      "rows": 1576,
+      "residSd": 21.77
+     }
+    }
+   ],
+   "walkDiffersP": 0.008092942471134639,
+   "lateDinnerDiffersP": 0.941614224191666
+  },
+  "preferred_language": {
+   "label": "Preferred language",
+   "groups": [
+    {
+     "group": "English",
+     "people": 328,
+     "meals": 11845,
+     "forecastMae": {
+      "est": 13.68,
+      "lo": 13.06,
+      "hi": 14.24
+     },
+     "walk": {
+      "est": -17.36,
+      "lo": -19.1,
+      "hi": -15.63,
+      "se": 0.89,
+      "people": 328,
+      "rows": 11845,
+      "residSd": 19.5
+     },
+     "lateDinner": {
+      "est": 9.11,
+      "lo": 6.33,
+      "hi": 11.88,
+      "se": 1.42,
+      "people": 306,
+      "rows": 3030,
+      "residSd": 21.81
+     }
+    },
+    {
+     "group": "Haitian Creole",
+     "people": 24,
+     "meals": 855,
+     "forecastMae": {
+      "est": 12.87,
+      "lo": 11.25,
+      "hi": 14.75
+     },
+     "walk": {
+      "est": -14.06,
+      "lo": -19.05,
+      "hi": -9.07,
+      "se": 2.55,
+      "people": 24,
+      "rows": 855,
+      "residSd": 17.71
+     },
+     "lateDinner": {
+      "est": 1.93,
+      "lo": -3.54,
+      "hi": 7.39,
+      "se": 2.79,
+      "people": 23,
+      "rows": 237,
+      "residSd": 17.69
+     }
+    },
+    {
+     "group": "Spanish",
+     "people": 148,
+     "meals": 5518,
+     "forecastMae": {
+      "est": 14.85,
+      "lo": 14.05,
+      "hi": 15.83
+     },
+     "walk": {
+      "est": -18.59,
+      "lo": -21.53,
+      "hi": -15.66,
+      "se": 1.5,
+      "people": 148,
+      "rows": 5518,
+      "residSd": 21.64
+     },
+     "lateDinner": {
+      "est": 10.55,
+      "lo": 6.75,
+      "hi": 14.34,
+      "se": 1.94,
+      "people": 142,
+      "rows": 1426,
+      "residSd": 24.43
+     }
+    }
+   ],
+   "walkDiffersP": 0.3093883598559299,
+   "lateDinnerDiffersP": 0.03260779467184743
+  },
+  "cancer_type": {
+   "label": "Cancer type",
+   "groups": [
+    {
+     "group": "bladder",
+     "people": 14,
+     "meals": 422,
+     "forecastMae": {
+      "est": 14.7,
+      "lo": 12.57,
+      "hi": 16.82
+     },
+     "walk": null,
+     "lateDinner": null,
+     "note": "fewer than 20 people: effects not estimated"
+    },
+    {
+     "group": "breast",
+     "people": 152,
+     "meals": 5774,
+     "forecastMae": {
+      "est": 12.92,
+      "lo": 12.03,
+      "hi": 13.64
+     },
+     "walk": {
+      "est": -16.07,
+      "lo": -18.92,
+      "hi": -13.22,
+      "se": 1.45,
+      "people": 152,
+      "rows": 5774,
+      "residSd": 18.81
+     },
+     "lateDinner": {
+      "est": 11.47,
+      "lo": 7.61,
+      "hi": 15.33,
+      "se": 1.97,
+      "people": 144,
+      "rows": 1510,
+      "residSd": 21.86
+     }
+    },
+    {
+     "group": "cervical",
+     "people": 12,
+     "meals": 459,
+     "forecastMae": {
+      "est": 11.92,
+      "lo": 10.33,
+      "hi": 13.96
+     },
+     "walk": null,
+     "lateDinner": null,
+     "note": "fewer than 20 people: effects not estimated"
+    },
+    {
+     "group": "colorectal",
+     "people": 63,
+     "meals": 2450,
+     "forecastMae": {
+      "est": 14.5,
+      "lo": 13.13,
+      "hi": 15.99
+     },
+     "walk": {
+      "est": -17.76,
+      "lo": -21.63,
+      "hi": -13.88,
+      "se": 1.98,
+      "people": 63,
+      "rows": 2450,
+      "residSd": 21.5
+     },
+     "lateDinner": {
+      "est": 8.43,
+      "lo": 2.68,
+      "hi": 14.18,
+      "se": 2.93,
+      "people": 61,
+      "rows": 647,
+      "residSd": 25.33
+     }
+    },
+    {
+     "group": "endometrial",
+     "people": 22,
+     "meals": 700,
+     "forecastMae": {
+      "est": 15.44,
+      "lo": 12.56,
+      "hi": 18.09
+     },
+     "walk": {
+      "est": -18.21,
+      "lo": -24.88,
+      "hi": -11.55,
+      "se": 3.4,
+      "people": 22,
+      "rows": 700,
+      "residSd": 23.37
+     },
+     "lateDinner": {
+      "est": 3.83,
+      "lo": -5.92,
+      "hi": 13.58,
+      "se": 4.97,
+      "people": 20,
+      "rows": 170,
+      "residSd": 26.05
+     }
+    },
+    {
+     "group": "head and neck",
+     "people": 17,
+     "meals": 684,
+     "forecastMae": {
+      "est": 14.97,
+      "lo": 12.83,
+      "hi": 16.96
+     },
+     "walk": null,
+     "lateDinner": null,
+     "note": "fewer than 20 people: effects not estimated"
+    },
+    {
+     "group": "kidney",
+     "people": 23,
+     "meals": 794,
+     "forecastMae": {
+      "est": 14.55,
+      "lo": 12.89,
+      "hi": 16.44
+     },
+     "walk": {
+      "est": -19.51,
+      "lo": -26.13,
+      "hi": -12.9,
+      "se": 3.37,
+      "people": 23,
+      "rows": 794,
+      "residSd": 19.3
+     },
+     "lateDinner": {
+      "est": 7.94,
+      "lo": -2.39,
+      "hi": 18.28,
+      "se": 5.27,
+      "people": 20,
+      "rows": 197,
+      "residSd": 20.78
+     }
+    },
+    {
+     "group": "lung",
+     "people": 18,
+     "meals": 705,
+     "forecastMae": {
+      "est": 16.22,
+      "lo": 13.39,
+      "hi": 19.05
+     },
+     "walk": null,
+     "lateDinner": null,
+     "note": "fewer than 20 people: effects not estimated"
+    },
+    {
+     "group": "lymphoma",
+     "people": 40,
+     "meals": 1399,
+     "forecastMae": {
+      "est": 14.11,
+      "lo": 12.39,
+      "hi": 16.14
+     },
+     "walk": {
+      "est": -17.79,
+      "lo": -23.63,
+      "hi": -11.96,
+      "se": 2.98,
+      "people": 40,
+      "rows": 1399,
+      "residSd": 20.77
+     },
+     "lateDinner": {
+      "est": 3.28,
+      "lo": -2.66,
+      "hi": 9.23,
+      "se": 3.03,
+      "people": 38,
+      "rows": 368,
+      "residSd": 21.36
+     }
+    },
+    {
+     "group": "melanoma",
+     "people": 24,
+     "meals": 819,
+     "forecastMae": {
+      "est": 12.28,
+      "lo": 10.62,
+      "hi": 14.29
+     },
+     "walk": {
+      "est": -12.71,
+      "lo": -17.49,
+      "hi": -7.92,
+      "se": 2.44,
+      "people": 24,
+      "rows": 819,
+      "residSd": 18.15
+     },
+     "lateDinner": {
+      "est": 6.16,
+      "lo": -1.28,
+      "hi": 13.6,
+      "se": 3.8,
+      "people": 22,
+      "rows": 219,
+      "residSd": 18.91
+     }
+    },
+    {
+     "group": "ovarian",
+     "people": 13,
+     "meals": 457,
+     "forecastMae": {
+      "est": 12.79,
+      "lo": 10.23,
+      "hi": 16.99
+     },
+     "walk": null,
+     "lateDinner": null,
+     "note": "fewer than 20 people: effects not estimated"
+    },
+    {
+     "group": "prostate",
+     "people": 86,
+     "meals": 2973,
+     "forecastMae": {
+      "est": 15.37,
+      "lo": 14.13,
+      "hi": 16.63
+     },
+     "walk": {
+      "est": -17.41,
+      "lo": -20.94,
+      "hi": -13.89,
+      "se": 1.8,
+      "people": 86,
+      "rows": 2973,
+      "residSd": 22.58
+     },
+     "lateDinner": {
+      "est": 17.73,
+      "lo": 12.27,
+      "hi": 23.2,
+      "se": 2.79,
+      "people": 82,
+      "rows": 751,
+      "residSd": 23.52
+     }
+    },
+    {
+     "group": "thyroid",
+     "people": 16,
+     "meals": 582,
+     "forecastMae": {
+      "est": 13.34,
+      "lo": 11.01,
+      "hi": 15.49
+     },
+     "walk": null,
+     "lateDinner": null,
+     "note": "fewer than 20 people: effects not estimated"
+    }
+   ],
+   "walkDiffersP": 0.6319768483318269,
+   "lateDinnerDiffersP": 0.013069035555097747
+  }
+ },
+ "seconds": 551
 }

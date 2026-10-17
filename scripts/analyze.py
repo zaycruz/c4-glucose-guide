@@ -52,6 +52,20 @@ CURVE_OFFSETS = list(range(0, 195, 15))  # minutes 0..180
 WALK_BINS = [(0, 0, "none"), (1, 9, "1-9 min"), (10, 19, "10-19 min"), (20, 29, "20-29 min"), (30, 999, "30+ min")]
 
 
+
+def cohort_real_world(rw):
+    """The survey-weighted NHANES fit is the one cited, so it is served as nhanesSurvivors; the unweighted fit is a labelled sensitivity."""
+    rw = dict(rw)
+    unw, w = rw.pop("nhanesSurvivors", None), rw.pop("nhanesSurvivorsWeighted", None)
+    if w:
+        rw["nhanesSurvivors"] = {**w, "weighted": True, "survivors": (unw or {}).get("survivors"),
+                                 "medians": (unw or {}).get("medians"), "mediansNote": "unweighted medians of the sample"}
+    if unw:
+        rw["nhanesSurvivorsUnweighted"] = {**unw, "weighted": False,
+                                           "note": "Sensitivity only: the same models without survey weights. No advice or claim uses it; "
+                                                   "with weights the movement link loses its clear signal (see nhanesSurvivors)."}
+    return rw
+
 def r(x, nd=1):
     if x is None or (isinstance(x, float) and not np.isfinite(x)):
         return None
@@ -827,13 +841,18 @@ def main(data_dir, out_dir):
         if st == "alert" and low_sugar:
             recs.insert(0, {"id": "talk_to_team", "title": "Tell your care team about low readings",
                             "text": f"{v('tbr70')}% of your readings were below 70 mg/dL ({latest_label}); the usual target is under 4%. "
-                                    f"Low sugar can make you shaky or dizzy. Share this before your next visit.",
+                                    f"Low sugar can make you shaky or dizzy. Contact your care team today rather than waiting for your next visit.",
                             "basis": "rule", "evidenceIds": ["tbr70", "status_rule"]})
         elif st == "alert" and m_last["mean"] > 250:
             recs.insert(0, {"id": "talk_to_team", "title": "Send these readings to your care team today",
                             "text": f"Your average was {v('mean_glucose')} mg/dL ({latest_label}), above 250, and only {v('tir')}% of readings were in the 70-180 range. "
                                     f"Contact your care team today rather than waiting for your next visit.",
                             "basis": "rule", "evidenceIds": ["mean_glucose", "tir", "status_rule"]})
+        elif st == "alert" and m_last["tar250"] > 5:
+            recs.insert(0, {"id": "talk_to_team", "title": "Send these readings to your care team today",
+                            "text": f"{v('tar250')}% of your readings were above 250 mg/dL ({latest_label}); the usual target is under 5%. "
+                                    f"Your average was {v('mean_glucose')} mg/dL. Contact your care team today rather than waiting for your next visit.",
+                            "basis": "rule", "evidenceIds": ["tar250", "mean_glucose", "status_rule"]})
         elif st == "alert":
             recs.insert(0, {"id": "talk_to_team", "title": "Share these readings with your care team",
                             "text": f"Only {v('tir')}% of your readings were in the 70-180 range ({latest_label}); the usual target is more than 70%. "
@@ -867,14 +886,22 @@ def main(data_dir, out_dir):
             care.append({"reason": f"Frequent lows: {v('tbr70')}% of readings below 70 (target under 4%)", "evidenceId": "tbr70"})
         if high_avg:
             care.append({"reason": f"Very high average: {v('mean_glucose')} mg/dL (above 250)", "evidenceId": "mean_glucose"})
-        care_flag = {"today": bool(care), "reasons": care,
-                     "rule": "Send to the care team today if more than 4% of readings are below 70 mg/dL or the average is above 250 mg/dL."}
+        often_high = m_last["tar250"] > 5
+        if often_high:
+            care.append({"reason": f"Often very high: {v('tar250')}% of readings above 250 (target under 5%)", "evidenceId": "tar250"})
+        visit = []  # alert, but not urgent: raise it at the next visit (keeps same-day calls for lows and very high averages)
+        if not care and st == "alert":
+            if m_last["tir"] < 70:
+                visit.append({"reason": f"Mostly high: {v('tir')}% of readings in 70-180 (target over 70%)", "evidenceId": "tir"})
+        care_flag = {"today": bool(care), "level": "today" if care else "next visit" if visit else None, "reasons": care or visit,
+                     "rule": "Send to the care team today if more than 4% of readings are below 70 mg/dL, the average is above 250 mg/dL, "
+                             "or more than 5% of readings are above 250 mg/dL (sustained highs). Time in range under 70% alone goes to the next visit."}
         if low_sugar:
             for rec in recs:
                 if rec["id"] == "walk":
                     rec["caution"] = WALK_CAUTION
                     rec["text"] += " " + WALK_CAUTION
-        team_key = "team_lows" if low_sugar else "team_high" if high_avg else "team_alert" if st == "alert" else None
+        team_key = "team_lows" if low_sugar else "team_high" if high_avg else "team_often_high" if often_high else "team_alert" if st == "alert" else None
         pview = patient_view(recs, low_sugar, team_key)
         hypo = {"level": "high", "reasonEvidenceId": "tbr70", "text": pview["en"]["lowSugarWarning"],
                 "translations": {k: pview[k]["lowSugarWarning"] for k in ("es", "ht")}} if low_sugar else None
@@ -997,11 +1024,13 @@ def main(data_dir, out_dir):
     sw_w = size_word(rw["real"]["est"], rw["program"]) if rw and rw.get("real") else None
     sw_l = size_word(rl["real"]["est"], rl["program"]) if rl and rl.get("real") else None
     plain_language = {
-        "headline": f"Late dinner +{rnd(ld['est'])}, evening walk -{rnd(wd['est'])}, 10 minutes is enough.",
+        "headline": f"Late dinner +{rnd(ld['est'])}, evening walk -{rnd(wd['est'])} in the program"
+                    + (f" (about -{rnd(rw['real']['est'])} in real adults, not proven)" if rw and rw.get("real") else "") + ", 10 minutes is enough.",
         "points": [
             {"id": "late_dinner", "text": f"Dinner at 8 pm or later: sugar rose about {rnd(ld['est'])} mg/dL more than after an earlier dinner, same person (95% CI {rnd(ld['lo'])} to {rnd(ld['hi'])}).",
              "est": r(ld["est"], 2), "lo": r(ld["lo"], 2), "hi": r(ld["hi"], 2), "realDataCheck": rl["label"] if rl else "not tested"},
-            {"id": "evening_walk", "text": f"A walk after dinner: sugar rose about {rnd(wd['est'])} mg/dL less (95% CI {rnd(wd['hi'])} to {rnd(wd['lo'])} less).",
+            {"id": "evening_walk", "text": f"A walk after dinner: sugar rose about {rnd(wd['est'])} mg/dL less (95% CI {rnd(wd['hi'])} to {rnd(wd['lo'])} less) in the program"
+                                            + (f", but only about {rnd(rw['real']['est'])} mg/dL less in {rw['real']['people']} real adults (CGMacros, 95% CI {rw['real']['lo']:+.1f} to {rw['real']['hi']:+.1f}, not proven)." if rw and rw.get("real") else "."),
              "est": r(wd["est"], 2), "lo": r(wd["lo"], 2), "hi": r(wd["hi"], 2), "realDataCheck": rw["label"] if rw else "not tested"},
             {"id": "ten_minutes", "text": f"10 minutes is enough: 10 to 19 minutes went with {rnd(d10['est'])} mg/dL less; longer walks added little ("
                                           + " and ".join(f"{rnd(d['est'])} for {d['bin']}" for d in longer) + ").",
@@ -1034,7 +1063,7 @@ def main(data_dir, out_dir):
             "power": {k: {kk: (r(vv, 2) if isinstance(vv, float) else vv) for kk, vv in v_.items()} for k, v_ in power.items()},
         },
         "statusCounts": status_counts,
-        "realWorld": realworld,
+        "realWorld": cohort_real_world(realworld),
         "engine": ml["engine"],
         "statistics": {k: (eff(v_) if isinstance(v_, dict) and "est" in v_ else v_) for k, v_ in stats.items() if k in ("effects", "negativeControl")}
                       | {"walkDose": stats["walkDose"], "dinnerHour": stats["dinnerHour"]},
@@ -1045,7 +1074,7 @@ def main(data_dir, out_dir):
         **({"fairness": {"note": "Synthetic program: these show whether the engine treats groups alike, not real-world fairness. Groups under 20 people get no effect estimate. "
                                 "walkDiffersP / lateDinnerDiffersP: Cochran Q test that the group effects differ (under 0.05 = they differ).",
                         "attributes": ml["fairness"]}} if ml.get("fairness") else {}),  # only when the engine run produced it
-        "careTeamToday": {"rule": "More than 4% of readings below 70 mg/dL, or an average above 250 mg/dL.",
+        "careTeamToday": {"rule": "More than 4% of readings below 70 mg/dL, an average above 250 mg/dL, or more than 5% of readings above 250 mg/dL.",
                           "count": sum(1 for x in roster if x["careTeamToday"])},
     }
     with open(f"{out_dir}/cohort.json", "w") as f:

@@ -119,11 +119,14 @@ def main():
         same = "n/a"
         if exp:
             try:
-                same = "yes" if get_path(cache[(exp, f)], path) == v else f"no ({get_path(cache[(exp, f)], path)})"
+                c = get_path(cache[(exp, f)], path)
+                # 1e-9 relative: BLAS on another CPU (x86 vs arm64) moves the last digits (seen: 1.3e-12 on one regression value)
+                close = isinstance(c, (int, float)) and isinstance(v, (int, float)) and abs(c - v) <= 1e-9 * max(1.0, abs(c))
+                same = "yes" if c == v else "yes (within 1e-9)" if close else f"no ({c})"
             except (KeyError, TypeError, IndexError):
                 same = "no (not in committed)"
         in_readme = readme is None or want.lstrip("-") in readme
-        ok = got == want and in_readme and same in ("yes", "n/a")
+        ok = got == want and in_readme and same in ("yes", "yes (within 1e-9)", "n/a")
         fails += not ok
         lines.append(f"| {label} | `{f}` → `{path}` | {want} | {got} | {same} | {'PASS' if ok else 'FAIL' + ('' if in_readme else ' (figure not in README)')} |")
     lines.append("")

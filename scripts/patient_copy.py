@@ -33,6 +33,9 @@ TEXT = {
     "team_high": {"en": "Today: send your blood sugar readings to your care team. Your average is very high.",
                   "es": "Hoy: envíe sus lecturas de azúcar a su equipo médico. Su promedio está muy alto.",
                   "ht": "Jodi a: voye chif sik ou yo bay ekip swen ou. Mwayèn sik ou twò wo."},
+    "team_often_high": {"en": "Today: send your blood sugar readings to your care team. Your sugar is often very high.",
+                        "es": "Hoy: envíe sus lecturas de azúcar a su equipo médico. Su azúcar está muy alto con frecuencia.",
+                        "ht": "Jodi a: voye chif sik ou yo bay ekip swen ou. Sik ou souvan twò wo."},
     "team_alert": {"en": "Share these readings with your care team at your next visit.",
                    "es": "Muestre estas lecturas a su equipo médico en su próxima cita.",
                    "ht": "Montre ekip swen ou chif sa yo nan pwochen randevou ou."},
@@ -71,8 +74,10 @@ def patient_view(recs, low_sugar, team_key):
         view[lang] = {"careTeam": TEXT[team_key][lang] if team_key else None,
                       "lowSugarWarning": TEXT["hypo"][lang] if low_sugar else None,
                       "actions": [{"id": rid, "text": TEXT[k][lang]} for rid, k in keys],
-                      "help": TEXT["help"][lang]}
-    view["note"] = "Spanish and Haitian Creole drafted by the team; have a native speaker review before clinical use."
+                      "help": TEXT["help"][lang],
+                      "translation": "original" if lang == "en" else "machine-translated, needs review",
+                      "reviewed": lang == "en"}
+    view["note"] = "Spanish and Haitian Creole are machine-translated (AI-drafted) and not yet reviewed by a native speaker; review before clinical use."
     return view
 
 

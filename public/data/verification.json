@@ -21,24 +21,25 @@
   "careTeamToday": 4,
   "advice": {
    "cached": true,
-   "ms": 89
+   "ms": 241
   },
-  "strict": true,
-  "publishedVerificationMatchesLive": true,
   "dataHash": "0c4855cbb317a154eca80147242fd8110f83a21b9c79a6065d2b0ee408658493",
-  "finishedAt": "2026-10-17T16:44:22.836Z",
-  "artifact": "runs/e2e-2026-10-17T16-44-14-414Z.json"
+  "finishedAt": "2026-10-17T16:58:18.171Z",
+  "artifact": "runs/e2e-2026-10-17T16-58-03-481Z.json"
  },
  "dataHash": "0c4855cbb317a154eca80147242fd8110f83a21b9c79a6065d2b0ee408658493",
- "commit": "37aaa70713a46d1dee547d6616c50e987d24a0dc",
+ "commit": "91cbaecb3acbabe73aabda5362df8717a2e80165",
  "repo": "https://github.com/zaycruz/c4-glucose-guide",
  "reproduce": [
-  "scripts/build-ml.sh <ssh host> <Challenge4_Dose_and_Timing dir>   # ML engine, minutes, on a server",
-  "scripts/build-data.sh <Challenge4_Dose_and_Timing dir>               # evidence, advice, roster",
+  "scripts/reproduce.sh <Challenge4_Dose_and_Timing dir> [out dir]   # data check, ML engine, benchmark, evidence; diffs every README number (REPRODUCE.md)",
   "npx wrangler deploy && node scripts/warm-advice.mjs && npx wrangler deploy",
-  "node scripts/e2e.mjs --strict                                          # this check"
+  "node scripts/e2e.mjs && npx wrangler deploy && node scripts/e2e.mjs --strict   # this check"
  ],
  "seeds": {
-  "engine": 20261017
+  "engine": 20261017,
+  "benchmark": 20261017,
+  "analysis": 20261017,
+  "realWorld": 7,
+  "models": "random_state=0"
  }
 }

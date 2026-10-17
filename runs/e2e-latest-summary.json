@@ -1,6 +1,6 @@
 {
  "base": "https://c4-glucose-guide.zay-259.workers.dev",
- "file": "runs/e2e-2026-10-17T16-44-14-414Z.json",
+ "file": "runs/e2e-2026-10-17T16-58-03-481Z.json",
  "pass": true,
  "failures": [],
  "survivors": 50,
@@ -22,10 +22,10 @@
  "careTeamToday": 4,
  "advice": {
   "cached": true,
-  "ms": 89
+  "ms": 241
  },
  "strict": true,
  "publishedVerificationMatchesLive": true,
  "dataHash": "0c4855cbb317a154eca80147242fd8110f83a21b9c79a6065d2b0ee408658493",
- "finishedAt": "2026-10-17T16:44:22.836Z"
+ "finishedAt": "2026-10-17T16:58:18.171Z"
 }

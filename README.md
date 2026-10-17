@@ -1,13 +1,13 @@
 # C4 Glucose Guide
 
-**A walk after dinner lowers the sugar rise by 18 mg/dL, and 10 minutes gets most of it.**
+**A walk after dinner lowers the sugar rise by 18 mg/dL in the program, and about 3 mg/dL in real adults (not yet proven); 10 minutes gets most of it.**
 For a survivor, that is one small habit with a measurable payoff. For the care team, the API flags who needs a call today (frequent lows or an average above 250 mg/dL), with the reason.
 
 | Result | Compared with | 95% CI |
 |---|---|---|
 | Walk after dinner: **−18.3 mg/dL** rise | the same person's dinners without a walk | 16.6 to 20.1 lower |
 | Dinner at 8 pm or later: **+9.2 mg/dL** rise | the same person's earlier dinners | 7.1 to 11.3 |
-| Real adults (CGMacros, n = 45), walk after a meal: **−3.2 mg/dL** | the program's −17.8 | −6.9 to 0.5 (same direction, not proven) |
+| Real adults (CGMacros, 44 people), walk after a meal: **−3.2 mg/dL** | the program's −17.8 | −6.9 to 0.5 (same direction, not proven) |
 
 Program numbers come from a synthetic 12-week cohort (500 people, double ML within person). Real data agrees on direction but shows a much smaller walk effect, and the advice says so.
 
@@ -42,7 +42,7 @@ Synthetic 12-week program: 500 sensor wearers, 18,218 clean meal curves. **The a
 | How much is enough? | **10-19 min gets most of it** (17.5 lower); 20-29 min 19.5; 30+ min 16.6. Benefit levels off after 10 minutes. |
 | Does a late dinner matter? | Dinner at 8 pm or later: **+9.2 mg/dL** (7.1 to 11.3). Each hour later adds more vs before 6 pm: 6-7 pm +3.9, 7-8 pm +8.4, 8-9 pm +13.3, 9-10 pm +18.2, 10 pm or later +25.4. |
 | Overnight fast? | Randomized: adding the fast to coaching changed HbA1c by -0.03 points overall (-0.06 to 0.00). Type 2 diabetes looked larger (-0.08), but a formal test can't tell the blood sugar groups apart (Q p = 0.15; Holm-adjusted p = 0.13), so the advice uses the overall number. The fast arm did fast longer: 13.05 vs 12.07 h, with 62% vs 36% of nights at 13 h or more. Night shift (n=28) points the other way, but the CI is wide. Coaching itself vs email tips: -0.17. |
-| Does it hold in real people? | CGMacros (45 real adults), same ML engine: late dinner +2.6 (-5.1 to 10.3) and walk after a meal -3.2 (-6.9 to 0.5). Both point the same way but are not proven. The real walk interval excludes the program's -17.8, so expect a much smaller walk effect in real people. The program's late-dinner +9.2 is still inside the real interval. NHANES survivors, survey-weighted: neither fasting length nor daily movement shows a clear link with HbA1c. |
+| Does it hold in real people? | CGMacros (45 real adults; 44 with walk data, 41 with late dinners), same ML engine: late dinner +2.6 (-5.1 to 10.3) and walk after a meal -3.2 (-6.9 to 0.5). Both point the same way but are not proven. The real walk interval excludes the program's -17.8, so expect a much smaller walk effect in real people. The program's late-dinner +9.2 is still inside the real interval. NHANES survivors, survey-weighted: neither fasting length nor daily movement shows a clear link with HbA1c. The API serves this weighted fit as `realWorld.nhanesSurvivors`; the unweighted fit is kept only as a labelled sensitivity (`nhanesSurvivorsUnweighted`). |
 | What does ML add for a person? | A **forecast of the rise after their typical dinner** (gradient boosting; each meal forecast by a model that never saw it). Typical miss: 14.0 mg/dL; R² 0.62 on meals it never saw from people it knows. |
 | Why ML, and not the regression? | We benchmarked them head to head ([ML_COMPARISON.md](ML_COMPARISON.md)). With confounding shaped like a threshold, a planted -10 effect is recovered with an error of +0.3 by double ML and +3.5 by the regression, whose interval never covered the truth. ML also predicts the rise better for new people (R² 0.44 vs 0.35) and in real data (0.30 vs 0.11). On this program's data the two engines agree, so the switch changes the method, not the story. |
 
@@ -52,12 +52,18 @@ Status (ok / watch / alert) uses fixed CGM consensus thresholds (time in range, 
 
 ## Safety and patient-facing fields (live in the API)
 
-- **Care team today:** `careTeamFlag` and `careTeamToday` are set for more than 4% of readings below 70 mg/dL or an average above 250 mg/dL. The reason cites the evidence, for example "Glucose: Frequent lows: 5.3% of readings below 70 (target under 4%)". Four of the 50 survivors are flagged today. `todayReason` and `priority` let the Coach Console mix C4 into one ranked Today queue.
+- **Care team today:** `careTeamFlag` and `careTeamToday` are set for more than 4% of readings below 70 mg/dL, an average above 250 mg/dL, or more than 5% of readings above 250 (sustained highs). Other alerts get `level: "next visit"`. The reason cites the evidence, for example "Glucose: Frequent lows: 5.3% of readings below 70 (target under 4%)". Ten of the 50 survivors are flagged today and one for the next visit. `todayReason` and `priority` let the Coach Console mix C4 into one ranked Today queue.
 - **Low sugar:** anyone with frequent lows gets `hypoglycaemiaWarning` (the 15-15 rule, and when to call 911). Their walk advice carries a low-sugar `caution`, and they are never told to fast longer.
 - **Plain language:** `plainSummary` per survivor. The cohort's `plainLanguage` says "Late dinner +9, evening walk -18, 10 minutes is enough", with 95% CIs, real-data labels, and "real data shows about a fifth (walk) / a quarter (late dinner) of the program's size".
-- **Spanish and Haitian Creole (Kreyòl):** `patientView.{en,es,ht}` holds up to three actions, the care-team line, the low-sugar warning, and a help line for food, money or transport (211, or a social worker). It uses fixed rule numbers only.
+- **Spanish and Haitian Creole (Kreyòl):** `patientView.{en,es,ht}` holds up to three actions, the care-team line, the low-sugar warning, and a help line for food, money or transport (211, or a social worker). It uses fixed rule numbers only. The Spanish and Kreyòl text is machine-translated and marked `reviewed: false` until a native speaker checks it.
 - **AI advice is precomputed:** `/advice` is served from a cache keyed to the current recommendations (about 0.1 s instead of 3-26 s). `?fresh=1` calls the model live.
-- **Not yet served:** a per-group fairness table (by race/ethnicity, sex, age, language and cancer type). It is written in the engine but needs a rerun; the API omits it until then.
+- **Fairness by group** (`/api/c4/cohort` → `fairness`): by race/ethnicity, sex, age, preferred language and cancer type. For each group it gives the forecast error and the walk and late-dinner effects with CIs; groups under 20 people get no effect estimate. Cochran Q tests whether the effects differ, without a multiplicity correction. It comes from the same engine run, reproduced from a fresh clone on Cloudflare with zero differences.
+  - The forecast misses by a similar amount in every group: 11.9 to 16.2 mg/dL.
+  - Race and ethnicity: the effects can't be told apart (walk Q p = 0.12; late dinner Q p = 0.37).
+  - Sex: the walk and late-dinner effects are larger in men (walk −20.3 vs −15.4).
+  - Age: the walk effect is smaller at 70+ (−14.7 vs −19.4 under 60).
+  - Kreyòl speakers (24 people): the late-dinner effect is smaller (+1.9; Q p = 0.03).
+  - The data is synthetic, so this checks that the engine treats groups alike. It does not measure real-world fairness.
 
 ## Demo story (2 minutes)
 

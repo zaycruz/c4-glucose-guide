@@ -96,13 +96,15 @@ for (const tile of roster.body) {
     const label = t.evidenceId === "walk_meals" ? t.label.replace(/\/\d+/, "") : t.label; // "Walks after 2/37 meals": 37 = meals_scored
     for (const n of nums(label)) check([e.value, e.n].some((v) => typeof v === "number" && Math.abs(Math.abs(v) - n) <= 0.5), `${id}: tag ${t.label} number ${n} not in evidence`);
   }
-  // safety routing: frequent lows (>4% below 70) or average above 250 -> care team today
-  const tbr = ev.get("tbr70")?.value, mean = ev.get("mean_glucose")?.value;
-  const lows = typeof tbr === "number" && tbr > 4, high = typeof mean === "number" && mean > 250;
+  // safety routing: frequent lows (>4% below 70), average above 250 or sustained highs (>5% above 250) -> care team today
+  const tbr = ev.get("tbr70")?.value, mean = ev.get("mean_glucose")?.value, tar = ev.get("tar250")?.value;
+  const lows = typeof tbr === "number" && tbr > 4, high = (typeof mean === "number" && mean > 250) || (typeof tar === "number" && tar > 5);
   const cf = b.careTeamFlag;
   if (check(cf && typeof cf.today === "boolean" && Array.isArray(cf.reasons), `${id}: careTeamFlag missing`)) {
     check(cf.today === (lows || high), `${id}: careTeamFlag.today=${cf.today} but lows=${lows} high=${high}`);
-    check(cf.today === cf.reasons.length > 0, `${id}: careTeamFlag reasons do not match the flag`);
+    check(cf.level === (cf.today ? "today" : b.status === "alert" ? "next visit" : null), `${id}: careTeamFlag.level=${cf.level} does not match today/status`);
+    check((cf.level !== null) === cf.reasons.length > 0, `${id}: careTeamFlag reasons do not match the level`);
+    if (cf.today) check(b.recommendations[0]?.id === "talk_to_team" && /today/.test(b.recommendations[0].text), `${id}: flagged today but the first card does not say today`);
     for (const rs of cf.reasons) check(ev.has(rs.evidenceId), `${id}: care reason evidence ${rs.evidenceId} missing`);
     check(tile.careTeamToday === cf.today, `${id}: roster careTeamToday differs from detail`);
   }
@@ -122,6 +124,7 @@ for (const tile of roster.body) {
       const v = pv[l];
       check(JSON.stringify(v.actions.map((a) => a.id)) === ids && v.actions.length >= 1 && v.actions.length <= 3, `${id}: patientView.${l} actions differ`);
       check(/211/.test(v.help), `${id}: patientView.${l} has no help route`);
+      check(v.reviewed === (l === "en") && (l === "en" || /machine-translated/.test(v.translation)), `${id}: patientView.${l} translation status missing`);
       check(!cf?.today || Boolean(v.careTeam), `${id}: flagged but patientView.${l} has no care-team line`);
       check(lows === Boolean(v.lowSugarWarning), `${id}: patientView.${l} low-sugar warning mismatch`);
       for (const t of [v.careTeam, v.lowSugarWarning, v.help, ...v.actions.map((a) => a.text)].filter(Boolean))
@@ -131,7 +134,7 @@ for (const tile of roster.body) {
   check(typeof b.plainSummary === "string" && b.plainSummary.length > 0, `${id}: plainSummary missing`);
   for (const n of nums(b.plainSummary ?? "")) check(PATIENT_NUMBERS.has(n), `${id}: plainSummary has measured number ${n}`);
   // todayReason numbers are person evidence (or rule thresholds)
-  for (const n of nums(strip((b.todayReason ?? "").replace(/target under 4%|above 250|below 70/g, " "))))
+  for (const n of nums(strip((b.todayReason ?? "").replace(/target under [45]%|above 250|below 70/g, " "))))
     check(personEvOf(b).some((e) => typeof e.value === "number" && Math.abs(Math.abs(e.value) - n) <= 0.5), `${id}: todayReason number ${n} not in evidence`);
   // headline and summary numbers are rounded person-level evidence values (+-0.5)
   const personEv = b.evidence.filter((e) => e.scope === "person");
@@ -148,7 +151,8 @@ check(cohort.status === 200 && cohort.body?.effects?.walk && cohort.body?.trial,
 const C = cohort.body ?? {};
 const pl = C.plainLanguage;
 if (check(pl && Array.isArray(pl.points) && pl.points.length === 3, "cohort plainLanguage missing")) {
-  const vals = [C.effects.lateDinner, C.effects.walkAfterDinner, ...(C.walkDose ?? [])].flatMap((e) => [e.est, e.lo, e.hi]);
+  const rcw = C.robustness?.realDataChecks?.walk?.real;
+  const vals = [C.effects.lateDinner, C.effects.walkAfterDinner, ...(C.walkDose ?? []), ...(rcw ? [rcw] : [])].flatMap((e) => [e.est, e.lo, e.hi]).concat(rcw ? [rcw.people] : []);
   for (const t of [pl.headline, ...pl.points.map((p) => p.text)])
     for (const n of nums(strip(t.replace(/10 minutes|95% CI/g, " ").replace(/\b(10-19|20-29|30\+?) min\b/g, " "))))
       check(vals.some((v) => typeof v === "number" && Math.abs(Math.abs(v) - n) <= 0.5), `plainLanguage number ${n} not in cohort effects`);

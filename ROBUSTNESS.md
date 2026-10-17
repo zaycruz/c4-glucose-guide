@@ -66,7 +66,7 @@ zay, after the statistics-vs-ML benchmark: "lets use ML ... update our submissio
 
 ## Judges'-panel API fixes: how they could fail (written before the code, 2026-10-17)
 
-The fixes are safety routing, cached advice, plain language, Spanish and Kreyòl copy, and verification online. Each failure below has an E2E assertion in `scripts/e2e.mjs`. A per-group fairness table is written in `scripts/ml_effects.py` but is not served yet: it needs an engine rerun, and the API omits `fairness` until then (item 8 applies once it is).
+The fixes are safety routing, cached advice, plain language, Spanish and Kreyòl copy, and verification online. Each failure below has an E2E assertion in `scripts/e2e.mjs`. The per-group fairness table from `scripts/ml_effects.py` is now served as `cohort.fairness` (from the engine rerun on Cloudflare, which reproduced every other number exactly), and item 8 applies.
 
 1. Someone with frequent lows (above 4% of readings below 70) has no `careTeamFlag.today`, no `hypoglycaemiaWarning`, or a walk recommendation without the low-sugar `caution`. Someone in that group still gets "aim for a 13-hour fast".
 2. An average above 250 mg/dL is not flagged for the care team today.

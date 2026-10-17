@@ -83,11 +83,11 @@ For a mixed "Today" queue across modules, each tile also has:
 | `evidence[]` | `{{id, label, value, unit, ci: [lo, hi] \\| null, n, scope, method, caveat}}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (real-data check: CGMacros or survey-weighted NHANES), `rule` (thresholds) |
 | `recommendations[]` | `{{id, title, text, basis, evidenceIds[], realDataCheck, caution?}}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
 | `recommendations[].realDataCheck` | `{{label, evidenceId}}` | does real data back this advice? `label`: `agrees`, `same direction, not proven`, `no clear signal`, `disagrees`, `not tested` (safety rules). `evidenceId` is the cited `scope: real` evidence item, or `null` when not tested. |
-| `careTeamFlag` | `{{today, reasons[{{reason, evidenceId}}], rule}}` | `today` is true for more than 4% of readings below 70 or an average above 250 mg/dL; same value as the roster's `careTeamToday` |
+| `careTeamFlag` | `{{today, level, reasons[{{reason, evidenceId}}], rule}}` | `today` is true for more than 4% of readings below 70, an average above 250 mg/dL, or more than 5% of readings above 250 (sustained highs); same value as the roster's `careTeamToday`. `level` is `today`, `next visit` (other alert: time in range under 70%) or null |
 | `hypoglycaemiaWarning` | `{{level, reasonEvidenceId, text, translations{{es, ht}}}} \\| null` | set for anyone with frequent lows: the 15-15 rule and when to call 911. When it is set, the walk advice carries `caution` and there is no advice to fast longer. |
 | `todayReason`, `priority` | string, int | same as on the roster tile |
 | `plainSummary` | string | the care-team line plus the person's actions in plain English, with no measured numbers |
-| `patientView` | `{{en, es, ht: {{careTeam, lowSugarWarning, actions[≤3 {{id, text}}], help}}, note}}` | a patient-facing version in English, Spanish and Haitian Creole (Kreyòl). It uses only fixed rule numbers (10, 15, 20, 211, 911…), no measured values. Action ids are the same in every language. `help` gives 211 and a social-worker referral for food, money or transport. `careTeam` and `lowSugarWarning` are null when they don't apply. |
+| `patientView` | `{{en, es, ht: {{careTeam, lowSugarWarning, actions[≤3 {{id, text}}], help, translation, reviewed}}, note}}` | a patient-facing version in English, Spanish and Haitian Creole (Kreyòl). It uses only fixed rule numbers (10, 15, 20, 211, 911…), no measured values. Action ids are the same in every language. `help` gives 211 and a social-worker referral for food, money or transport. `careTeam` and `lowSugarWarning` are null when they don't apply. Spanish and Kreyòl are machine-translated and not yet reviewed (`translation: "machine-translated, needs review"`, `reviewed: false`). |
 | `charts` | object of plain arrays | see below |
 | `dataNote` | string | notice that the data is synthetic |
 
@@ -131,10 +131,10 @@ Cohort findings for a program-level view. Top-level keys:
 - `effects.<name>` = `{{est, lo, hi, se, people, rows}}`: within-person double-ML estimates (gradient boosting, 5-fold cross-fitting × 3) with person-clustered 95% CIs. The fixed-effects regression cross-check is under `statistics.effects`. Names: `walk`, `walkAfterDinner`, `walkAfterOtherMeals`, `lateDinner`, `carbsPer10g`, `fastMorningPerHour`, `fast13Morning`, plus iAUC versions.
 - `walkDose[]`, `dinnerHour[]`: `{{bin, est, lo, hi, n_meals}}`, for the dose-response charts.
 - `trial.contrasts.<outcome>["A vs B"]`: randomized difference in the week 12 minus week 0 change. `trial.fastVsCoachingBySubgroup`: the same difference by starting blood sugar group and by night shift. `trial.adherence`: what each arm actually did.
-- `realWorld.cgmacros`, `realWorld.nhanesSurvivors`: the same questions answered from real data.
+- `realWorld.cgmacros`, `realWorld.nhanesSurvivors`: the same questions answered from real data. `nhanesSurvivors` is survey-weighted (the fit every claim cites); `nhanesSurvivorsUnweighted` is the same models without weights, a labelled sensitivity that no claim uses.
 - `plainLanguage`: `{{headline, points[{{id, text, est, lo, hi, realDataCheck}}], realData, source}}`. A plain hero (late dinner, evening walk, 10 minutes is enough) whose numbers round the `effects` and `walkDose` values. `realData` says how large the real-data effect is next to the program's (for example "about a fifth"), computed from the actual ratio.
 - `careTeamToday`: `{{rule, count}}`.
-- `fairness` is not served yet. A per-group engine table is written but needs an engine rerun; this key appears only once it has run.
+- `fairness`: `{{note, attributes: {{race_ethnicity, sex, age_band, preferred_language, cancer_type: {{label, groups[{{group, people, meals, forecastMae, walk, lateDinner, note?}}], walkDiffersP, lateDinnerDiffersP}}}}}}`. Groups under 20 people have `walk`/`lateDinner` null. The Q-test p-values are not multiplicity-corrected. The data is synthetic, so this checks that the engine treats groups alike, not real-world fairness.
 
 ```json
 {j(coh_example)}
