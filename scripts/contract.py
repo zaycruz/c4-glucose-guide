@@ -108,7 +108,7 @@ Example (`{DEMO}`, trimmed):
 
 ## `GET /api/c4/survivors/:id/advice`
 
-Workers AI (`{adv['model']}`) rewrites the recommendations in plain language. The response is `{{survivorId, model, servedModel, items[{{id, title, text, source, rejected?}}], recHash, generatedAt, cached, ms, error}}`. `servedModel` is the model the provider actually ran (it may be an alias of `model`). The raw provider response is never returned.
+Workers AI (`{adv['model']}`) rewrites the recommendations in plain language. The response is `{{survivorId, model, providerModelName, fallbackModel, modelNote, items[{{id, title, text, source, rejected?}}], recHash, generatedAt, cached, ms, error}}`. `model` is the one model requested; `fallbackModel` is always null (there is no fallback model). `providerModelName` is the name Workers AI writes in its response (`@cf/meta/llama-3.3-70b-instruct-sd`), its own label for that deployment, not a different model. If the AI call fails, items fall back to the checked template text (`source: "template"`). The raw provider response is never returned.
 - **Cached by default.** Rewrites are precomputed for every survivor by `scripts/warm-advice.mjs` and served from `public/data/advice/<id>.json`, but only while `recHash`, the SHA-256 of the current `[id, text]` recommendations, still matches. So stale advice is never served, and a call takes about 0.1 s instead of 3-26 s.
 - `?fresh=1` skips the cache and calls the model live.
 - If the model fails, `error` reads "AI rewrite unavailable; showing the checked template text" and every item uses the template. The raw error is never shown.

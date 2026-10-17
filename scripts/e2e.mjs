@@ -196,6 +196,8 @@ const advice = await get(`/api/c4/survivors/${alertId}/advice`);
 run.responses[`/api/c4/survivors/${alertId}/advice`] = advice;
 check(advice.status === 200 && Array.isArray(advice.body?.items), "advice endpoint failed");
 check(!advice.body?.error || /unavailable/.test(advice.body.error), "advice passes a raw model error through");
+check(advice.body?.model === "@cf/meta/llama-3.3-70b-instruct-fp8-fast" && advice.body?.fallbackModel === null && !("servedModel" in (advice.body ?? {}))
+  && /no fallback model/.test(advice.body?.modelNote ?? ""), "advice model fields do not state the requested model and the no-fallback rule");
 check(!("rawPreview" in (advice.body ?? {})) && !JSON.stringify(advice.body ?? {}).includes("chatcmpl"), "advice exposes the raw provider response");
 if (STRICT) check(advice.body?.cached === true && advice.ms < 2000, `advice not served from cache (cached=${advice.body?.cached}, ${advice.ms} ms)`);
 const detailEv = run.responses[`/api/c4/survivors/${alertId}`].body;
@@ -252,6 +254,7 @@ try { commit = execSync("git rev-parse HEAD", { encoding: "utf8" }).trim(); } ca
 const { strict: _s, publishedVerificationMatchesLive: _m, ...published } = run.summary;
 writeFileSync("public/data/verification.json", JSON.stringify({
   e2e: { ...published, artifact: `runs/e2e-${stamp}.json` }, dataHash, commit,
+  aiAdvice: { model: advice.body?.model ?? null, providerModelName: advice.body?.providerModelName ?? null, fallbackModel: advice.body?.fallbackModel ?? null, modelNote: advice.body?.modelNote ?? null },
   repo: "https://github.com/zaycruz/c4-glucose-guide",
   reproduce: ["scripts/reproduce.sh <Challenge4_Dose_and_Timing dir> [out dir]   # data check, ML engine, benchmark, evidence; diffs every README number (REPRODUCE.md)",
               "npx wrangler deploy && node scripts/warm-advice.mjs && npx wrangler deploy",

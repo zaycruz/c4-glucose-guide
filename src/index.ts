@@ -12,6 +12,9 @@ type Rec = { id: string; title: string; text: string; basis: string; evidenceIds
 type Detail = { survivorId: string; evidence: Evidence[]; recommendations: Rec[]; [k: string]: unknown };
 
 const AI_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
+// This Worker calls one model and has no fallback model. Workers AI labels its responses with its own internal
+// name for the deployment ("...-instruct-sd", not in Cloudflare's model list); we pass that through as-is.
+const MODEL_NOTE = "One model is requested and there is no fallback model. providerModelName is the name Workers AI puts in its response for this deployment; it is not a different model. If the AI call fails, the items fall back to the checked template text (source: template), never to another model.";
 const ID_RE = /^c4-N\d{4}$/;
 const CORS = {
   "access-control-allow-origin": "*",
@@ -106,9 +109,13 @@ async function phrase(env: Env, detail: Detail) {
       ? { id: rec.id, title: rec.title, text: rec.text, source: "template", evidenceIds: rec.evidenceIds, rejected: { text: ai, untracedNumbers: bad, addedCausalWords: causal } }
       : { id: rec.id, title: rec.title, text: ai, source: "ai", evidenceIds: rec.evidenceIds, rejected: null };
   });
-  // The provider may serve an alias of the requested model; report both, never the raw provider response.
-  const served = typeof (raw as { model?: unknown } | null)?.model === "string" ? (raw as { model: string }).model : null;
-  return { survivorId: detail.survivorId, model: AI_MODEL, servedModel: served, ms: Date.now() - started, error, items };
+  // Never the raw provider response: only the name the provider reports for the model it ran.
+  const reported = typeof (raw as { model?: unknown } | null)?.model === "string" ? (raw as { model: string }).model : null;
+  return { survivorId: detail.survivorId, ...modelFields(reported), ms: Date.now() - started, error, items };
+}
+
+function modelFields(reported: string | null) {
+  return { model: AI_MODEL, providerModelName: reported, fallbackModel: null, modelNote: MODEL_NOTE };
 }
 
 /** SHA-256 of the recommendation ids and texts: a cached rewrite is served only if the advice it rephrased is unchanged. */
@@ -123,10 +130,10 @@ async function advice(env: Env, req: Request, detail: Detail, fresh: boolean) {
   const started = Date.now();
   const hash = await recHash(detail);
   if (!fresh) {
-    const cached = (await asset(env, req, `/data/advice/${detail.survivorId}.json`)) as { recHash?: string; rawPreview?: unknown } | null;
+    const cached = (await asset(env, req, `/data/advice/${detail.survivorId}.json`)) as { recHash?: string; rawPreview?: unknown; servedModel?: string | null } | null;
     if (cached && cached.recHash === hash) {
-      const { rawPreview: _raw, ...keep } = cached;
-      return { ...keep, cached: true, ms: Date.now() - started };
+      const { rawPreview: _raw, servedModel, ...keep } = cached;
+      return { ...keep, ...modelFields(servedModel ?? null), cached: true, ms: Date.now() - started };
     }
   }
   const live = await phrase(env, detail);
