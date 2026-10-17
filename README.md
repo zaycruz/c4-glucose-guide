@@ -27,7 +27,7 @@ Live API: https://c4-glucose-guide.zay-259.workers.dev/api/c4/survivors · contr
 
 Coach Console module C4 (eMerge hackathon, Healthcare track, Sylvester): **how meals, meal timing and movement shape blood sugar**, per survivor and across the cohort, with honest uncertainty, turned into advice a survivor can follow. Every number in the advice traces to an `evidence[]` item.
 
-- Live: https://c4-glucose-guide.zay-259.workers.dev (cohort view: `/#cohort`)
+- Live: https://c4-glucose-guide.zay-259.workers.dev (landing page in the Patient 360 design; the interactive demo is at `/demo.html`, cohort view `/demo.html#cohort`)
 - API: see [CONTRACT.md](CONTRACT.md) (`/api/c4/survivors`, `/api/c4/survivors/:id`, `/api/c4/survivors/:id/advice`, `/api/c4/cohort`, `/api/c4/verification`)
 - Reproduce every number below: [REPRODUCE.md](REPRODUCE.md) (`scripts/reproduce.sh`)
 - Data: the Challenge 4 "Dose and Timing" set (the README inside calls it "Challenge 2"). Synthetic program for the survivors; CGMacros and NHANES as the real-data check.
@@ -67,8 +67,8 @@ Status (ok / watch / alert) uses fixed CGM consensus thresholds (time in range, 
 
 ## Demo story (2 minutes)
 
-1. **Cohort first** (`/#cohort`, 40 s). "Does a late dinner matter? Same person, same carbs: every hour later adds to the rise, up to +25 mg/dL after 10 pm. Is an evening walk worth it? Yes: about 18 mg/dL lower after dinner, more than after other meals, and 10 minutes gets most of it. These numbers come from machine learning (double ML), checked against a classic regression. Overnight fast: the randomized arm changed HbA1c by -0.03, and we could not show it differs by blood sugar group. And here is the honest part: in 45 real people the walk and late-dinner effects point the same way, but they aren't proven yet."
-2. **Roster** (`/`, 20 s). Each tile shows a plain headline and up to four signal tags (red = risk, amber = watch, green = working), so you can scan without opening anyone. Filter chips narrow it to Alert / Watch / Ok. Click **N0632** (alert, 76F, colorectal).
+1. **Cohort first** (`/demo.html#cohort`, 40 s). "Does a late dinner matter? Same person, same carbs: every hour later adds to the rise, up to +25 mg/dL after 10 pm. Is an evening walk worth it? Yes: about 18 mg/dL lower after dinner, more than after other meals, and 10 minutes gets most of it. These numbers come from machine learning (double ML), checked against a classic regression. Overnight fast: the randomized arm changed HbA1c by -0.03, and we could not show it differs by blood sugar group. And here is the honest part: in 45 real people the walk and late-dinner effects point the same way, but they aren't proven yet."
+2. **Roster** (`/demo.html`, 20 s). Each tile shows a plain headline and up to four signal tags (red = risk, amber = watch, green = working), so you can scan without opening anyone. Filter chips narrow it to Alert / Watch / Ok. Click **N0632** (alert, 76F, colorectal).
 3. **N0632** (50 s). Headline: "Frequent lows: 5.3% of readings below 70". The tags read Lows 5.3%, Late dinners 57%, Walks work: -18.7 mg/dL, Fast 9.9 h. The KPI strip and the typical-day chart sit under the header. Each piece of advice comes with its own chart: tell the care team about the lows and don't stretch the fast (check-ups table); walk after dinner (her own walk vs no-walk curve, a personal estimate with a CI); eat dinner earlier (her early vs late dinner curves next to the cohort's). "Show the numbers" opens the evidence behind each number.
 4. **Rephrase with Workers AI** (10 s). The text becomes warmer. The note shows how many rewrites were rejected, either for a number that isn't in the evidence or for causal words like "helped".
 
@@ -122,7 +122,7 @@ It saves the full responses and a summary under `runs/` (`runs/e2e-latest-summar
 - `scripts/reproduce.sh`, `scripts/headline.py`: one-command reproduction and the README-number diff (see REPRODUCE.md); `infra/cf-runner/`: runs it from a fresh clone in a Cloudflare Sandbox
 - `pyproject.toml`, `uv.lock`: pinned Python 3.12 environment; `data/README.md`: where the data goes and its SHA-256 sums
 - `src/index.ts`: Worker (routes, CORS, Workers AI rewrite with numeric guard)
-- `public/index.html`: standalone demo page (dependency-free SVG charts)
+- `public/index.html`, `public/p360.css`: landing page in the shared Patient 360 design; `public/demo.html`: the interactive demo (dependency-free SVG charts)
 
 ## Sources
 

@@ -154,7 +154,7 @@ Index: `{{module, name, dataType, routes[], contract}}`. Also answers at `/api/c
 
 ## `GET /`
 
-Standalone demo page (`public/index.html`). It shows the roster, the survivor panel with charts and evidence, and a **Cohort findings** tab (`/#cohort`).
+Landing page in the shared Patient 360 design (`public/index.html`, `public/p360.css`): hero result with baseline and CI, safety routing, the fairness table, endpoints and the reproduce steps. The older interactive demo (roster, survivor panel with charts and evidence, **Cohort findings** tab) is at `/demo.html` (`/demo.html#cohort`).
 """
 open("CONTRACT.md", "w").write(md)
 print("CONTRACT.md written,", len(md.splitlines()), "lines")
