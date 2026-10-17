@@ -17,6 +17,13 @@ The survivors are synthetic (Crane Lab hackathon set). Nobody in them is real.
 
 Roster tiles: 50 survivors, sorted alert → watch → ok. Each tile also carries `tags[]` (see the detail fields below) so a coach can scan the signal without opening the panel. These are the sensor wearers in the dataset's 100-person app sample.
 
+For a mixed "Today" queue across modules, each tile also has:
+- `careTeamToday` (bool): send to the care team today. The rule is more than 4% of readings below 70 mg/dL, or an average above 250 mg/dL.
+- `todayReason` (string, at most 90 characters, starts with "Glucose: "): every number in it is in the person's evidence.
+- `priority` (0-4, lower is more urgent): 0 = care team for lows, 1 = care team for a high average, 2 = alert, 3 = watch, 4 = ok.
+- `dataType`: `"synthetic"`.
+- `module`: `"C4 Glucose Guide"`.
+
 ```json
 [
   {
@@ -41,7 +48,12 @@ Roster tiles: 50 survivors, sorted alert → watch → ok. Each tile also carrie
         "evidenceId": "walk_meals"
       }
     ],
-    "updatedAt": "2024-08-01T19:15:00"
+    "updatedAt": "2024-08-01T19:15:00",
+    "careTeamToday": false,
+    "todayReason": "Glucose: High most of the day: 63% in range, average 178 mg/dL",
+    "priority": 2,
+    "dataType": "synthetic",
+    "module": "C4 Glucose Guide"
   },
   {
     "survivorId": "c4-N0085",
@@ -65,7 +77,12 @@ Roster tiles: 50 survivors, sorted alert → watch → ok. Each tile also carrie
         "evidenceId": "fast_avg"
       }
     ],
-    "updatedAt": "2025-05-11T23:45:00"
+    "updatedAt": "2025-05-11T23:45:00",
+    "careTeamToday": false,
+    "todayReason": "Glucose: High most of the day: 64% in range, average 177 mg/dL",
+    "priority": 2,
+    "dataType": "synthetic",
+    "module": "C4 Glucose Guide"
   }
 ]
 ```
@@ -79,8 +96,13 @@ Roster tiles: 50 survivors, sorted alert → watch → ok. Each tile also carrie
 | `tags[]` | `{label, tone, evidenceId}` | up to 4 short signals, same as on the roster tile. `tone`: `risk`, `warn`, `good`, `info`. Each number in `label` is the value or n of the evidence item `evidenceId` (checked by `scripts/e2e.mjs`). |
 | `profile` | object | age, sex, cancerType, yearsSinceTreatment, bloodSugarGroup, group (trial arm), workSchedule |
 | `evidence[]` | `{id, label, value, unit, ci: [lo, hi] \| null, n, scope, method, caveat}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (real-data check: CGMacros or survey-weighted NHANES), `rule` (thresholds) |
-| `recommendations[]` | `{id, title, text, basis, evidenceIds[], realDataCheck}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
+| `recommendations[]` | `{id, title, text, basis, evidenceIds[], realDataCheck, caution?}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
 | `recommendations[].realDataCheck` | `{label, evidenceId}` | does real data back this advice? `label`: `agrees`, `same direction, not proven`, `no clear signal`, `disagrees`, `not tested` (safety rules). `evidenceId` is the cited `scope: real` evidence item, or `null` when not tested. |
+| `careTeamFlag` | `{today, reasons[{reason, evidenceId}], rule}` | `today` is true for more than 4% of readings below 70 or an average above 250 mg/dL; same value as the roster's `careTeamToday` |
+| `hypoglycaemiaWarning` | `{level, reasonEvidenceId, text, translations{es, ht}} \| null` | set for anyone with frequent lows: the 15-15 rule and when to call 911. When it is set, the walk advice carries `caution` and there is no advice to fast longer. |
+| `todayReason`, `priority` | string, int | same as on the roster tile |
+| `plainSummary` | string | the care-team line plus the person's actions in plain English, with no measured numbers |
+| `patientView` | `{en, es, ht: {careTeam, lowSugarWarning, actions[≤3 {id, text}], help}, note}` | a patient-facing version in English, Spanish and Haitian Creole (Kreyòl). It uses only fixed rule numbers (10, 15, 20, 211, 911…), no measured values. Action ids are the same in every language. `help` gives 211 and a social-worker referral for food, money or transport. `careTeam` and `lowSugarWarning` are null when they don't apply. |
 | `charts` | object of plain arrays | see below |
 | `dataNote` | string | notice that the data is synthetic |
 
@@ -126,7 +148,89 @@ Example (`c4-N0632`, trimmed):
     }
   ],
   "summary": "76-year-old female, colorectal cancer, 1.3 years after treatment; normal at start; group: coaching; day job. Average sugar 85 mg/dL in weeks 11-12, 95% of readings in range. Median rise after dinner 46 mg/dL. ML forecast for a typical dinner: 46 mg/dL. Synthetic participant (made-up data).",
+  "plainSummary": "Today: tell your care team about your low blood sugar readings. Ask your care team before walking more, because of your low readings. Then walk 10 to 20 minutes after dinner and carry juice or glucose tablets. Try to start dinner before 8 pm. Don't make your overnight fast longer for now; talk to your care team first.",
   "updatedAt": "2024-06-23T23:45:00",
+  "careTeamFlag": {
+    "today": true,
+    "reasons": [
+      {
+        "reason": "Frequent lows: 5.3% of readings below 70 (target under 4%)",
+        "evidenceId": "tbr70"
+      }
+    ],
+    "rule": "Send to the care team today if more than 4% of readings are below 70 mg/dL or the average is above 250 mg/dL."
+  },
+  "hypoglycaemiaWarning": {
+    "level": "high",
+    "reasonEvidenceId": "tbr70",
+    "text": "Low sugar: if you feel shaky, sweaty or confused, eat or drink 15 grams of fast sugar (half a cup of juice or 4 glucose tablets), wait 15 minutes and check again. If someone passes out, call 911.",
+    "translations": {
+      "es": "Azúcar baja: si se siente tembloroso, sudoroso o confundido, coma o beba 15 gramos de azúcar rápida (media taza de jugo o 4 tabletas de glucosa), espere 15 minutos y vuelva a medirse. Si alguien se desmaya, llame al 911.",
+      "ht": "Sik ba: si ou santi ou ap tranble, ou ap swe oswa ou konfonn, manje oswa bwè 15 gram sik rapid (yon mwatye tas ji oswa 4 grenn glikoz), tann 15 minit epi tcheke ankò. Si yon moun endispoze, rele 911."
+    }
+  },
+  "todayReason": "Glucose: Frequent lows: 5.3% of readings below 70 (target under 4%)",
+  "priority": 0,
+  "patientView": {
+    "en": {
+      "careTeam": "Today: tell your care team about your low blood sugar readings.",
+      "lowSugarWarning": "Low sugar: if you feel shaky, sweaty or confused, eat or drink 15 grams of fast sugar (half a cup of juice or 4 glucose tablets), wait 15 minutes and check again. If someone passes out, call 911.",
+      "actions": [
+        {
+          "id": "walk",
+          "text": "Ask your care team before walking more, because of your low readings. Then walk 10 to 20 minutes after dinner and carry juice or glucose tablets."
+        },
+        {
+          "id": "late_dinner",
+          "text": "Try to start dinner before 8 pm."
+        },
+        {
+          "id": "overnight_fast",
+          "text": "Don't make your overnight fast longer for now; talk to your care team first."
+        }
+      ],
+      "help": "Need help with food, money or transport? Call 211 (free, any time) or ask your coach to connect you with a social worker."
+    },
+    "es": {
+      "careTeam": "Hoy: avise a su equipo médico sobre sus niveles bajos de azúcar.",
+      "lowSugarWarning": "Azúcar baja: si se siente tembloroso, sudoroso o confundido, coma o beba 15 gramos de azúcar rápida (media taza de jugo o 4 tabletas de glucosa), espere 15 minutos y vuelva a medirse. Si alguien se desmaya, llame al 911.",
+      "actions": [
+        {
+          "id": "walk",
+          "text": "Por sus niveles bajos de azúcar, consulte a su equipo médico antes de caminar más. Luego camine de 10 a 20 minutos después de la cena y lleve jugo o tabletas de glucosa."
+        },
+        {
+          "id": "late_dinner",
+          "text": "Trate de empezar a cenar antes de las 8 de la noche."
+        },
+        {
+          "id": "overnight_fast",
+          "text": "Por ahora no alargue su ayuno de la noche; hable primero con su equipo médico."
+        }
+      ],
+      "help": "¿Necesita ayuda con comida, dinero o transporte? Llame al 211 (gratis, a cualquier hora) o pida a su coach que le conecte con un trabajador social."
+    },
+    "ht": {
+      "careTeam": "Jodi a: di ekip swen ou sou sik ki desann twò ba.",
+      "lowSugarWarning": "Sik ba: si ou santi ou ap tranble, ou ap swe oswa ou konfonn, manje oswa bwè 15 gram sik rapid (yon mwatye tas ji oswa 4 grenn glikoz), tann 15 minit epi tcheke ankò. Si yon moun endispoze, rele 911.",
+      "actions": [
+        {
+          "id": "walk",
+          "text": "Paske sik ou konn desann twò ba, mande ekip swen ou anvan ou mache plis. Apre sa, mache 10 a 20 minit apre manje aswè, epi pote ji oswa grenn glikoz avè ou."
+        },
+        {
+          "id": "late_dinner",
+          "text": "Eseye kòmanse manje aswè anvan 8 è di swa."
+        },
+        {
+          "id": "overnight_fast",
+          "text": "Pou kounye a, pa fè jèn lannwit ou pi long; pale ak ekip swen ou anvan."
+        }
+      ],
+      "help": "Ou bezwen èd pou manje, lajan oswa transpò? Rele 211 (gratis, nenpòt lè) oswa mande antrenè ou mete ou an kontak ak yon travayè sosyal."
+    },
+    "note": "Spanish and Haitian Creole drafted by the team; have a native speaker review before clinical use."
+  },
   "profile": {
     "age": 76,
     "sex": "female",
@@ -287,7 +391,7 @@ Example (`c4-N0632`, trimmed):
     {
       "id": "walk",
       "title": "Take a short walk after meals",
-      "text": "Your sugar rose about 18.7 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.3 mg/dL). A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
+      "text": "Your sugar rose about 18.7 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.3 mg/dL). A check in real adults (CGMacros) pointed the same way, at about a fifth of the program's size, but it is not proven there yet. Because of your low readings, check with your care team before walking more. Walk after eating, not on an empty stomach, carry juice or glucose tablets, and stop to check your sugar if you feel shaky, sweaty or confused.",
       "weightOnYourData": 0.53,
       "basis": "personal",
       "evidenceIds": [
@@ -302,13 +406,15 @@ Example (`c4-N0632`, trimmed):
       ],
       "realDataCheck": {
         "label": "same direction, not proven",
-        "evidenceId": "real_walk"
-      }
+        "evidenceId": "real_walk",
+        "realSize": "about a fifth of the program's size"
+      },
+      "caution": "Because of your low readings, check with your care team before walking more. Walk after eating, not on an empty stomach, carry juice or glucose tablets, and stop to check your sugar if you feel shaky, sweaty or confused."
     },
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "57.1% of your dinners started at 8 pm or later. Across the program, sugar rose about 9.2 mg/dL more after late dinners than after earlier ones in the same person, and 13.3 mg/dL more after a dinner at 8-9 pm than after one before 6 pm. Try to start dinner before 8 pm. A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
+      "text": "57.1% of your dinners started at 8 pm or later. Across the program, sugar rose about 9.2 mg/dL more after late dinners than after earlier ones in the same person, and 13.3 mg/dL more after a dinner at 8-9 pm than after one before 6 pm. Try to start dinner before 8 pm. A check in real adults (CGMacros) pointed the same way, at about a quarter of the program's size, but it is not proven there yet.",
       "basis": "cohort",
       "evidenceIds": [
         "late_share",
@@ -319,7 +425,8 @@ Example (`c4-N0632`, trimmed):
       ],
       "realDataCheck": {
         "label": "same direction, not proven",
-        "evidenceId": "real_late_dinner"
+        "evidenceId": "real_late_dinner",
+        "realSize": "about a quarter of the program's size"
       }
     },
     {
@@ -496,7 +603,12 @@ Example (`c4-N0632`, trimmed):
 
 ## `GET /api/c4/survivors/:id/advice`
 
-Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the recommendations in plain language; a call takes about 3-8 s. Each rewrite is checked, and the Worker drops it and returns the template (`source: "template"`, with a `rejected` object) when it:
+Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the recommendations in plain language. The response is `{survivorId, model, items[{id, title, text, source, rejected?}], recHash, generatedAt, cached, ms, error}`.
+- **Cached by default.** Rewrites are precomputed for every survivor by `scripts/warm-advice.mjs` and served from `public/data/advice/<id>.json`, but only while `recHash`, the SHA-256 of the current `[id, text]` recommendations, still matches. So stale advice is never served, and a call takes about 0.1 s instead of 3-26 s.
+- `?fresh=1` skips the cache and calls the model live.
+- If the model fails, `error` reads "AI rewrite unavailable; showing the checked template text" and every item uses the template. The raw error is never shown.
+
+Each rewrite is checked. The Worker drops it and returns the template (`source: "template"`, with a `rejected` object) when it:
 - uses a number that is not in the template or its evidence (`rejected.untracedNumbers`);
 - adds a causal verb such as helped, caused, lowered or reduced that the template does not use (`rejected.addedCausalWords`).
 
@@ -504,14 +616,13 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
 {
   "survivorId": "c4-N0632",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-  "ms": 4130,
   "error": null,
   "rawPreview": null,
   "items": [
     {
       "id": "talk_to_team",
       "title": "Tell your care team about low readings",
-      "text": "Some of your readings were below 70 mg/dL, which can make you feel shaky or dizzy, so share this with your team before your next visit. Your readings were below the target of under 4%.",
+      "text": "You had low sugar readings, which can make you feel shaky or dizzy, so share this with your team before your next visit. Your readings were below 70 mg/dL 5.3% of the time, which is higher than the usual target of under 4%.",
       "source": "ai",
       "evidenceIds": [
         "tbr70",
@@ -522,7 +633,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "walk",
       "title": "Take a short walk after meals",
-      "text": "Your sugar rose about 18.7 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.3 mg/dL). A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
+      "text": "Your sugar rose about 18.7 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.3 mg/dL). A check in real adults (CGMacros) pointed the same way, at about a fifth of the program's size, but it is not proven there yet. Because of your low readings, check with your care team before walking more. Walk after eating, not on an empty stomach, carry juice or glucose tablets, and stop to check your sugar if you feel shaky, sweaty or confused.",
       "source": "template",
       "evidenceIds": [
         "walk_effect_own",
@@ -535,7 +646,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
         "real_walk"
       ],
       "rejected": {
-        "text": "Walking after meals helped your sugar rise about 18.7 mg/dL less, so try to walk for 10 to 20 minutes after dinner. The biggest gain was seen when walking after dinner, with a difference of 18.3 mg/dL.",
+        "text": "Walking after meals helped your sugar rise 18.7 mg/dL less, so try walking 10 to 20 minutes after dinner. Walk after eating, not on an empty stomach, and carry juice or glucose tablets in case you feel shaky or sweaty.",
         "untracedNumbers": [],
         "addedCausalWords": [
           "helped"
@@ -545,7 +656,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "Most of your dinners were at 8 pm or later, and sugar rose about 9.2 mg/dL more after late dinners than after earlier ones. Try to start dinner before 8 pm, as sugar rose 13.3 mg/dL more after a dinner at 8-9 pm than after one before 6 pm.",
+      "text": "Eating dinner late, at 8 pm or later, is linked to sugar rising 9.2 mg/dL more, so try to start dinner before 8 pm. In the program, sugar rose 13.3 mg/dL more after a dinner at 8-9 pm than after one before 6 pm.",
       "source": "ai",
       "evidenceIds": [
         "late_share",
@@ -559,22 +670,21 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "overnight_fast",
       "title": "Hold off on longer fasts for now",
-      "text": "5.3% of your readings were below 70 mg/dL, so check with your care team before stretching your overnight fast. Right now it averages 9.9 hours.",
-      "source": "template",
+      "text": "Your overnight fast currently averages 9.9 hours, but check with your care team before making any changes. You had low sugar readings 5.3% of the time, so it's a good idea to talk to your team before stretching your overnight fast.",
+      "source": "ai",
       "evidenceIds": [
         "tbr70",
         "fast_avg",
         "status_rule"
       ],
-      "rejected": {
-        "text": "Some of your readings were below 70 mg/dL, so check with your care team before changing your overnight fast, which currently averages 9.9 hours. Your care team can help you decide what to do next.",
-        "untracedNumbers": [],
-        "addedCausalWords": [
-          "help"
-        ]
-      }
+      "rejected": null
     }
-  ]
+  ],
+  "recHash": "3eaf1b35f56dec9faed56d214005710b1716c7c5cce5495f7869e61de2943d34",
+  "generatedAt": "2026-10-17T16:39:09.642Z",
+  "generationMs": 10320,
+  "cached": true,
+  "ms": 4
 }
 ```
 
@@ -664,14 +774,27 @@ Cohort findings for a program-level view. Top-level keys:
     "realEffects",
     "seconds"
   ],
-  "methods": "str"
+  "methods": "str",
+  "plainLanguage": [
+    "headline",
+    "points",
+    "realData",
+    "source"
+  ],
+  "careTeamToday": [
+    "rule",
+    "count"
+  ]
 }
 ```
 
-- `effects.<name>` = `{est, lo, hi, people, rows}`: within-person estimates (person fixed effects) with cluster-bootstrap 95% CIs. Names: `walk`, `walkAfterDinner`, `walkAfterOtherMeals`, `lateDinner`, `carbsPer10g`, `fastMorningPerHour`, `fast13Morning`, plus iAUC versions.
+- `effects.<name>` = `{est, lo, hi, se, people, rows}`: within-person double-ML estimates (gradient boosting, 5-fold cross-fitting × 3) with person-clustered 95% CIs. The fixed-effects regression cross-check is under `statistics.effects`. Names: `walk`, `walkAfterDinner`, `walkAfterOtherMeals`, `lateDinner`, `carbsPer10g`, `fastMorningPerHour`, `fast13Morning`, plus iAUC versions.
 - `walkDose[]`, `dinnerHour[]`: `{bin, est, lo, hi, n_meals}`, for the dose-response charts.
 - `trial.contrasts.<outcome>["A vs B"]`: randomized difference in the week 12 minus week 0 change. `trial.fastVsCoachingBySubgroup`: the same difference by starting blood sugar group and by night shift. `trial.adherence`: what each arm actually did.
 - `realWorld.cgmacros`, `realWorld.nhanesSurvivors`: the same questions answered from real data.
+- `plainLanguage`: `{headline, points[{id, text, est, lo, hi, realDataCheck}], realData, source}`. A plain hero (late dinner, evening walk, 10 minutes is enough) whose numbers round the `effects` and `walkDose` values. `realData` says how large the real-data effect is next to the program's (for example "about a fifth"), computed from the actual ratio.
+- `careTeamToday`: `{rule, count}`.
+- `fairness` is not served yet. A per-group engine table is written but needs an engine rerun; this key appears only once it has run.
 
 ```json
 {
@@ -726,6 +849,57 @@ Cohort findings for a program-level view. Top-level keys:
     "people": 41,
     "rows": 314,
     "residSd": 25.27
+  }
+}
+```
+
+## `GET /api/c4/verification`
+
+The latest E2E result for the deployed data: pass/fail, the count of traced numbers, the advice latency, `dataHash` (SHA-256 of the roster and cohort it checked), the git `commit`, the commands to reproduce and the seeds. `node scripts/e2e.mjs --strict` fails if this record does not match the live data.
+
+```json
+{
+  "e2e": {
+    "pass": true,
+    "failures": [],
+    "survivors": 50,
+    "statusCounts": {
+      "alert": 11,
+      "watch": 10,
+      "ok": 29
+    },
+    "recommendations": 156,
+    "adviceNumbersTracedToEvidence": 614,
+    "wordingConstantsStripped": 563,
+    "aiAdvice": {
+      "survivorId": "c4-N0072",
+      "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      "ms": 40,
+      "itemsRephrasedByAi": 3,
+      "items": 3
+    },
+    "careTeamToday": 4,
+    "advice": {
+      "cached": true,
+      "ms": 211
+    },
+    "strict": false,
+    "publishedVerificationMatchesLive": false,
+    "dataHash": "0c4855cbb317a154eca80147242fd8110f83a21b9c79a6065d2b0ee408658493",
+    "finishedAt": "2026-10-17T16:44:07.123Z",
+    "artifact": "runs/e2e-2026-10-17T16-43-56-293Z.json"
+  },
+  "dataHash": "0c4855cbb317a154eca80147242fd8110f83a21b9c79a6065d2b0ee408658493",
+  "commit": "37aaa70713a46d1dee547d6616c50e987d24a0dc",
+  "repo": "https://github.com/zaycruz/c4-glucose-guide",
+  "reproduce": [
+    "scripts/build-ml.sh <ssh host> <Challenge4_Dose_and_Timing dir>   # ML engine, minutes, on a server",
+    "scripts/build-data.sh <Challenge4_Dose_and_Timing dir>               # evidence, advice, roster",
+    "npx wrangler deploy && node scripts/warm-advice.mjs && npx wrangler deploy",
+    "node scripts/e2e.mjs --strict                                          # this check"
+  ],
+  "seeds": {
+    "engine": 20261017
   }
 }
 ```

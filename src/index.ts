@@ -27,7 +27,12 @@ const json = (body: unknown, status = 200) =>
 
 async function asset(env: Env, req: Request, path: string): Promise<unknown | null> {
   const res = await env.ASSETS.fetch(new URL(path, req.url));
-  return res.ok ? res.json() : null;
+  if (!res.ok || !res.headers.get("content-type")?.includes("json")) return null;
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
 
 /** Every number in a text, as absolute values (signs are worded as "less"/"more"). */
@@ -105,6 +110,26 @@ async function phrase(env: Env, detail: Detail) {
   return { survivorId: detail.survivorId, model: AI_MODEL, ms: Date.now() - started, error, rawPreview, items };
 }
 
+/** SHA-256 of the recommendation ids and texts: a cached rewrite is served only if the advice it rephrased is unchanged. */
+async function recHash(detail: Detail) {
+  const data = new TextEncoder().encode(JSON.stringify(detail.recommendations.map((r) => [r.id, r.text])));
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/** Precomputed advice (scripts/warm-advice.mjs) when it matches the current recommendations; else live, with template fallback. */
+async function advice(env: Env, req: Request, detail: Detail, fresh: boolean) {
+  const started = Date.now();
+  const hash = await recHash(detail);
+  if (!fresh) {
+    const cached = (await asset(env, req, `/data/advice/${detail.survivorId}.json`)) as { recHash?: string } | null;
+    if (cached && cached.recHash === hash) return { ...cached, cached: true, ms: Date.now() - started };
+  }
+  const live = await phrase(env, detail);
+  // Never pass a raw model error through: on any failure the items are the checked templates.
+  return { ...live, error: live.error ? "AI rewrite unavailable; showing the checked template text" : null, recHash: hash, cached: false };
+}
+
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
@@ -115,6 +140,7 @@ export default {
 
     if (path === "/api/c4/survivors") return json(await asset(env, req, "/data/roster.json"));
     if (path === "/api/c4/cohort") return json(await asset(env, req, "/data/cohort.json"));
+    if (path === "/api/c4/verification") return json(await asset(env, req, "/data/verification.json"));
 
     const m = path.match(/^\/api\/c4\/survivors\/([^/]+)(\/advice)?$/);
     if (m) {
@@ -122,8 +148,8 @@ export default {
       if (!ID_RE.test(id)) return json({ error: "unknown survivorId", survivorId: id }, 404);
       const detail = (await asset(env, req, `/data/survivors/${id}.json`)) as Detail | null;
       if (!detail) return json({ error: "unknown survivorId", survivorId: id }, 404);
-      return m[2] ? json(await phrase(env, detail)) : json(detail);
+      return m[2] ? json(await advice(env, req, detail, url.searchParams.has("fresh"))) : json(detail);
     }
-    return json({ error: "not found", routes: ["/api/c4/survivors", "/api/c4/survivors/:id", "/api/c4/survivors/:id/advice", "/api/c4/cohort"] }, 404);
+    return json({ error: "not found", routes: ["/api/c4/survivors", "/api/c4/survivors/:id", "/api/c4/survivors/:id/advice", "/api/c4/cohort", "/api/c4/verification"] }, 404);
   },
 } satisfies ExportedHandler<Env>;

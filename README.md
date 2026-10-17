@@ -3,7 +3,8 @@
 Coach Console module C4 (eMerge hackathon, Healthcare track, Sylvester): **how meals, meal timing and movement shape blood sugar**, per survivor and across the cohort, with honest uncertainty, turned into advice a survivor can follow. Every number in the advice traces to an `evidence[]` item.
 
 - Live: https://c4-glucose-guide.zay-259.workers.dev (cohort view: `/#cohort`)
-- API: see [CONTRACT.md](CONTRACT.md) (`/api/c4/survivors`, `/api/c4/survivors/:id`, `/api/c4/survivors/:id/advice`, `/api/c4/cohort`)
+- API: see [CONTRACT.md](CONTRACT.md) (`/api/c4/survivors`, `/api/c4/survivors/:id`, `/api/c4/survivors/:id/advice`, `/api/c4/cohort`, `/api/c4/verification`)
+- Reproduce every number below: [REPRODUCE.md](REPRODUCE.md) (`scripts/reproduce.sh`)
 - Data: the Challenge 4 "Dose and Timing" set (the README inside calls it "Challenge 2"). Synthetic program for the survivors; CGMacros and NHANES as the real-data check.
 
 ## What it finds
@@ -24,6 +25,15 @@ Every recommendation carries a real-data check label (`agrees`, `same direction,
 
 Status (ok / watch / alert) uses fixed CGM consensus thresholds (time in range, highs above 250, lows below 70). Personal effects come from the same ML engine: each person's effect is fitted on their own cross-fitted residuals, their meals are bootstrapped, and the result is blended with the cohort (empirical Bayes). They are reported only where the person's own data supports them. If they don't have enough data, the advice says so and uses the cohort number. Night-shift workers get no clock-time advice. People with frequent lows are told not to stretch their fasts.
 
+## Safety and patient-facing fields (live in the API)
+
+- **Care team today:** `careTeamFlag` and `careTeamToday` are set for more than 4% of readings below 70 mg/dL or an average above 250 mg/dL. The reason cites the evidence, for example "Glucose: Frequent lows: 5.3% of readings below 70 (target under 4%)". Four of the 50 survivors are flagged today. `todayReason` and `priority` let the Coach Console mix C4 into one ranked Today queue.
+- **Low sugar:** anyone with frequent lows gets `hypoglycaemiaWarning` (the 15-15 rule, and when to call 911). Their walk advice carries a low-sugar `caution`, and they are never told to fast longer.
+- **Plain language:** `plainSummary` per survivor. The cohort's `plainLanguage` says "Late dinner +9, evening walk -18, 10 minutes is enough", with 95% CIs, real-data labels, and "real data shows about a fifth (walk) / a quarter (late dinner) of the program's size".
+- **Spanish and Haitian Creole (Kreyòl):** `patientView.{en,es,ht}` holds up to three actions, the care-team line, the low-sugar warning, and a help line for food, money or transport (211, or a social worker). It uses fixed rule numbers only.
+- **AI advice is precomputed:** `/advice` is served from a cache keyed to the current recommendations (about 0.1 s instead of 3-26 s). `?fresh=1` calls the model live.
+- **Not yet served:** a per-group fairness table (by race/ethnicity, sex, age, language and cancer type). It is written in the engine but needs a rerun; the API omits it until then.
+
 ## Demo story (2 minutes)
 
 1. **Cohort first** (`/#cohort`, 40 s). "Does a late dinner matter? Same person, same carbs: every hour later adds to the rise, up to +25 mg/dL after 10 pm. Is an evening walk worth it? Yes: about 18 mg/dL lower after dinner, more than after other meals, and 10 minutes gets most of it. These numbers come from machine learning (double ML), checked against a classic regression. Overnight fast: the randomized arm changed HbA1c by -0.03, and we could not show it differs by blood sugar group. And here is the honest part: in 45 real people the walk and late-dinner effects point the same way, but they aren't proven yet."
@@ -32,6 +42,8 @@ Status (ok / watch / alert) uses fixed CGM consensus thresholds (time in range, 
 4. **Rephrase with Workers AI** (10 s). The text becomes warmer. The note shows how many rewrites were rejected, either for a number that isn't in the evidence or for causal words like "helped".
 
 ## Run
+
+See [REPRODUCE.md](REPRODUCE.md) for the one-command path from the raw data to every number in this README (`scripts/reproduce.sh <data dir>`). The steps it wraps:
 
 ```sh
 npm install
@@ -61,6 +73,9 @@ No dev server needed; verification runs against the deployed Worker. Raw data is
 - headline and summary numbers match the person's evidence within ±0.5;
 - every tag's `evidenceId` resolves, its numbers match that evidence, and the tags on the roster tile match the panel;
 - AI rewrites add no untraced numbers and no new causal verbs (helped, caused, lowered, reduced).
+- safety: everyone with frequent lows or an average above 250 is flagged for the care team with a reason, the roster matches the panel, the lows group has the warning and the walk caution and no longer-fast advice, and `todayReason` is at most 90 characters with traced numbers;
+- `patientView` has all three languages, the same action ids in each, fixed rule numbers only, and the 211 help line; `plainSummary` and the cohort `plainLanguage` numbers trace, and the "fifth / quarter" wording matches the actual ratio;
+- advice comes from the cache, is never a raw model error, and with `--strict` answers in under 2 s; the published `/verification` record matches the live data.
 
 It saves the full responses and a summary under `runs/` (`runs/e2e-latest-summary.json`).
 

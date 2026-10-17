@@ -41,6 +41,9 @@ import sys
 import numpy as np
 import pandas as pd
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from patient_copy import WALK_CAUTION, patient_view, plain_summary  # noqa: E402
+
 RNG = np.random.default_rng(20261017)
 B_COHORT = 400
 B_PERSON = 300
@@ -530,6 +533,16 @@ def main(data_dir, out_dir):
             power["walk"] = {"realPeople": ppl, "programEffect": cohort["walk"]["est"], "realEffect": cg["walk10"]["est"],
                              "peopleForProgramEffect": people_needed(cg["walk10"], cohort["walk"]["est"], ppl),
                              "peopleForRealEffect": people_needed(cg["walk10"], cg["walk10"]["est"], ppl)}
+    def size_word(real_est, program_est):
+        ratio = real_est / program_est if program_est else 0
+        if ratio <= 0:
+            return None
+        for lim, w in ((0.15, "much smaller than"), (0.22, "about a fifth of"), (0.3, "about a quarter of"), (0.4, "about a third of"),
+                       (0.6, "about half of"), (0.85, "somewhat smaller than"), (1.2, "about the same as")):
+            if ratio < lim:
+                return w
+        return "larger than"
+
     REAL_SENTENCE = {
         "agrees": "A check in real adults ({src}) found the same.",
         "same direction, not proven": "A check in real adults ({src}) pointed the same way, but it is not proven there yet.",
@@ -816,6 +829,11 @@ def main(data_dir, out_dir):
                             "text": f"{v('tbr70')}% of your readings were below 70 mg/dL ({latest_label}); the usual target is under 4%. "
                                     f"Low sugar can make you shaky or dizzy. Share this before your next visit.",
                             "basis": "rule", "evidenceIds": ["tbr70", "status_rule"]})
+        elif st == "alert" and m_last["mean"] > 250:
+            recs.insert(0, {"id": "talk_to_team", "title": "Send these readings to your care team today",
+                            "text": f"Your average was {v('mean_glucose')} mg/dL ({latest_label}), above 250, and only {v('tir')}% of readings were in the 70-180 range. "
+                                    f"Contact your care team today rather than waiting for your next visit.",
+                            "basis": "rule", "evidenceIds": ["mean_glucose", "tir", "status_rule"]})
         elif st == "alert":
             recs.insert(0, {"id": "talk_to_team", "title": "Share these readings with your care team",
                             "text": f"Only {v('tir')}% of your readings were in the 70-180 range ({latest_label}); the usual target is more than 70%. "
@@ -837,7 +855,30 @@ def main(data_dir, out_dir):
             rec["realDataCheck"] = {"label": rc["label"], "evidenceId": eid}
             rec["evidenceIds"].append(eid)
             src = "NHANES" if key == "overnightFast" else "CGMacros"
-            rec["text"] += " " + REAL_SENTENCE[rc["label"]].format(src=src)
+            sw_ = size_word(rc["real"]["est"], rc["program"]) if key in ("walk", "lateDinner") and rc["label"] == "same direction, not proven" else None
+            rec["text"] += " " + (f"A check in real adults ({src}) pointed the same way, at {sw_} the program's size, but it is not proven there yet."
+                                  if sw_ else REAL_SENTENCE[rc["label"]].format(src=src))
+            if sw_:
+                rec["realDataCheck"]["realSize"] = sw_ + " the program's size"
+        # safety routing (judges' panel): care team today for frequent lows or a very high average
+        high_avg = m_last["mean"] > 250
+        care = []
+        if low_sugar:
+            care.append({"reason": f"Frequent lows: {v('tbr70')}% of readings below 70 (target under 4%)", "evidenceId": "tbr70"})
+        if high_avg:
+            care.append({"reason": f"Very high average: {v('mean_glucose')} mg/dL (above 250)", "evidenceId": "mean_glucose"})
+        care_flag = {"today": bool(care), "reasons": care,
+                     "rule": "Send to the care team today if more than 4% of readings are below 70 mg/dL or the average is above 250 mg/dL."}
+        if low_sugar:
+            for rec in recs:
+                if rec["id"] == "walk":
+                    rec["caution"] = WALK_CAUTION
+                    rec["text"] += " " + WALK_CAUTION
+        team_key = "team_lows" if low_sugar else "team_high" if high_avg else "team_alert" if st == "alert" else None
+        pview = patient_view(recs, low_sugar, team_key)
+        hypo = {"level": "high", "reasonEvidenceId": "tbr70", "text": pview["en"]["lowSugarWarning"],
+                "translations": {k: pview[k]["lowSugarWarning"] for k in ("es", "ht")}} if low_sugar else None
+
         # charts
         hourly = []
         for lab, part in (("weeks 1-2", gp[gp.window == "weeks 1-2"]), ("weeks 11-12", gp[gp.window == "weeks 11-12"])):
@@ -922,8 +963,12 @@ def main(data_dir, out_dir):
                    + (f"Median rise after dinner {round(din.rise.median())} mg/dL. " if len(din) else "")
                    + (f"ML forecast for a typical dinner: {round(fcp['pred'])} mg/dL. " if fcp else "")
                    + "Synthetic participant (made-up data).")
+        today_reason = ("Glucose: " + (care[0]["reason"] if care else headline))[:90]
+        priority = (0 if low_sugar else 1) if care else {"alert": 2, "watch": 3, "ok": 4}[st]
         detail = {"survivorId": sid, "displayName": display, "status": st, "statusReasons": reasons, "headline": headline, "tags": tags,
-                  "summary": summary, "updatedAt": updated,
+                  "summary": summary, "plainSummary": plain_summary(recs, low_sugar, team_key), "updatedAt": updated,
+                  "careTeamFlag": care_flag, "hypoglycaemiaWarning": hypo, "todayReason": today_reason, "priority": priority,
+                  "patientView": pview,
                   "profile": {"age": int(info.age), "sex": info.sex, "cancerType": info.cancer_type,
                               "yearsSinceTreatment": float(info.years_since_treatment), "bloodSugarGroup": info.blood_sugar_group,
                               "group": info.group, "workSchedule": info.work_schedule},
@@ -931,7 +976,9 @@ def main(data_dir, out_dir):
                   "dataNote": "Synthetic data from the Crane Lab hackathon set. Nobody in it is real."}
         with open(f"{out_dir}/survivors/{sid}.json", "w") as f:
             json.dump(detail, f, separators=(",", ":"))
-        roster.append({"survivorId": sid, "displayName": display, "status": st, "headline": headline, "tags": tags, "updatedAt": updated})
+        roster.append({"survivorId": sid, "displayName": display, "status": st, "headline": headline, "tags": tags, "updatedAt": updated,
+                       "careTeamToday": care_flag["today"], "todayReason": today_reason, "priority": priority,
+                       "dataType": "synthetic", "module": "C4 Glucose Guide"})
 
     rank = {"alert": 0, "watch": 1, "ok": 2}
     roster.sort(key=lambda x: (rank[x["status"]], x["survivorId"]))
@@ -940,6 +987,30 @@ def main(data_dir, out_dir):
 
     def eff(e):
         return {k: (r(v_, 2) if isinstance(v_, (float, np.floating)) else v_) for k, v_ in e.items()}
+
+    def rnd(x):
+        return int(round(abs(x)))
+    ld, wd = cohort["lateDinner"], cohort["walkAfterDinner"]
+    d10 = next(d for d in dose if d["bin"] == "10-19 min")
+    longer = [d for d in dose if d["bin"] not in ("none", "10-19 min")]
+    rw, rl = real_checks.get("walk"), real_checks.get("lateDinner")
+    sw_w = size_word(rw["real"]["est"], rw["program"]) if rw and rw.get("real") else None
+    sw_l = size_word(rl["real"]["est"], rl["program"]) if rl and rl.get("real") else None
+    plain_language = {
+        "headline": f"Late dinner +{rnd(ld['est'])}, evening walk -{rnd(wd['est'])}, 10 minutes is enough.",
+        "points": [
+            {"id": "late_dinner", "text": f"Dinner at 8 pm or later: sugar rose about {rnd(ld['est'])} mg/dL more than after an earlier dinner, same person (95% CI {rnd(ld['lo'])} to {rnd(ld['hi'])}).",
+             "est": r(ld["est"], 2), "lo": r(ld["lo"], 2), "hi": r(ld["hi"], 2), "realDataCheck": rl["label"] if rl else "not tested"},
+            {"id": "evening_walk", "text": f"A walk after dinner: sugar rose about {rnd(wd['est'])} mg/dL less (95% CI {rnd(wd['hi'])} to {rnd(wd['lo'])} less).",
+             "est": r(wd["est"], 2), "lo": r(wd["lo"], 2), "hi": r(wd["hi"], 2), "realDataCheck": rw["label"] if rw else "not tested"},
+            {"id": "ten_minutes", "text": f"10 minutes is enough: 10 to 19 minutes went with {rnd(d10['est'])} mg/dL less; longer walks added little ("
+                                          + " and ".join(f"{rnd(d['est'])} for {d['bin']}" for d in longer) + ").",
+             "est": r(d10["est"], 2), "lo": r(d10["lo"], 2), "hi": r(d10["hi"], 2), "realDataCheck": "not tested"},
+        ],
+        "realData": (f"In 45 real adults (CGMacros) both pointed the same way but were smaller: the walk effect was {sw_w} and the late-dinner effect {sw_l} "
+                     "the program's size, and neither is proven there yet.") if sw_w and sw_l else None,
+        "source": "Synthetic 12-week program (made up), 500 sensor wearers; ML engine (double ML), within person.",
+    }
 
     cohort_out = {
         "source": "synthetic 12-week program (made up), 500 sensor wearers; checkups for all 2,000",
@@ -970,6 +1041,12 @@ def main(data_dir, out_dir):
         "forecast": {k: v_ for k, v_ in ml["forecast"].items() if k != "dinnerByPerson"},
         "mlCompare": mlc,
         "methods": __doc__.split("Methods (all numbers in evidence[] come from here):")[1].strip(),
+        "plainLanguage": plain_language,
+        **({"fairness": {"note": "Synthetic program: these show whether the engine treats groups alike, not real-world fairness. Groups under 20 people get no effect estimate. "
+                                "walkDiffersP / lateDinnerDiffersP: Cochran Q test that the group effects differ (under 0.05 = they differ).",
+                        "attributes": ml["fairness"]}} if ml.get("fairness") else {}),  # only when the engine run produced it
+        "careTeamToday": {"rule": "More than 4% of readings below 70 mg/dL, or an average above 250 mg/dL.",
+                          "count": sum(1 for x in roster if x["careTeamToday"])},
     }
     with open(f"{out_dir}/cohort.json", "w") as f:
         json.dump(cohort_out, f, indent=1)

@@ -1612,5 +1612,40 @@
   },
   "seconds": 180
  },
- "methods": "- Meal response: baseline = last 15-min reading at or before the meal (<= 15 min earlier).\n  Rise = peak of the readings 15..120 min after the meal minus baseline. iAUC = area above\n  baseline over 0..120 min (mg/dL x h). Meals with another item of >= 100 kcal in the next\n  120 min are dropped, so the curve belongs to one meal.\n- Late dinner: dinner starting at or after 20:00. Within-person comparison (person fixed\n  effects), adjusted for carbs. Night-shift workers are left out.\n- Post-meal walk: walked_after_min > 0. Within-person, adjusted for carbs and meal type.\n  Walking was self-chosen, so this is an association, not proof.\n- Overnight fast: the randomized arm comparison (coaching + overnight fast vs coaching) on\n  week 12 minus week 0 change is the fair causal estimate. Within-person night-to-night\n  link between the overnight fast and next-morning glucose is shown as an association.\n- Cohort CIs: cluster bootstrap that resamples people. Personal CIs: bootstrap of that\n  person's meals, then empirical-Bayes shrinkage toward the cohort estimate.\n- Robustness of the walk effect (see ROBUSTNESS.md):\n  negative control = same model with the reading 15 min BEFORE the meal as outcome (a later\n  walk cannot change it); E-value (VanderWeele & Ding 2017) with the within-person residual SD;\n  instrument = randomized arm (coaching vs email tips) as encouragement to walk, Wald ratio at\n  person level. The instrument proved inconclusive (exclusion restriction fails) and is not\n  counted as support.\n- Fast by subgroup: Cochran Q test of arm x blood-sugar-group interaction, Holm adjustment across\n  all subgroup contrasts. Advice uses group-specific fast numbers only if Q p < 0.05.\n- Real-data agreement labels: agrees (same sign, CI excludes 0), same direction not proven,\n  no clear signal, disagrees (opposite sign, CI excludes 0). Power: people needed for 80% power,\n  scaling the real study's SE by sqrt(people)."
+ "methods": "- Meal response: baseline = last 15-min reading at or before the meal (<= 15 min earlier).\n  Rise = peak of the readings 15..120 min after the meal minus baseline. iAUC = area above\n  baseline over 0..120 min (mg/dL x h). Meals with another item of >= 100 kcal in the next\n  120 min are dropped, so the curve belongs to one meal.\n- Late dinner: dinner starting at or after 20:00. Within-person comparison (person fixed\n  effects), adjusted for carbs. Night-shift workers are left out.\n- Post-meal walk: walked_after_min > 0. Within-person, adjusted for carbs and meal type.\n  Walking was self-chosen, so this is an association, not proof.\n- Overnight fast: the randomized arm comparison (coaching + overnight fast vs coaching) on\n  week 12 minus week 0 change is the fair causal estimate. Within-person night-to-night\n  link between the overnight fast and next-morning glucose is shown as an association.\n- Cohort CIs: cluster bootstrap that resamples people. Personal CIs: bootstrap of that\n  person's meals, then empirical-Bayes shrinkage toward the cohort estimate.\n- Robustness of the walk effect (see ROBUSTNESS.md):\n  negative control = same model with the reading 15 min BEFORE the meal as outcome (a later\n  walk cannot change it); E-value (VanderWeele & Ding 2017) with the within-person residual SD;\n  instrument = randomized arm (coaching vs email tips) as encouragement to walk, Wald ratio at\n  person level. The instrument proved inconclusive (exclusion restriction fails) and is not\n  counted as support.\n- Fast by subgroup: Cochran Q test of arm x blood-sugar-group interaction, Holm adjustment across\n  all subgroup contrasts. Advice uses group-specific fast numbers only if Q p < 0.05.\n- Real-data agreement labels: agrees (same sign, CI excludes 0), same direction not proven,\n  no clear signal, disagrees (opposite sign, CI excludes 0). Power: people needed for 80% power,\n  scaling the real study's SE by sqrt(people).",
+ "plainLanguage": {
+  "headline": "Late dinner +9, evening walk -18, 10 minutes is enough.",
+  "points": [
+   {
+    "id": "late_dinner",
+    "text": "Dinner at 8 pm or later: sugar rose about 9 mg/dL more than after an earlier dinner, same person (95% CI 7 to 11).",
+    "est": 9.21,
+    "lo": 7.09,
+    "hi": 11.32,
+    "realDataCheck": "same direction, not proven"
+   },
+   {
+    "id": "evening_walk",
+    "text": "A walk after dinner: sugar rose about 18 mg/dL less (95% CI 17 to 20 less).",
+    "est": -18.31,
+    "lo": -20.08,
+    "hi": -16.55,
+    "realDataCheck": "same direction, not proven"
+   },
+   {
+    "id": "ten_minutes",
+    "text": "10 minutes is enough: 10 to 19 minutes went with 17 mg/dL less; longer walks added little (20 for 20-29 min and 17 for 30+ min).",
+    "est": -17.47,
+    "lo": -19.11,
+    "hi": -15.82,
+    "realDataCheck": "not tested"
+   }
+  ],
+  "realData": "In 45 real adults (CGMacros) both pointed the same way but were smaller: the walk effect was about a fifth of and the late-dinner effect about a quarter of the program's size, and neither is proven there yet.",
+  "source": "Synthetic 12-week program (made up), 500 sensor wearers; ML engine (double ML), within person."
+ },
+ "careTeamToday": {
+  "rule": "More than 4% of readings below 70 mg/dL, or an average above 250 mg/dL.",
+  "count": 4
+ }
 }

@@ -1,9 +1,14 @@
 // E2E check: hits every endpoint of a deployed (or local) Worker, asserts the contract
 // and the "every number traces to evidence" rule, and saves the responses under runs/.
 // Usage: node scripts/e2e.mjs [baseUrl]
+import { createHash } from "node:crypto";
+import { execSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 
-const BASE = (process.argv[2] ?? "https://c4-glucose-guide.zay-259.workers.dev").replace(/\/$/, "");
+const args = process.argv.slice(2);
+const STRICT = args.includes("--strict"); // also require cached advice and a verification record that matches the live data
+const BASE = (args.find((a) => !a.startsWith("--")) ?? "https://c4-glucose-guide.zay-259.workers.dev").replace(/\/$/, "");
+const PATIENT_NUMBERS = new Set([4, 8, 10, 13, 15, 20, 211, 911]); // fixed rule numbers allowed in patient copy
 const STATUS = ["alert", "watch", "ok"];
 // Exact wording constants (rules and labels, not measurements). They are removed before
 // number extraction; every number left must trace to the cited evidence.
@@ -11,13 +16,14 @@ const CONSTANT_PHRASES = [
   /\b8-9 pm\b/g, /\bbefore 6 pm\b/g, /\b8 pm\b/g, /\b13-hour\b/g, /\b13 hours\b/g, /\b70-180\b/g, /95% CI\b/g,
   /\bweeks 1-2\b/g, /\bweeks 11-12\b/g, /\b10 to 20 minutes?\b/g, /\b10 to 19 minutes?\b/g, /\b20-29 minutes\b/g,
   /\b30\+ minutes\b/g, /under 4%/g, /more than 70%/g, /below 70 mg\/dL/g, /below 70%/g, /below 90%/g,
-  /\bHbA1c\b/g, /\btype 2 diabetes\b/g, /more than 5% of readings above (180|250)/g, /more than 4% of readings below 70/g, /up 10\+ mg\/dL/g,
+  /\bHbA1c\b/g, /\btype 2 diabetes\b/g, /more than 5% of readings above (180|250)/g, /\babove 250\b/g, /more than 4% of readings below 70/g, /up 10\+ mg\/dL/g,
   /readings below 70\b/g, /Spikes above 180\b/g, // headline thresholds
 ];
 const CAUSAL = /\b(caus\w*|help(s|ed)?|lower(s|ed)?|reduc\w*|prevent\w*|cur(e|es|ed))\b/gi;
 const strip = (t) => CONSTANT_PHRASES.reduce((acc, re) => acc.replace(re, " "), t);
 
 const failures = [];
+const personEvOf = (b) => b.evidence.filter((e) => e.scope === "person");
 const check = (ok, msg) => { if (!ok) failures.push(msg); return ok; };
 const nums = (t) => (t.match(/\d+(?:\.\d+)?/g) ?? []).map((n) => Math.abs(Number(n)));
 const traced = (n, ev) =>
@@ -90,6 +96,43 @@ for (const tile of roster.body) {
     const label = t.evidenceId === "walk_meals" ? t.label.replace(/\/\d+/, "") : t.label; // "Walks after 2/37 meals": 37 = meals_scored
     for (const n of nums(label)) check([e.value, e.n].some((v) => typeof v === "number" && Math.abs(Math.abs(v) - n) <= 0.5), `${id}: tag ${t.label} number ${n} not in evidence`);
   }
+  // safety routing: frequent lows (>4% below 70) or average above 250 -> care team today
+  const tbr = ev.get("tbr70")?.value, mean = ev.get("mean_glucose")?.value;
+  const lows = typeof tbr === "number" && tbr > 4, high = typeof mean === "number" && mean > 250;
+  const cf = b.careTeamFlag;
+  if (check(cf && typeof cf.today === "boolean" && Array.isArray(cf.reasons), `${id}: careTeamFlag missing`)) {
+    check(cf.today === (lows || high), `${id}: careTeamFlag.today=${cf.today} but lows=${lows} high=${high}`);
+    check(cf.today === cf.reasons.length > 0, `${id}: careTeamFlag reasons do not match the flag`);
+    for (const rs of cf.reasons) check(ev.has(rs.evidenceId), `${id}: care reason evidence ${rs.evidenceId} missing`);
+    check(tile.careTeamToday === cf.today, `${id}: roster careTeamToday differs from detail`);
+  }
+  check(lows === (b.hypoglycaemiaWarning != null), `${id}: hypoglycaemiaWarning presence does not match frequent lows`);
+  if (lows) {
+    const w = b.recommendations.find((r) => r.id === "walk");
+    if (w) check(Boolean(w.caution) && w.text.includes(w.caution), `${id}: walk advice for frequent lows has no low-sugar caution`);
+    check(!b.recommendations.some((r) => r.title.startsWith("Aim for a 13-hour")), `${id}: frequent lows but told to fast longer`);
+  }
+  check(typeof b.todayReason === "string" && b.todayReason.length <= 90 && b.todayReason === tile.todayReason, `${id}: todayReason missing, too long or differs from roster`);
+  check(b.priority === tile.priority && Number.isInteger(b.priority), `${id}: priority missing or differs`);
+  // patient copy: three languages, same actions, fixed rule numbers only, care-team line when flagged, help route
+  const pv = b.patientView;
+  if (check(pv && ["en", "es", "ht"].every((l) => pv[l]), `${id}: patientView missing a language`)) {
+    const ids = JSON.stringify(pv.en.actions.map((a) => a.id));
+    for (const l of ["en", "es", "ht"]) {
+      const v = pv[l];
+      check(JSON.stringify(v.actions.map((a) => a.id)) === ids && v.actions.length >= 1 && v.actions.length <= 3, `${id}: patientView.${l} actions differ`);
+      check(/211/.test(v.help), `${id}: patientView.${l} has no help route`);
+      check(!cf?.today || Boolean(v.careTeam), `${id}: flagged but patientView.${l} has no care-team line`);
+      check(lows === Boolean(v.lowSugarWarning), `${id}: patientView.${l} low-sugar warning mismatch`);
+      for (const t of [v.careTeam, v.lowSugarWarning, v.help, ...v.actions.map((a) => a.text)].filter(Boolean))
+        for (const n of nums(t)) check(PATIENT_NUMBERS.has(n), `${id}: patientView.${l} has measured number ${n}`);
+    }
+  }
+  check(typeof b.plainSummary === "string" && b.plainSummary.length > 0, `${id}: plainSummary missing`);
+  for (const n of nums(b.plainSummary ?? "")) check(PATIENT_NUMBERS.has(n), `${id}: plainSummary has measured number ${n}`);
+  // todayReason numbers are person evidence (or rule thresholds)
+  for (const n of nums(strip((b.todayReason ?? "").replace(/target under 4%|above 250|below 70/g, " "))))
+    check(personEvOf(b).some((e) => typeof e.value === "number" && Math.abs(Math.abs(e.value) - n) <= 0.5), `${id}: todayReason number ${n} not in evidence`);
   // headline and summary numbers are rounded person-level evidence values (+-0.5)
   const personEv = b.evidence.filter((e) => e.scope === "person");
   for (const field of ["headline", "summary"]) {
@@ -102,11 +145,39 @@ for (const tile of roster.body) {
 const cohort = await get("/api/c4/cohort");
 run.responses["/api/c4/cohort"] = cohort;
 check(cohort.status === 200 && cohort.body?.effects?.walk && cohort.body?.trial, "cohort endpoint incomplete");
+const C = cohort.body ?? {};
+const pl = C.plainLanguage;
+if (check(pl && Array.isArray(pl.points) && pl.points.length === 3, "cohort plainLanguage missing")) {
+  const vals = [C.effects.lateDinner, C.effects.walkAfterDinner, ...(C.walkDose ?? [])].flatMap((e) => [e.est, e.lo, e.hi]);
+  for (const t of [pl.headline, ...pl.points.map((p) => p.text)])
+    for (const n of nums(strip(t.replace(/10 minutes|95% CI/g, " ").replace(/\b(10-19|20-29|30\+?) min\b/g, " "))))
+      check(vals.some((v) => typeof v === "number" && Math.abs(Math.abs(v) - n) <= 0.5), `plainLanguage number ${n} not in cohort effects`);
+  const rc = C.robustness?.realDataChecks;
+  for (const [k, word] of [["walk", "walk effect was"], ["lateDinner", "late-dinner effect"]]) {
+    const ratio = rc?.[k]?.real?.est / rc?.[k]?.program;
+    const ok = { "about a fifth of": [0.15, 0.22], "about a quarter of": [0.22, 0.3], "about a third of": [0.3, 0.4], "about half of": [0.4, 0.6] };
+    const said = Object.keys(ok).find((w) => pl.realData?.includes(`${word} ${w}`) || pl.realData?.includes(`${word} ${w}`.replace(" was", "")));
+    if (said) check(ratio >= ok[said][0] && ratio < ok[said][1], `plainLanguage says ${k} is ${said} but the ratio is ${ratio}`);
+  }
+}
+const fair = C.fairness?.attributes;
+// fairness is served only once the engine run includes it; when present it must be complete
+if (C.fairness !== undefined && check(fair && Object.keys(fair).length >= 4, "cohort fairness table incomplete")) {
+  for (const [attr, t] of Object.entries(fair))
+    for (const g of t.groups) {
+      check(typeof g.forecastMae?.est === "number", `fairness ${attr}/${g.group}: no forecast error`);
+      if (g.people < 20) check(g.walk === null && /fewer than 20/.test(g.note ?? ""), `fairness ${attr}/${g.group}: small group without a note`);
+      else check(g.walk === null ? Boolean(g.note) : typeof g.walk.est === "number", `fairness ${attr}/${g.group}: walk effect missing`);
+    }
+}
+check(C.careTeamToday?.count === roster.body.filter((x) => x.careTeamToday).length, "cohort careTeamToday count differs from roster");
 
 const alertId = roster.body.find((s) => s.status === "alert")?.survivorId ?? roster.body[0].survivorId;
 const advice = await get(`/api/c4/survivors/${alertId}/advice`);
 run.responses[`/api/c4/survivors/${alertId}/advice`] = advice;
 check(advice.status === 200 && Array.isArray(advice.body?.items), "advice endpoint failed");
+check(!advice.body?.error || /unavailable/.test(advice.body.error), "advice passes a raw model error through");
+if (STRICT) check(advice.body?.cached === true && advice.ms < 2000, `advice not served from cache (cached=${advice.body?.cached}, ${advice.ms} ms)`);
 const detailEv = run.responses[`/api/c4/survivors/${alertId}`].body;
 for (const it of advice.body?.items ?? []) {
   const rec = detailEv.recommendations.find((r) => r.id === it.id);
@@ -128,18 +199,37 @@ const pre = await get("/api/c4/survivors", { method: "OPTIONS" });
 check(pre.status === 204 && pre.cors === "*", "CORS preflight failed");
 run.responses.negative = { missing: missing.status, malformed: bad.status, preflight: pre.status };
 
+const dataHash = createHash("sha256").update(JSON.stringify([roster.body, cohort.body])).digest("hex");
+const ver = await get("/api/c4/verification");
+const verFresh = ver.status === 200 && ver.body?.dataHash === dataHash;
+if (STRICT) check(verFresh, "published verification record does not match the live data");
 const counts = Object.fromEntries(STATUS.map((s) => [s, roster.body.filter((x) => x.status === s).length]));
 run.summary = {
   pass: failures.length === 0, failures,
   survivors: roster.body.length, statusCounts: counts, recommendations: recCount,
   adviceNumbersTracedToEvidence: numberCount, wordingConstantsStripped: constantsStripped,
   aiAdvice: { survivorId: alertId, model: advice.body?.model, ms: advice.body?.ms, itemsRephrasedByAi: aiUsed, items: advice.body?.items?.length },
-  finishedAt: new Date().toISOString(),
+  careTeamToday: roster.body.filter((x) => x.careTeamToday).length,
+  advice: { cached: advice.body?.cached ?? null, ms: advice.ms }, strict: STRICT, publishedVerificationMatchesLive: verFresh,
+  dataHash, finishedAt: new Date().toISOString(),
 };
 
 mkdirSync("runs", { recursive: true });
 const stamp = run.startedAt.replace(/[:.]/g, "-");
 writeFileSync(`runs/e2e-${stamp}.json`, JSON.stringify(run, null, 1));
 writeFileSync("runs/e2e-latest-summary.json", JSON.stringify({ base: BASE, file: `runs/e2e-${stamp}.json`, ...run.summary }, null, 1));
+// Verification record for /api/c4/verification (published on the next deploy; --strict checks it matches).
+let commit = null;
+try { commit = execSync("git rev-parse HEAD", { encoding: "utf8" }).trim(); } catch {}
+// strict / publishedVerificationMatchesLive describe the run that checks a published record, so they are not published.
+const { strict: _s, publishedVerificationMatchesLive: _m, ...published } = run.summary;
+writeFileSync("public/data/verification.json", JSON.stringify({
+  e2e: { ...published, artifact: `runs/e2e-${stamp}.json` }, dataHash, commit,
+  repo: "https://github.com/zaycruz/c4-glucose-guide",
+  reproduce: ["scripts/reproduce.sh <Challenge4_Dose_and_Timing dir> [out dir]   # data check, ML engine, benchmark, evidence; diffs every README number (REPRODUCE.md)",
+              "npx wrangler deploy && node scripts/warm-advice.mjs && npx wrangler deploy",
+              "node scripts/e2e.mjs && npx wrangler deploy && node scripts/e2e.mjs --strict   # this check"],
+  seeds: { engine: 20261017, benchmark: 20261017, analysis: 20261017, realWorld: 7, models: "random_state=0" },
+}, null, 1));
 console.log(JSON.stringify(run.summary, null, 1));
 process.exit(failures.length ? 1 : 0);

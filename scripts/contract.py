@@ -15,6 +15,7 @@ def get(path):
 
 roster, det, coh = get("/api/c4/survivors"), get(f"/api/c4/survivors/{DEMO}"), get("/api/c4/cohort")
 adv = get(f"/api/c4/survivors/{DEMO}/advice")
+ver = get("/api/c4/verification")
 j = lambda o: json.dumps(o, indent=2, ensure_ascii=False)
 trim = lambda v, k=4: v[:k] + ["…"] if isinstance(v, list) and len(v) > k else v
 
@@ -60,6 +61,13 @@ The survivors are synthetic (Crane Lab hackathon set). Nobody in them is real.
 
 Roster tiles: {len(roster)} survivors, sorted alert → watch → ok. Each tile also carries `tags[]` (see the detail fields below) so a coach can scan the signal without opening the panel. These are the sensor wearers in the dataset's 100-person app sample.
 
+For a mixed "Today" queue across modules, each tile also has:
+- `careTeamToday` (bool): send to the care team today. The rule is more than 4% of readings below 70 mg/dL, or an average above 250 mg/dL.
+- `todayReason` (string, at most 90 characters, starts with "Glucose: "): every number in it is in the person's evidence.
+- `priority` (0-4, lower is more urgent): 0 = care team for lows, 1 = care team for a high average, 2 = alert, 3 = watch, 4 = ok.
+- `dataType`: `"synthetic"`.
+- `module`: `"C4 Glucose Guide"`.
+
 ```json
 {j(roster[:2])}
 ```
@@ -73,8 +81,13 @@ Roster tiles: {len(roster)} survivors, sorted alert → watch → ok. Each tile 
 | `tags[]` | `{{label, tone, evidenceId}}` | up to 4 short signals, same as on the roster tile. `tone`: `risk`, `warn`, `good`, `info`. Each number in `label` is the value or n of the evidence item `evidenceId` (checked by `scripts/e2e.mjs`). |
 | `profile` | object | age, sex, cancerType, yearsSinceTreatment, bloodSugarGroup, group (trial arm), workSchedule |
 | `evidence[]` | `{{id, label, value, unit, ci: [lo, hi] \\| null, n, scope, method, caveat}}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (real-data check: CGMacros or survey-weighted NHANES), `rule` (thresholds) |
-| `recommendations[]` | `{{id, title, text, basis, evidenceIds[], realDataCheck}}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
+| `recommendations[]` | `{{id, title, text, basis, evidenceIds[], realDataCheck, caution?}}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
 | `recommendations[].realDataCheck` | `{{label, evidenceId}}` | does real data back this advice? `label`: `agrees`, `same direction, not proven`, `no clear signal`, `disagrees`, `not tested` (safety rules). `evidenceId` is the cited `scope: real` evidence item, or `null` when not tested. |
+| `careTeamFlag` | `{{today, reasons[{{reason, evidenceId}}], rule}}` | `today` is true for more than 4% of readings below 70 or an average above 250 mg/dL; same value as the roster's `careTeamToday` |
+| `hypoglycaemiaWarning` | `{{level, reasonEvidenceId, text, translations{{es, ht}}}} \\| null` | set for anyone with frequent lows: the 15-15 rule and when to call 911. When it is set, the walk advice carries `caution` and there is no advice to fast longer. |
+| `todayReason`, `priority` | string, int | same as on the roster tile |
+| `plainSummary` | string | the care-team line plus the person's actions in plain English, with no measured numbers |
+| `patientView` | `{{en, es, ht: {{careTeam, lowSugarWarning, actions[≤3 {{id, text}}], help}}, note}}` | a patient-facing version in English, Spanish and Haitian Creole (Kreyòl). It uses only fixed rule numbers (10, 15, 20, 211, 911…), no measured values. Action ids are the same in every language. `help` gives 211 and a social-worker referral for food, money or transport. `careTeam` and `lowSugarWarning` are null when they don't apply. |
 | `charts` | object of plain arrays | see below |
 | `dataNote` | string | notice that the data is synthetic |
 
@@ -94,7 +107,12 @@ Example (`{DEMO}`, trimmed):
 
 ## `GET /api/c4/survivors/:id/advice`
 
-Optional. Workers AI (`{adv['model']}`) rewrites the recommendations in plain language; a call takes about 3-8 s. Each rewrite is checked, and the Worker drops it and returns the template (`source: "template"`, with a `rejected` object) when it:
+Workers AI (`{adv['model']}`) rewrites the recommendations in plain language. The response is `{{survivorId, model, items[{{id, title, text, source, rejected?}}], recHash, generatedAt, cached, ms, error}}`.
+- **Cached by default.** Rewrites are precomputed for every survivor by `scripts/warm-advice.mjs` and served from `public/data/advice/<id>.json`, but only while `recHash`, the SHA-256 of the current `[id, text]` recommendations, still matches. So stale advice is never served, and a call takes about 0.1 s instead of 3-26 s.
+- `?fresh=1` skips the cache and calls the model live.
+- If the model fails, `error` reads "AI rewrite unavailable; showing the checked template text" and every item uses the template. The raw error is never shown.
+
+Each rewrite is checked. The Worker drops it and returns the template (`source: "template"`, with a `rejected` object) when it:
 - uses a number that is not in the template or its evidence (`rejected.untracedNumbers`);
 - adds a causal verb such as helped, caused, lowered or reduced that the template does not use (`rejected.addedCausalWords`).
 
@@ -110,13 +128,24 @@ Cohort findings for a program-level view. Top-level keys:
 {j(cohort_keys)}
 ```
 
-- `effects.<name>` = `{{est, lo, hi, people, rows}}`: within-person estimates (person fixed effects) with cluster-bootstrap 95% CIs. Names: `walk`, `walkAfterDinner`, `walkAfterOtherMeals`, `lateDinner`, `carbsPer10g`, `fastMorningPerHour`, `fast13Morning`, plus iAUC versions.
+- `effects.<name>` = `{{est, lo, hi, se, people, rows}}`: within-person double-ML estimates (gradient boosting, 5-fold cross-fitting × 3) with person-clustered 95% CIs. The fixed-effects regression cross-check is under `statistics.effects`. Names: `walk`, `walkAfterDinner`, `walkAfterOtherMeals`, `lateDinner`, `carbsPer10g`, `fastMorningPerHour`, `fast13Morning`, plus iAUC versions.
 - `walkDose[]`, `dinnerHour[]`: `{{bin, est, lo, hi, n_meals}}`, for the dose-response charts.
 - `trial.contrasts.<outcome>["A vs B"]`: randomized difference in the week 12 minus week 0 change. `trial.fastVsCoachingBySubgroup`: the same difference by starting blood sugar group and by night shift. `trial.adherence`: what each arm actually did.
 - `realWorld.cgmacros`, `realWorld.nhanesSurvivors`: the same questions answered from real data.
+- `plainLanguage`: `{{headline, points[{{id, text, est, lo, hi, realDataCheck}}], realData, source}}`. A plain hero (late dinner, evening walk, 10 minutes is enough) whose numbers round the `effects` and `walkDose` values. `realData` says how large the real-data effect is next to the program's (for example "about a fifth"), computed from the actual ratio.
+- `careTeamToday`: `{{rule, count}}`.
+- `fairness` is not served yet. A per-group engine table is written but needs an engine rerun; this key appears only once it has run.
 
 ```json
 {j(coh_example)}
+```
+
+## `GET /api/c4/verification`
+
+The latest E2E result for the deployed data: pass/fail, the count of traced numbers, the advice latency, `dataHash` (SHA-256 of the roster and cohort it checked), the git `commit`, the commands to reproduce and the seeds. `node scripts/e2e.mjs --strict` fails if this record does not match the live data.
+
+```json
+{j(ver)}
 ```
 
 ## `GET /`

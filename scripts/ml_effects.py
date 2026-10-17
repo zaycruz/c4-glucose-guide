@@ -138,6 +138,58 @@ def forecast(mr):
                   "err10": float(q[0]), "err90": float(q[1]), "meals": int(len(mr))}
 
 
+FAIR_MIN_PEOPLE = 20
+FAIR_ATTRS = (("race_ethnicity", "Race and ethnicity"), ("sex", "Sex"), ("age_band", "Age"),
+              ("preferred_language", "Preferred language"), ("cancer_type", "Cancer type"))
+
+
+def q_test(effects):
+    """Cochran Q: do the subgroup effects differ more than chance? Returns p (None if under 2 groups)."""
+    from scipy.stats import chi2
+    e = [x for x in effects if x and x.get("se")]
+    if len(e) < 2:
+        return None
+    w = np.array([1 / x["se"] ** 2 for x in e])
+    est = np.array([x["est"] for x in e])
+    pooled = (w * est).sum() / w.sum()
+    return float(chi2.sf((w * (est - pooled) ** 2).sum(), len(e) - 1))
+
+
+def fairness_table(mr, parts, walk_cov, rng):
+    """Forecast error and the two effects by subgroup. Groups under FAIR_MIN_PEOPLE get no effect estimate."""
+    info = parts.set_index("participant_id")
+    d = mr.copy()
+    d["age_band"] = pd.cut(d.participant_id.map(info.age), [0, 59, 69, 200], labels=["under 60", "60-69", "70+"]).astype(str)
+    for col in ("race_ethnicity", "sex", "preferred_language", "cancer_type"):
+        d[col] = d.participant_id.map(info[col])
+    d["abs_err"] = (d.rise - d.pred).abs()
+    out = {}
+    for col, label in FAIR_ATTRS:
+        rows = []
+        for val, sub in d.groupby(col):
+            people = sub.participant_id.unique()
+            per = sub.groupby("participant_id").abs_err.agg(["sum", "count"])
+            boots = [per.loc[k].sum()["sum"] / per.loc[k].sum()["count"] for k in
+                     (rng.choice(people, len(people)) for _ in range(300))]
+            row = {"group": str(val), "people": int(len(people)), "meals": int(len(sub)),
+                   "forecastMae": {"est": r(float(sub.abs_err.mean()), 2), "lo": r(float(np.percentile(boots, 2.5)), 2),
+                                   "hi": r(float(np.percentile(boots, 97.5)), 2)}, "walk": None, "lateDinner": None}
+            if len(people) >= FAIR_MIN_PEOPLE:
+                sd = sub[(sub.meal_type == "dinner") & (sub.work_schedule != "night shift")]
+                try:
+                    row["walk"] = eff(dml(sub, "walked", "rise", walk_cov))
+                    if sd.participant_id.nunique() >= FAIR_MIN_PEOPLE:
+                        row["lateDinner"] = eff(dml(sd, "late", "rise", MACROS))
+                except Exception as ex:  # too little variation inside a small group
+                    row["note"] = f"effect not estimable: {type(ex).__name__}"
+            else:
+                row["note"] = f"fewer than {FAIR_MIN_PEOPLE} people: effects not estimated"
+            rows.append(row)
+        out[col] = {"label": label, "groups": rows,
+                    "walkDiffersP": q_test([x["walk"] for x in rows]), "lateDinnerDiffersP": q_test([x["lateDinner"] for x in rows])}
+    return out
+
+
 def eff(e, scale=1.0):
     return {k: (r(v * scale, 2) if k in ("est", "lo", "hi", "se") else (r(v, 2) if isinstance(v, float) else v))
             for k, v in e.items() if not k.startswith("_")}
@@ -208,6 +260,8 @@ def main(data_dir, out_dir):
     dd = mr[mr.meal_type == "dinner"].groupby("participant_id")
     fc["dinnerByPerson"] = {pid: {"pred": float(s.pred.mean()), "n": int(len(s))} for pid, s in dd}
     print(f"personal+forecast {time.time() - t0:.0f}s", file=sys.stderr)
+    fairness = fairness_table(mr, parts, walk_cov, rng)
+    print(f"fairness {time.time() - t0:.0f}s", file=sys.stderr)
 
     cg = cgmacros_meals(data_dir)
     cgm = ["calories", "carbs_g", "protein_g", "fat_g", "fiber_g"]
@@ -225,6 +279,7 @@ def main(data_dir, out_dir):
     out["forecast"] = {k: (r(v, 2) if isinstance(v, float) else v) for k, v in fc.items() if k != "dinnerByPerson"}
     out["forecast"]["dinnerByPerson"] = {k: {"pred": r(v["pred"], 1), "n": v["n"]} for k, v in fc["dinnerByPerson"].items()}
     out["real"] = real
+    out["fairness"] = fairness
     out["seconds"] = round(time.time() - t0)
     os.makedirs(out_dir, exist_ok=True)
     with open(f"{out_dir}/ml_effects.json", "w") as f:

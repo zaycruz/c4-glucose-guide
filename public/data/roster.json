@@ -21,7 +21,12 @@
     "evidenceId": "walk_meals"
    }
   ],
-  "updatedAt": "2024-08-01T19:15:00"
+  "updatedAt": "2024-08-01T19:15:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: High most of the day: 63% in range, average 178 mg/dL",
+  "priority": 2,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0085",
@@ -45,7 +50,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-05-11T23:45:00"
+  "updatedAt": "2025-05-11T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: High most of the day: 64% in range, average 177 mg/dL",
+  "priority": 2,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0632",
@@ -74,7 +84,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-06-23T23:45:00"
+  "updatedAt": "2024-06-23T23:45:00",
+  "careTeamToday": true,
+  "todayReason": "Glucose: Frequent lows: 5.3% of readings below 70 (target under 4%)",
+  "priority": 0,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0767",
@@ -98,7 +113,12 @@
     "evidenceId": "walk_effect_blend"
    }
   ],
-  "updatedAt": "2025-03-28T19:15:00"
+  "updatedAt": "2025-03-28T19:15:00",
+  "careTeamToday": true,
+  "todayReason": "Glucose: Frequent lows: 5.5% of readings below 70 (target under 4%)",
+  "priority": 0,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0872",
@@ -122,7 +142,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-11-10T23:45:00"
+  "updatedAt": "2024-11-10T23:45:00",
+  "careTeamToday": true,
+  "todayReason": "Glucose: Very high average: 306.2 mg/dL (above 250)",
+  "priority": 1,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0950",
@@ -151,7 +176,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-12-29T23:45:00"
+  "updatedAt": "2024-12-29T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: High most of the day: 69% in range, average 172 mg/dL",
+  "priority": 2,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1097",
@@ -175,7 +205,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-04-07T23:45:00"
+  "updatedAt": "2024-04-07T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: High most of the day: 15% in range, average 212 mg/dL",
+  "priority": 2,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1303",
@@ -204,7 +239,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-07-28T23:45:00"
+  "updatedAt": "2024-07-28T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: High most of the day: 1% in range, average 235 mg/dL",
+  "priority": 2,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1530",
@@ -233,7 +273,12 @@
     "evidenceId": "walk_effect_blend"
    }
   ],
-  "updatedAt": "2024-07-07T23:45:00"
+  "updatedAt": "2024-07-07T23:45:00",
+  "careTeamToday": true,
+  "todayReason": "Glucose: Frequent lows: 10.3% of readings below 70 (target under 4%)",
+  "priority": 0,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1774",
@@ -262,7 +307,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-10-05T23:45:00"
+  "updatedAt": "2025-10-05T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: High most of the day: 40% in range, average 198 mg/dL",
+  "priority": 2,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1938",
@@ -286,7 +336,12 @@
     "evidenceId": "walk_meals"
    }
   ],
-  "updatedAt": "2025-07-13T23:45:00"
+  "updatedAt": "2025-07-13T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: High most of the day: 59% in range, average 182 mg/dL",
+  "priority": 2,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0097",
@@ -305,7 +360,12 @@
     "evidenceId": "walk_meals"
    }
   ],
-  "updatedAt": "2025-06-15T23:45:00"
+  "updatedAt": "2025-06-15T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Often above range: 85% in range",
+  "priority": 3,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0434",
@@ -324,7 +384,12 @@
     "evidenceId": "walk_meals"
    }
   ],
-  "updatedAt": "2025-04-06T23:45:00"
+  "updatedAt": "2025-04-06T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Spikes above 180: 6.0% of readings",
+  "priority": 3,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0587",
@@ -353,7 +418,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-09-29T23:45:00"
+  "updatedAt": "2024-09-29T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Often above range: 80% in range",
+  "priority": 3,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0828",
@@ -377,7 +447,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-06-16T23:45:00"
+  "updatedAt": "2024-06-16T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Often above range: 84% in range",
+  "priority": 3,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0964",
@@ -406,7 +481,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-09-10T17:00:00"
+  "updatedAt": "2024-09-10T17:00:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Often above range: 78% in range",
+  "priority": 3,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1337",
@@ -430,7 +510,12 @@
     "evidenceId": "walk_meals"
    }
   ],
-  "updatedAt": "2025-12-07T23:45:00"
+  "updatedAt": "2025-12-07T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Often above range: 75% in range",
+  "priority": 3,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1447",
@@ -449,7 +534,12 @@
     "evidenceId": "walk_meals"
    }
   ],
-  "updatedAt": "2025-07-27T23:45:00"
+  "updatedAt": "2025-07-27T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Spikes above 180: 8.7% of readings",
+  "priority": 3,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1557",
@@ -468,7 +558,12 @@
     "evidenceId": "walk_meals"
    }
   ],
-  "updatedAt": "2024-10-27T23:45:00"
+  "updatedAt": "2024-10-27T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Spikes above 180: 8.7% of readings",
+  "priority": 3,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1797",
@@ -492,7 +587,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-10-12T23:45:00"
+  "updatedAt": "2025-10-12T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Spikes above 180: 7.6% of readings",
+  "priority": 3,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1877",
@@ -521,7 +621,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-08-14T12:30:00"
+  "updatedAt": "2024-08-14T12:30:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Often above range: 75% in range",
+  "priority": 3,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0013",
@@ -540,7 +645,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-03-02T23:45:00"
+  "updatedAt": "2025-03-02T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0214",
@@ -564,7 +674,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-11-10T23:45:00"
+  "updatedAt": "2024-11-10T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 96% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0254",
@@ -583,7 +698,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-08-18T23:45:00"
+  "updatedAt": "2024-08-18T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 99% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0358",
@@ -602,7 +722,12 @@
     "evidenceId": "walk_meals"
    }
   ],
-  "updatedAt": "2024-02-04T23:45:00"
+  "updatedAt": "2024-02-04T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 97% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0383",
@@ -626,7 +751,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-08-24T23:45:00"
+  "updatedAt": "2025-08-24T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 98% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0579",
@@ -640,7 +770,12 @@
     "evidenceId": "walk_effect_blend"
    }
   ],
-  "updatedAt": "2025-10-17T17:45:00"
+  "updatedAt": "2025-10-17T17:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0731",
@@ -654,7 +789,12 @@
     "evidenceId": "status_rule"
    }
   ],
-  "updatedAt": "2025-01-19T23:45:00"
+  "updatedAt": "2025-01-19T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0758",
@@ -673,7 +813,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-09-01T23:45:00"
+  "updatedAt": "2024-09-01T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 98% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0766",
@@ -692,7 +837,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-08-04T23:45:00"
+  "updatedAt": "2024-08-04T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0833",
@@ -700,7 +850,12 @@
   "status": "ok",
   "headline": "Steady: 100% in range",
   "tags": [],
-  "updatedAt": "2024-09-15T23:45:00"
+  "updatedAt": "2024-09-15T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0850",
@@ -708,7 +863,12 @@
   "status": "ok",
   "headline": "Steady: 100% in range",
   "tags": [],
-  "updatedAt": "2025-04-27T23:45:00"
+  "updatedAt": "2025-04-27T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0893",
@@ -722,7 +882,12 @@
     "evidenceId": "walk_meals"
    }
   ],
-  "updatedAt": "2025-01-19T23:45:00"
+  "updatedAt": "2025-01-19T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0906",
@@ -746,7 +911,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-09-21T23:45:00"
+  "updatedAt": "2025-09-21T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N0920",
@@ -754,7 +924,12 @@
   "status": "ok",
   "headline": "Steady: 100% in range",
   "tags": [],
-  "updatedAt": "2024-05-19T23:45:00"
+  "updatedAt": "2024-05-19T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1160",
@@ -773,7 +948,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-12-01T23:45:00"
+  "updatedAt": "2024-12-01T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 97% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1277",
@@ -792,7 +972,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-11-24T23:45:00"
+  "updatedAt": "2024-11-24T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1286",
@@ -811,7 +996,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-12-08T23:45:00"
+  "updatedAt": "2024-12-08T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1313",
@@ -835,7 +1025,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-05-26T23:45:00"
+  "updatedAt": "2024-05-26T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 99% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1350",
@@ -854,7 +1049,12 @@
     "evidenceId": "walk_meals"
    }
   ],
-  "updatedAt": "2024-09-07T11:15:00"
+  "updatedAt": "2024-09-07T11:15:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1434",
@@ -873,7 +1073,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-12-14T23:45:00"
+  "updatedAt": "2025-12-14T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 98% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1569",
@@ -897,7 +1102,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-11-02T23:45:00"
+  "updatedAt": "2025-11-02T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 98% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1590",
@@ -921,7 +1131,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-05-05T23:45:00"
+  "updatedAt": "2024-05-05T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1706",
@@ -940,7 +1155,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-03-23T23:45:00"
+  "updatedAt": "2025-03-23T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 100% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1786",
@@ -959,7 +1179,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-05-18T23:45:00"
+  "updatedAt": "2025-05-18T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 97% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1822",
@@ -978,7 +1203,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-11-24T23:45:00"
+  "updatedAt": "2024-11-24T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 99% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1861",
@@ -1002,7 +1232,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-09-28T23:45:00"
+  "updatedAt": "2025-09-28T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 98% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1902",
@@ -1016,7 +1251,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-09-01T23:45:00"
+  "updatedAt": "2024-09-01T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 97% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1912",
@@ -1035,7 +1275,12 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2025-06-15T23:45:00"
+  "updatedAt": "2025-06-15T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 99% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  },
  {
   "survivorId": "c4-N1944",
@@ -1059,6 +1304,11 @@
     "evidenceId": "fast_avg"
    }
   ],
-  "updatedAt": "2024-12-08T23:45:00"
+  "updatedAt": "2024-12-08T23:45:00",
+  "careTeamToday": false,
+  "todayReason": "Glucose: Steady: 98% in range",
+  "priority": 4,
+  "dataType": "synthetic",
+  "module": "C4 Glucose Guide"
  }
 ]

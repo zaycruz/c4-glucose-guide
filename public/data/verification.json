@@ -1,0 +1,44 @@
+{
+ "e2e": {
+  "pass": true,
+  "failures": [],
+  "survivors": 50,
+  "statusCounts": {
+   "alert": 11,
+   "watch": 10,
+   "ok": 29
+  },
+  "recommendations": 156,
+  "adviceNumbersTracedToEvidence": 614,
+  "wordingConstantsStripped": 563,
+  "aiAdvice": {
+   "survivorId": "c4-N0072",
+   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+   "ms": 4,
+   "itemsRephrasedByAi": 3,
+   "items": 3
+  },
+  "careTeamToday": 4,
+  "advice": {
+   "cached": true,
+   "ms": 89
+  },
+  "strict": true,
+  "publishedVerificationMatchesLive": true,
+  "dataHash": "0c4855cbb317a154eca80147242fd8110f83a21b9c79a6065d2b0ee408658493",
+  "finishedAt": "2026-10-17T16:44:22.836Z",
+  "artifact": "runs/e2e-2026-10-17T16-44-14-414Z.json"
+ },
+ "dataHash": "0c4855cbb317a154eca80147242fd8110f83a21b9c79a6065d2b0ee408658493",
+ "commit": "37aaa70713a46d1dee547d6616c50e987d24a0dc",
+ "repo": "https://github.com/zaycruz/c4-glucose-guide",
+ "reproduce": [
+  "scripts/build-ml.sh <ssh host> <Challenge4_Dose_and_Timing dir>   # ML engine, minutes, on a server",
+  "scripts/build-data.sh <Challenge4_Dose_and_Timing dir>               # evidence, advice, roster",
+  "npx wrangler deploy && node scripts/warm-advice.mjs && npx wrangler deploy",
+  "node scripts/e2e.mjs --strict                                          # this check"
+ ],
+ "seeds": {
+  "engine": 20261017
+ }
+}
