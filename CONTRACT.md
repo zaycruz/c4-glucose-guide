@@ -18,7 +18,8 @@ The survivors are synthetic (Crane Lab hackathon set). Nobody in them is real.
 Roster tiles: 50 survivors, sorted alert → watch → ok. Each tile also carries `tags[]` (see the detail fields below) so a coach can scan the signal without opening the panel. These are the sensor wearers in the dataset's 100-person app sample.
 
 For a mixed "Today" queue across modules, each tile also has:
-- `careTeamToday` (bool): send to the care team today. The rule is more than 4% of readings below 70 mg/dL, or an average above 250 mg/dL.
+- `careTeamToday` (bool): flagged for the care team, any urgency (name kept for compatibility).
+- `careTeamUrgency`: `"today"` (more than 1% of readings below 54 mg/dL), `"this-week"` (more than 4% below 70, an average above 250 mg/dL, or more than 5% above 250) or null. Tier by this field.
 - `todayReason` (string, at most 90 characters, starts with "Glucose: "): every number in it is in the person's evidence.
 - `priority` (0-4, lower is more urgent): 0 = care team for lows, 1 = care team for a high average, 2 = alert, 3 = watch, 4 = ok.
 - `dataType`: `"synthetic"`.
@@ -50,6 +51,7 @@ For a mixed "Today" queue across modules, each tile also has:
     ],
     "updatedAt": "2024-08-01T19:15:00",
     "careTeamToday": true,
+    "careTeamUrgency": "this-week",
     "todayReason": "Glucose: Often very high: 10.9% of readings above 250 (target under 5%)",
     "priority": 1,
     "dataType": "synthetic",
@@ -79,6 +81,7 @@ For a mixed "Today" queue across modules, each tile also has:
     ],
     "updatedAt": "2025-05-11T23:45:00",
     "careTeamToday": true,
+    "careTeamUrgency": "this-week",
     "todayReason": "Glucose: Often very high: 6.3% of readings above 250 (target under 5%)",
     "priority": 1,
     "dataType": "synthetic",
@@ -96,9 +99,9 @@ For a mixed "Today" queue across modules, each tile also has:
 | `tags[]` | `{label, tone, evidenceId}` | up to 4 short signals, same as on the roster tile. `tone`: `risk`, `warn`, `good`, `info`. Each number in `label` is the value or n of the evidence item `evidenceId` (checked by `scripts/e2e.mjs`). |
 | `profile` | object | age, sex, cancerType, yearsSinceTreatment, bloodSugarGroup, group (trial arm), workSchedule |
 | `evidence[]` | `{id, label, value, unit, ci: [lo, hi] \| null, n, scope, method, caveat}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (real-data check: CGMacros or survey-weighted NHANES), `rule` (thresholds) |
-| `recommendations[]` | `{id, title, text, basis, evidenceIds[], realDataCheck, caution?}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
+| `recommendations[]` | `{id, title, text, basis, evidenceIds[], realDataCheck, caution?, medicationCaution?}` | Every `walk` card carries `medicationCaution` (clinician voice: medicines are not recorded; anyone on insulin or a sulfonylurea should ask the care team about lows before adding post-meal walks; the coach does not change medication) and ends with the same check in patient words. `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
 | `recommendations[].realDataCheck` | `{label, evidenceId}` | does real data back this advice? `label`: `agrees`, `same direction, not proven`, `no clear signal`, `disagrees`, `not tested` (safety rules). `evidenceId` is the cited `scope: real` evidence item, or `null` when not tested. |
-| `careTeamFlag` | `{today, level, reasons[{reason, evidenceId}], medicationCheck, rule}` | `today` is true for more than 4% of readings below 70, more than 1% below 54 (level 2 lows, evidence `tbr54`), an average above 250 mg/dL, or more than 5% of readings above 250 (sustained highs); same value as the roster's `careTeamToday`. `level` is `today`, `next visit` (other alert: time in range under 70%) or null. `medicationCheck` is `{recorded: false, ask, why}` for anyone with lows (this data records no medicines; it asks about insulin or a sulfonylurea), otherwise null |
+| `careTeamFlag` | `{today, urgency, level, reasons[{reason, evidenceId}], medicationCheck, rule}` | `urgency` is `"today"` for more than 1% of readings below 54 (level 2 lows) and `"this-week"` for every other care-team flag, else null; the card and patient lines say "today" or "this week" to match. `today` (flagged, any urgency; name kept for compatibility) is true for more than 4% of readings below 70, more than 1% below 54 (level 2 lows, evidence `tbr54`), an average above 250 mg/dL, or more than 5% of readings above 250 (sustained highs); same value as the roster's `careTeamToday`. `level` is `today`, `this week`, `next visit` (other alert: time in range under 70%) or null. `medicationCheck` is `{recorded: false, ask, why}` for anyone with lows (this data records no medicines; it asks about insulin or a sulfonylurea), otherwise null |
 | `hypoglycaemiaWarning` | `{level, reasonEvidenceId, text, translations{es, ht}} \| null` | set for anyone with lows (above 4% below 70 or above 1% below 54): the 15-15 rule and when to call 911. When it is set, `recommendations` holds only `talk_to_team` (care team first: no walking, fasting or meal-timing advice), `patientView.*.actions` is empty, and tags show only risk. |
 | `todayReason`, `priority` | string, int | same as on the roster tile |
 | `plainSummary` | string | the care-team line plus the person's actions in plain English, with no measured numbers |
@@ -133,11 +136,12 @@ Example (`c4-N0632`, trimmed):
     }
   ],
   "summary": "76-year-old female, colorectal cancer, 1.3 years after treatment; normal at start; group: coaching; day job. Average sugar 85 mg/dL in weeks 11-12, 95% of readings in range. Median rise after dinner 46 mg/dL. ML forecast for a typical dinner: 46 mg/dL. Synthetic participant (made-up data).",
-  "plainSummary": "Today: tell your care team about your low blood sugar readings. Ask if a diabetes medicine needs changing, and don't change your exercise or meal times until then.",
+  "plainSummary": "This week: tell your care team about your low blood sugar readings. Ask if a diabetes medicine needs changing, and don't change your exercise or meal times until then.",
   "updatedAt": "2024-06-23T23:45:00",
   "careTeamFlag": {
     "today": true,
-    "level": "today",
+    "urgency": "this-week",
+    "level": "this week",
     "reasons": [
       {
         "reason": "Frequent lows: 5.3% of readings below 70 (target under 4%)",
@@ -149,7 +153,7 @@ Example (`c4-N0632`, trimmed):
       "ask": "insulin or a sulfonylurea (glipizide, glyburide, glimepiride)",
       "why": "the usual causes of lows; this data set records no medicines"
     },
-    "rule": "Send to the care team today if more than 4% of readings are below 70 mg/dL, more than 1% are below 54 mg/dL, the average is above 250 mg/dL, or more than 5% of readings are above 250 mg/dL (sustained highs). Time in range under 70% alone goes to the next visit."
+    "rule": "Send to the care team today if more than 1% of readings are below 54 mg/dL (level 2 lows). Send to the care team this week if more than 4% of readings are below 70 mg/dL, the average is above 250 mg/dL, or more than 5% of readings are above 250 mg/dL (sustained highs). Time in range under 70% alone goes to the next visit."
   },
   "hypoglycaemiaWarning": {
     "level": "high",
@@ -164,7 +168,7 @@ Example (`c4-N0632`, trimmed):
   "priority": 0,
   "patientView": {
     "en": {
-      "careTeam": "Today: tell your care team about your low blood sugar readings. Ask if a diabetes medicine needs changing, and don't change your exercise or meal times until then.",
+      "careTeam": "This week: tell your care team about your low blood sugar readings. Ask if a diabetes medicine needs changing, and don't change your exercise or meal times until then.",
       "lowSugarWarning": "Low sugar: if you feel shaky, sweaty or confused, eat or drink 15 grams of fast sugar (half a cup of juice or 4 glucose tablets), wait 15 minutes and check again. If someone passes out, call 911.",
       "actions": [],
       "help": "Need help with food, money or transport? Call 211 (free, any time) or ask your coach to connect you with a social worker.",
@@ -172,7 +176,7 @@ Example (`c4-N0632`, trimmed):
       "reviewed": true
     },
     "es": {
-      "careTeam": "Hoy: avise a su equipo médico sobre sus niveles bajos de azúcar. Pregunte si hay que cambiar algún medicamento para la diabetes, y no cambie su ejercicio ni sus horarios de comida hasta entonces.",
+      "careTeam": "Esta semana: avise a su equipo médico sobre sus niveles bajos de azúcar. Pregunte si hay que cambiar algún medicamento para la diabetes, y no cambie su ejercicio ni sus horarios de comida hasta entonces.",
       "lowSugarWarning": "Azúcar baja: si se siente tembloroso, sudoroso o confundido, coma o beba 15 gramos de azúcar rápida (media taza de jugo o 4 tabletas de glucosa), espere 15 minutos y vuelva a medirse. Si alguien se desmaya, llame al 911.",
       "actions": [],
       "help": "¿Necesita ayuda con comida, dinero o transporte? Llame al 211 (gratis, a cualquier hora) o pida a su coach que le conecte con un trabajador social.",
@@ -180,7 +184,7 @@ Example (`c4-N0632`, trimmed):
       "reviewed": false
     },
     "ht": {
-      "careTeam": "Jodi a: di ekip swen ou sou sik ki desann twò ba. Mande si yo dwe chanje yon medikaman pou dyabèt, epi pa chanje egzèsis ou ni lè ou manje jiska lè sa.",
+      "careTeam": "Semèn sa a: di ekip swen ou sou sik ki desann twò ba. Mande si yo dwe chanje yon medikaman pou dyabèt, epi pa chanje egzèsis ou ni lè ou manje jiska lè sa.",
       "lowSugarWarning": "Sik ba: si ou santi ou ap tranble, ou ap swe oswa ou konfonn, manje oswa bwè 15 gram sik rapid (yon mwatye tas ji oswa 4 grenn glikoz), tann 15 minit epi tcheke ankò. Si yon moun endispoze, rele 911.",
       "actions": [],
       "help": "Ou bezwen èd pou manje, lajan oswa transpò? Rele 211 (gratis, nenpòt lè) oswa mande antrenè ou mete ou an kontak ak yon travayè sosyal.",
@@ -334,8 +338,8 @@ Example (`c4-N0632`, trimmed):
   "recommendations": [
     {
       "id": "talk_to_team",
-      "title": "Tell your care team about low readings today",
-      "text": "5.3% of your readings were below 70 mg/dL and 0.0% below 54 (weeks 11-12); the usual targets are under 4% and under 1%. Low sugar can make you shaky or dizzy. Contact your care team today rather than waiting for your next visit. Ask whether a diabetes medicine needs changing: insulin and sulfonylureas (glipizide, glyburide, glimepiride) are the usual causes of lows, and this data does not record medicines. Until then, don't change your exercise, fasting or meal times.",
+      "title": "Tell your care team about low readings this week",
+      "text": "5.3% of your readings were below 70 mg/dL and 0.0% below 54 (weeks 11-12); the usual targets are under 4% and under 1%. Low sugar can make you shaky or dizzy. Contact your care team this week rather than waiting for your next visit. Ask whether a diabetes medicine needs changing: insulin and sulfonylureas (glipizide, glyburide, glimepiride) are the usual causes of lows, and this data does not record medicines. Until then, don't change your exercise, fasting or meal times.",
       "basis": "rule",
       "evidenceIds": [
         "tbr70",
@@ -506,7 +510,7 @@ Example (`c4-N0632`, trimmed):
 
 ## `GET /api/c4/survivors/:id/advice`
 
-Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the recommendations in plain language. The response is `{survivorId, model, items[{id, title, text, source, rejected?}], recHash, generatedAt, cached, ms, error}`.
+Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the recommendations in plain language. The response is `{survivorId, model, servedModel, items[{id, title, text, source, rejected?}], recHash, generatedAt, cached, ms, error}`. `servedModel` is the model the provider actually ran (it may be an alias of `model`). The raw provider response is never returned.
 - **Cached by default.** Rewrites are precomputed for every survivor by `scripts/warm-advice.mjs` and served from `public/data/advice/<id>.json`, but only while `recHash`, the SHA-256 of the current `[id, text]` recommendations, still matches. So stale advice is never served, and a call takes about 0.1 s instead of 3-26 s.
 - `?fresh=1` skips the cache and calls the model live.
 - If the model fails, `error` reads "AI rewrite unavailable; showing the checked template text" and every item uses the template. The raw error is never shown.
@@ -519,12 +523,13 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
 {
   "survivorId": "c4-N0632",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+  "servedModel": "@cf/meta/llama-3.3-70b-instruct-sd",
   "error": null,
   "items": [
     {
       "id": "talk_to_team",
-      "title": "Tell your care team about low readings today",
-      "text": "5.3% of your readings were below 70 mg/dL and 0.0% below 54 (weeks 11-12); the usual targets are under 4% and under 1%. Low sugar can make you shaky or dizzy. Contact your care team today rather than waiting for your next visit. Ask whether a diabetes medicine needs changing: insulin and sulfonylureas (glipizide, glyburide, glimepiride) are the usual causes of lows, and this data does not record medicines. Until then, don't change your exercise, fasting or meal times.",
+      "title": "Tell your care team about low readings this week",
+      "text": "5.3% of your readings were below 70 mg/dL and 0.0% below 54 (weeks 11-12); the usual targets are under 4% and under 1%. Low sugar can make you shaky or dizzy. Contact your care team this week rather than waiting for your next visit. Ask whether a diabetes medicine needs changing: insulin and sulfonylureas (glipizide, glyburide, glimepiride) are the usual causes of lows, and this data does not record medicines. Until then, don't change your exercise, fasting or meal times.",
       "source": "template",
       "evidenceIds": [
         "tbr70",
@@ -534,11 +539,11 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
       "rejected": null
     }
   ],
-  "recHash": "ebd6f3136790050bc96e63a93cbdbea65a1b72cae40a8d2dd39bf73df65be0d5",
-  "generatedAt": "2026-10-17T18:05:35.620Z",
-  "generationMs": 1701,
+  "recHash": "2fd84843059bd080627ac75417a2089c06d03b8200281c2efd1783d1ae386f40",
+  "generatedAt": "2026-10-17T18:37:50.570Z",
+  "generationMs": 1310,
   "cached": true,
-  "ms": 108
+  "ms": 105
 }
 ```
 
@@ -643,7 +648,9 @@ Cohort findings for a program-level view. Top-level keys:
   ],
   "careTeamToday": [
     "rule",
-    "count"
+    "count",
+    "today",
+    "thisWeek"
   ]
 }
 ```
@@ -653,7 +660,7 @@ Cohort findings for a program-level view. Top-level keys:
 - `trial.contrasts.<outcome>["A vs B"]`: randomized difference in the week 12 minus week 0 change. `trial.fastVsCoachingBySubgroup`: the same difference by starting blood sugar group and by night shift. `trial.adherence`: what each arm actually did.
 - `realWorld.cgmacros`, `realWorld.nhanesSurvivors`: the same questions answered from real data. `nhanesSurvivors` is survey-weighted (the fit every claim cites); `nhanesSurvivorsUnweighted` is the same models without weights, a labelled sensitivity that no claim uses.
 - `plainLanguage`: `{headline, points[{id, text, est, lo, hi, realDataCheck}], realData, source}`. A plain hero (late dinner, evening walk, 10 minutes is enough) whose numbers round the `effects` and `walkDose` values. `realData` says how large the real-data effect is next to the program's (for example "about a fifth"), computed from the actual ratio.
-- `careTeamToday`: `{rule, count}`.
+- `careTeamToday`: `{rule, count, today, thisWeek}`: flagged survivors and how many are today vs this week.
 - `fairness`: `{note, attributes: {race_ethnicity, sex, age_band, preferred_language, cancer_type: {label, groups[{group, people, meals, forecastMae, walk, lateDinner, note?}], walkDiffersP, lateDinnerDiffersP, walkDiffersPHolm, lateDinnerDiffersPHolm}}, plainLanguage, monitoring}`. Groups under 20 people have `walk`/`lateDinner` null. `*DiffersP` are Cochran Q p-values; `*PHolm` are Holm-adjusted across all 10 tests. `plainLanguage` is a one-line summary; `monitoring` is the rule for real use (quarterly recompute; a group that differs gets the pooled number and care-team review). The data is synthetic, so this checks that the engine treats groups alike, not real-world fairness.
 
 ```json
@@ -734,21 +741,21 @@ The latest E2E result for the deployed data: pass/fail, the count of traced numb
     "aiAdvice": {
       "survivorId": "c4-N0072",
       "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "ms": 113,
+      "ms": 132,
       "itemsRephrasedByAi": 2,
       "items": 3
     },
     "careTeamToday": 10,
     "advice": {
       "cached": true,
-      "ms": 1234
+      "ms": 184
     },
     "dataHash": "70f1ec29177ca2cb8ce496a4d6c89ae70fe651db91dcd7fad0a77ec826b70143",
-    "finishedAt": "2026-10-17T18:14:39.667Z",
-    "artifact": "runs/e2e-2026-10-17T18-14-11-376Z.json"
+    "finishedAt": "2026-10-17T18:30:37.359Z",
+    "artifact": "runs/e2e-2026-10-17T18-30-26-671Z.json"
   },
   "dataHash": "70f1ec29177ca2cb8ce496a4d6c89ae70fe651db91dcd7fad0a77ec826b70143",
-  "commit": "7d930179ee5937eeff1656215123b48439391010",
+  "commit": "38f89b21f186ba22727ad1e972d70a9274a4681a",
   "repo": "https://github.com/zaycruz/c4-glucose-guide",
   "reproduce": [
     "scripts/reproduce.sh <Challenge4_Dose_and_Timing dir> [out dir]   # data check, ML engine, benchmark, evidence; diffs every README number (REPRODUCE.md)",
