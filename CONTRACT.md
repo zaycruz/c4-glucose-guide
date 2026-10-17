@@ -510,7 +510,7 @@ Example (`c4-N0632`, trimmed):
 
 ## `GET /api/c4/survivors/:id/advice`
 
-Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the recommendations in plain language. The response is `{survivorId, model, servedModel, items[{id, title, text, source, rejected?}], recHash, generatedAt, cached, ms, error}`. `servedModel` is the model the provider actually ran (it may be an alias of `model`). The raw provider response is never returned.
+Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the recommendations in plain language. The response is `{survivorId, model, providerModelName, fallbackModel, modelNote, items[{id, title, text, source, rejected?}], recHash, generatedAt, cached, ms, error}`. `model` is the one model requested; `fallbackModel` is always null (there is no fallback model). `providerModelName` is the name Workers AI writes in its response (`@cf/meta/llama-3.3-70b-instruct-sd`), its own label for that deployment, not a different model. If the AI call fails, items fall back to the checked template text (`source: "template"`). The raw provider response is never returned.
 - **Cached by default.** Rewrites are precomputed for every survivor by `scripts/warm-advice.mjs` and served from `public/data/advice/<id>.json`, but only while `recHash`, the SHA-256 of the current `[id, text]` recommendations, still matches. So stale advice is never served, and a call takes about 0.1 s instead of 3-26 s.
 - `?fresh=1` skips the cache and calls the model live.
 - If the model fails, `error` reads "AI rewrite unavailable; showing the checked template text" and every item uses the template. The raw error is never shown.
@@ -523,7 +523,6 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
 {
   "survivorId": "c4-N0632",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-  "servedModel": "@cf/meta/llama-3.3-70b-instruct-sd",
   "error": null,
   "items": [
     {
@@ -542,8 +541,11 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
   "recHash": "2fd84843059bd080627ac75417a2089c06d03b8200281c2efd1783d1ae386f40",
   "generatedAt": "2026-10-17T18:37:50.570Z",
   "generationMs": 1310,
+  "providerModelName": "@cf/meta/llama-3.3-70b-instruct-sd",
+  "fallbackModel": null,
+  "modelNote": "One model is requested and there is no fallback model. providerModelName is the name Workers AI puts in its response for this deployment; it is not a different model. If the AI call fails, the items fall back to the checked template text (source: template), never to another model.",
   "cached": true,
-  "ms": 105
+  "ms": 6
 }
 ```
 
@@ -741,21 +743,21 @@ The latest E2E result for the deployed data: pass/fail, the count of traced numb
     "aiAdvice": {
       "survivorId": "c4-N0072",
       "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "ms": 132,
-      "itemsRephrasedByAi": 2,
+      "ms": 98,
+      "itemsRephrasedByAi": 1,
       "items": 3
     },
     "careTeamToday": 10,
     "advice": {
       "cached": true,
-      "ms": 184
+      "ms": 149
     },
-    "dataHash": "70f1ec29177ca2cb8ce496a4d6c89ae70fe651db91dcd7fad0a77ec826b70143",
-    "finishedAt": "2026-10-17T18:30:37.359Z",
-    "artifact": "runs/e2e-2026-10-17T18-30-26-671Z.json"
+    "dataHash": "792bf474e13f9f99c12361a4d86445918ab242fa25d07e7e4c73c6ed3d36cdaf",
+    "finishedAt": "2026-10-17T18:43:46.425Z",
+    "artifact": "runs/e2e-2026-10-17T18-43-36-864Z.json"
   },
-  "dataHash": "70f1ec29177ca2cb8ce496a4d6c89ae70fe651db91dcd7fad0a77ec826b70143",
-  "commit": "38f89b21f186ba22727ad1e972d70a9274a4681a",
+  "dataHash": "792bf474e13f9f99c12361a4d86445918ab242fa25d07e7e4c73c6ed3d36cdaf",
+  "commit": "4ceab2db3115f7dd702b245c8e224e787747cd08",
   "repo": "https://github.com/zaycruz/c4-glucose-guide",
   "reproduce": [
     "scripts/reproduce.sh <Challenge4_Dose_and_Timing dir> [out dir]   # data check, ML engine, benchmark, evidence; diffs every README number (REPRODUCE.md)",

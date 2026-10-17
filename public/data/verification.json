@@ -14,21 +14,27 @@
   "aiAdvice": {
    "survivorId": "c4-N0072",
    "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "ms": 98,
+   "ms": 4,
    "itemsRephrasedByAi": 1,
    "items": 3
   },
   "careTeamToday": 10,
   "advice": {
    "cached": true,
-   "ms": 149
+   "ms": 58
   },
   "dataHash": "792bf474e13f9f99c12361a4d86445918ab242fa25d07e7e4c73c6ed3d36cdaf",
-  "finishedAt": "2026-10-17T18:43:46.425Z",
-  "artifact": "runs/e2e-2026-10-17T18-43-36-864Z.json"
+  "finishedAt": "2026-10-17T19:53:42.374Z",
+  "artifact": "runs/e2e-2026-10-17T19-53-28-461Z.json"
  },
  "dataHash": "792bf474e13f9f99c12361a4d86445918ab242fa25d07e7e4c73c6ed3d36cdaf",
- "commit": "4ceab2db3115f7dd702b245c8e224e787747cd08",
+ "commit": "eebca26729b07dc82340cb88233cbe656b68fad6",
+ "aiAdvice": {
+  "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+  "providerModelName": "@cf/meta/llama-3.3-70b-instruct-sd",
+  "fallbackModel": null,
+  "modelNote": "One model is requested and there is no fallback model. providerModelName is the name Workers AI puts in its response for this deployment; it is not a different model. If the AI call fails, the items fall back to the checked template text (source: template), never to another model."
+ },
  "repo": "https://github.com/zaycruz/c4-glucose-guide",
  "reproduce": [
   "scripts/reproduce.sh <Challenge4_Dose_and_Timing dir> [out dir]   # data check, ML engine, benchmark, evidence; diffs every README number (REPRODUCE.md)",
