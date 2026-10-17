@@ -266,6 +266,10 @@ def main(data_dir, out_dir):
     cohort["lateDinnerIauc"] = fe_effect(dinners, ["late", "carbs_g"], ycol="iauc")
     cohort["walk"] = fe_effect(mrw, ["walked"] + walk_cov)
     cohort["walkIauc"] = fe_effect(mrw, ["walked"] + walk_cov, ycol="iauc")
+    din_w = mrw[(mrw.meal_type == "dinner") & (mrw.work_schedule != "night shift")]
+    cohort["walkAfterDinner"] = fe_effect(din_w, ["walked", "carbs_g"])
+    oth = mrw[mrw.meal_type != "dinner"]
+    cohort["walkAfterOtherMeals"] = fe_effect(oth, ["walked"] + walk_cov)
     cohort["carbsPer10g"] = fe_effect(mrw, ["carbs_g", "walked"] + list(mt.columns))
     for k in ("est", "lo", "hi"):
         cohort["carbsPer10g"][k] *= 10
@@ -342,6 +346,27 @@ def main(data_dir, out_dir):
             boots = [RNG.choice(va, len(va)).mean() - RNG.choice(vb, len(vb)).mean() for _ in range(2000)]
             lo, hi = np.percentile(boots, [2.5, 97.5])
             trial["contrasts"][out][f"{a} vs {b}"] = {"est": va.mean() - vb.mean(), "lo": lo, "hi": hi, "n": int(len(va) + len(vb))}
+
+    def arm_contrast(sub, out, a="coaching + overnight fast", b="coaching"):
+        va = sub[sub.group == a][out].dropna().to_numpy()
+        vb = sub[sub.group == b][out].dropna().to_numpy()
+        boots = [RNG.choice(va, len(va)).mean() - RNG.choice(vb, len(vb)).mean() for _ in range(2000)]
+        lo, hi = np.percentile(boots, [2.5, 97.5])
+        return {"est": va.mean() - vb.mean(), "lo": lo, "hi": hi, "n": int(len(va) + len(vb))}
+
+    trial["fastVsCoachingBySubgroup"] = {}
+    for out in ("hba1c_pct", "fasting_glucose_mg_dl"):
+        sg = {f"blood sugar: {g_}": arm_contrast(sub, out) for g_, sub in delta.groupby("blood_sugar_group")}
+        sg["excluding night shift"] = arm_contrast(delta[delta.work_schedule != "night shift"], out)
+        sg["night shift only"] = arm_contrast(delta[delta.work_schedule == "night shift"], out)
+        trial["fastVsCoachingBySubgroup"][out] = sg
+    dd_ = daily.merge(parts[["participant_id", "group"]], on="participant_id")
+    trial["adherence"] = {
+        grp: {"overnightFastHours": float(sub.overnight_fast_hours.mean()),
+              "nightsAtLeast13hPct": float(100 * (sub.overnight_fast_hours.dropna() >= 13).mean()),
+              "eveningCaloriesPct": float(sub.evening_calories_pct.mean()),
+              "walkAfterDinnerMin": float(sub.walked_after_dinner_min.mean())}
+        for grp, sub in dd_.groupby("group")}
 
     # cohort mean curves
     cc = [f"c{o}" for o in CURVE_OFFSETS]
@@ -493,6 +518,22 @@ def main(data_dir, out_dir):
         add("cohort_late", "Program-wide: rise after dinners at 8 pm or later vs earlier (same person)", cl["est"], "mg/dL", "cohort",
             "Within-person regression adjusted for carbs; night-shift workers excluded; cluster bootstrap 95% CI.",
             ci=(cl["lo"], cl["hi"]), n=cl["rows"], caveat="Association, not proof.")
+        cwd = cohort["walkAfterDinner"]
+        cwo = cohort["walkAfterOtherMeals"]
+        add("cohort_walk_dinner", "Program-wide: rise after dinner with a walk vs without (same person)", cwd["est"], "mg/dL", "cohort",
+            "Within-person regression on dinners, adjusted for carbs; night-shift workers excluded; cluster bootstrap 95% CI.",
+            ci=(cwd["lo"], cwd["hi"]), n=cwd["rows"], caveat="Walking was self-chosen: association, not proof.")
+        add("cohort_walk_other", "Program-wide: rise after other meals with a walk vs without (same person)", cwo["est"], "mg/dL", "cohort",
+            "Within-person regression on breakfasts, lunches and snacks, adjusted for carbs and meal type; cluster bootstrap 95% CI.",
+            ci=(cwo["lo"], cwo["hi"]), n=cwo["rows"])
+        tsg = trial["fastVsCoachingBySubgroup"]["hba1c_pct"][f"blood sugar: {info.blood_sugar_group}"]
+        add("trial_fast_hba1c_group", f"Randomized, people who started with {info.blood_sugar_group}: HbA1c change, coaching + overnight fast vs coaching alone",
+            tsg["est"], "% points", "trial", "Difference in mean (week 12 - week 0) between randomized arms within this starting blood sugar group; bootstrap 95% CI.",
+            ci=(tsg["lo"], tsg["hi"]), n=tsg["n"], nd=2, caveat="Randomization holds within groups set at the start.")
+        adh = trial["adherence"]
+        add("trial_fast_adherence", "Randomized: extra overnight fast hours in the fast arm vs coaching alone",
+            adh["coaching + overnight fast"]["overnightFastHours"] - adh["coaching"]["overnightFastHours"], "hours", "trial",
+            "Mean overnight_fast_hours over all logged days, fast arm minus coaching arm.")
         tf = trial["contrasts"]["hba1c_pct"]["coaching + overnight fast vs coaching"]
         tg = trial["contrasts"]["fasting_glucose_mg_dl"]["coaching + overnight fast vs coaching"]
         add("trial_fast_hba1c", "Randomized: HbA1c change, coaching + overnight fast vs coaching alone", tf["est"], "% points", "trial",
@@ -522,16 +563,17 @@ def main(data_dir, out_dir):
         if pw and sw["hi"] < 0 and pw["hi"] < 0 and sw["weight"] >= 0.25:
             recs.append({"id": "walk", "title": "Take a short walk after meals",
                          "text": f"Your sugar rose about {abs(v('walk_effect_blend'))} mg/dL less after meals when you walked. "
-                                 f"Aim for 10 to 20 minutes after your biggest meal.",
+                                 f"Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain ({abs(v('cohort_walk_dinner'))} mg/dL).",
                          "weightOnYourData": r(sw["weight"], 2),
-                         "basis": "personal", "evidenceIds": ["walk_effect_own", "walk_effect_blend", "cohort_walk_10_19"]})
+                         "basis": "personal", "evidenceIds": ["walk_effect_own", "walk_effect_blend", "cohort_walk_dinner", "cohort_walk_10_19"]})
         else:
             why = f"You walked after {v('walk_meals')} of your scored meals, too few to measure your own effect yet. " if walks < 6 else \
                   "We can't yet see a clear effect in your own meals. "
             recs.append({"id": "walk", "title": "Try a 10 to 20 minute walk after dinner",
-                         "text": why + f"Across the program, a 10 to 19 minute walk went with a rise about {abs(v('cohort_walk_10_19'))} mg/dL smaller in the same person. "
-                                       f"Longer walks added little: 20-29 minutes went with {abs(v('cohort_walk_20_29'))} mg/dL less and 30+ minutes with {abs(v('cohort_walk_30plus'))} mg/dL less.",
-                         "basis": "cohort", "evidenceIds": ["walk_meals", "cohort_walk_10_19", "cohort_walk_20_29", "cohort_walk_30plus"]})
+                         "text": why + f"Across the program, a walk after dinner went with a rise about {abs(v('cohort_walk_dinner'))} mg/dL smaller in the same person, "
+                                       f"more than after other meals ({abs(v('cohort_walk_other'))} mg/dL). "
+                                       f"10 to 19 minutes got most of the gain: {abs(v('cohort_walk_10_19'))} mg/dL less, against {abs(v('cohort_walk_20_29'))} for 20-29 minutes and {abs(v('cohort_walk_30plus'))} for 30+ minutes.",
+                         "basis": "cohort", "evidenceIds": ["walk_meals", "cohort_walk_dinner", "cohort_walk_other", "cohort_walk_10_19", "cohort_walk_20_29", "cohort_walk_30plus"]})
         # late dinner recommendation
         if night_shift:
             recs.append({"id": "late_dinner", "title": "Keep meal times steady around your shifts",
@@ -560,9 +602,10 @@ def main(data_dir, out_dir):
         elif not night_shift and "fast_avg" in evid:
             recs.append({"id": "overnight_fast", "title": "Aim for a 13-hour overnight break",
                          "text": f"Your overnight fast averaged {v('fast_avg')} hours, and {v('fast13_share')}% of nights reached 13 hours. "
-                                 f"In the randomized program, adding a 13-hour overnight fast to coaching changed HbA1c by {v('trial_fast_hba1c')} points "
-                                 f"(95% CI {evid['trial_fast_hba1c']['ci'][0]} to {evid['trial_fast_hba1c']['ci'][1]}) compared with coaching alone.",
-                         "basis": "trial", "evidenceIds": ["fast_avg", "fast13_share", "trial_fast_hba1c"]})
+                                 f"In the randomized program, for people who started with {info.blood_sugar_group}, adding the overnight fast to coaching changed HbA1c by "
+                                 f"{v('trial_fast_hba1c_group')} points (95% CI {evid['trial_fast_hba1c_group']['ci'][0]} to {evid['trial_fast_hba1c_group']['ci'][1]}) compared with coaching alone"
+                                 + (". The benefit was largest in type 2 diabetes." if info.blood_sugar_group != "type 2 diabetes" else ", the biggest gain of any group."),
+                         "basis": "trial", "evidenceIds": ["fast_avg", "fast13_share", "trial_fast_hba1c_group", "trial_fast_hba1c"]})
         if st == "alert" and low_sugar:
             recs.insert(0, {"id": "talk_to_team", "title": "Tell your care team about low readings",
                             "text": f"{v('tbr70')}% of your readings were below 70 mg/dL ({latest_label}); the usual target is under 4%. "
@@ -655,7 +698,9 @@ def main(data_dir, out_dir):
         "walkDose": [eff(d) for d in dose],
         "dinnerHour": [eff(d) for d in dinner_hour],
         "curves": curves,
-        "trial": {"arms": trial["arms"], "contrasts": {o: {k: eff(v_) for k, v_ in d.items()} for o, d in trial["contrasts"].items()}},
+        "trial": {"arms": trial["arms"], "contrasts": {o: {k: eff(v_) for k, v_ in d.items()} for o, d in trial["contrasts"].items()},
+                  "fastVsCoachingBySubgroup": {o: {k: eff(v_) for k, v_ in d.items()} for o, d in trial["fastVsCoachingBySubgroup"].items()},
+                  "adherence": {g_: {k: r(v_, 2) for k, v_ in d.items()} for g_, d in trial["adherence"].items()}},
         "statusCounts": status_counts,
         "realWorld": realworld,
         "methods": __doc__.split("Methods (all numbers in evidence[] come from here):")[1].strip(),

@@ -44,6 +44,11 @@ function allowedNumbers(rec: Rec, evidence: Map<string, Evidence>) {
   return allowed;
 }
 
+/** Causal verbs the AI may not introduce: the data shows patterns, not proof. */
+const CAUSAL = /\b(caus\w*|help(s|ed)?|lower(s|ed)?|reduc\w*|prevent\w*|cur(e|es|ed))\b/gi;
+const addedCausal = (ai: string, template: string) =>
+  (ai.match(CAUSAL) ?? []).filter((w) => !new RegExp(`\\b${w}\\b`, "i").test(template));
+
 function untraced(text: string, allowed: Set<number>) {
   return numbers(text).filter((n) => ![...allowed].some((a) => Math.abs(a - n) < 0.051));
 }
@@ -61,7 +66,7 @@ async function phrase(env: Env, detail: Detail) {
           content:
             "You rewrite health-coaching advice for a cancer survivor in warm, plain English (reading age 12). " +
             "Keep each item to two short sentences. Use ONLY numbers that appear in the given text; never add, change or round numbers. " +
-            "Do not add medical claims. Keep links as patterns (\"went with\", \"was linked to\"); never say a habit caused, helped or lowered something unless the text says so. Answer JSON: {\"items\":[{\"id\":string,\"text\":string}]}.",
+            "Do not add medical claims. Where the text links a habit to sugar, keep its own wording; do not upgrade it to caused, helped, lowered or reduced. Answer JSON: {\"items\":[{\"id\":string,\"text\":string}]}.",
         },
         { role: "user", content: JSON.stringify(detail.recommendations.map((r) => ({ id: r.id, text: r.text }))) },
       ],
@@ -91,8 +96,9 @@ async function phrase(env: Env, detail: Detail) {
     const ai = aiItems.get(rec.id);
     if (!ai) return { id: rec.id, title: rec.title, text: rec.text, source: "template", evidenceIds: rec.evidenceIds, rejected: null };
     const bad = untraced(ai, allowedNumbers(rec, evidence));
-    return bad.length
-      ? { id: rec.id, title: rec.title, text: rec.text, source: "template", evidenceIds: rec.evidenceIds, rejected: { text: ai, untracedNumbers: bad } }
+    const causal = addedCausal(ai, rec.text);
+    return bad.length || causal.length
+      ? { id: rec.id, title: rec.title, text: rec.text, source: "template", evidenceIds: rec.evidenceIds, rejected: { text: ai, untracedNumbers: bad, addedCausalWords: causal } }
       : { id: rec.id, title: rec.title, text: ai, source: "ai", evidenceIds: rec.evidenceIds, rejected: null };
   });
   const rawPreview = aiItems.size ? null : JSON.stringify(raw)?.slice(0, 600) ?? null;

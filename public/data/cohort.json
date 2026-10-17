@@ -29,24 +29,38 @@
    "people": 500,
    "rows": 18218
   },
+  "walkAfterDinner": {
+   "est": -18.71,
+   "lo": -20.43,
+   "hi": -17.24,
+   "people": 471,
+   "rows": 4711
+  },
+  "walkAfterOtherMeals": {
+   "est": -13.46,
+   "lo": -15.55,
+   "hi": -11.5,
+   "people": 500,
+   "rows": 13323
+  },
   "carbsPer10g": {
    "est": 5.34,
-   "lo": 5.07,
+   "lo": 5.11,
    "hi": 5.6,
    "people": 500,
    "rows": 18218
   },
   "fastMorningPerHour": {
    "est": -0.44,
-   "lo": -0.76,
-   "hi": -0.15,
+   "lo": -0.8,
+   "hi": -0.16,
    "people": 389,
    "rows": 3029
   },
   "fast13Morning": {
    "est": -1.14,
-   "lo": -2.39,
-   "hi": 0.03,
+   "lo": -2.07,
+   "hi": -0.03,
    "people": 389,
    "rows": 3029
   }
@@ -55,15 +69,15 @@
   "normal": {
    "walk": {
     "est": -13.42,
-    "lo": -14.95,
-    "hi": -11.97,
+    "lo": -14.91,
+    "hi": -12.04,
     "people": 230,
     "rows": 8525
    },
    "lateDinner": {
     "est": 5.79,
-    "lo": 3.92,
-    "hi": 7.77,
+    "lo": 3.6,
+    "hi": 7.73,
     "people": 217,
     "rows": 2200
    }
@@ -71,15 +85,15 @@
   "prediabetes": {
    "walk": {
     "est": -18.87,
-    "lo": -21.72,
-    "hi": -16.01,
+    "lo": -21.67,
+    "hi": -16.1,
     "people": 145,
     "rows": 5289
    },
    "lateDinner": {
     "est": 13.74,
-    "lo": 8.88,
-    "hi": 19.93,
+    "lo": 8.75,
+    "hi": 19.34,
     "people": 139,
     "rows": 1371
    }
@@ -87,15 +101,15 @@
   "type 2 diabetes": {
    "walk": {
     "est": -24.95,
-    "lo": -28.56,
-    "hi": -21.51,
+    "lo": -28.7,
+    "hi": -21.68,
     "people": 125,
     "rows": 4404
    },
    "lateDinner": {
     "est": 9.6,
-    "lo": 4.5,
-    "hi": 14.03,
+    "lo": 5.04,
+    "hi": 14.66,
     "people": 115,
     "rows": 1140
    }
@@ -112,8 +126,8 @@
   {
    "bin": "10-19 min",
    "est": -17.13,
-   "lo": -18.81,
-   "hi": -15.63,
+   "lo": -18.9,
+   "hi": -15.64,
    "people": 500,
    "rows": 18218,
    "n_meals": 866
@@ -121,8 +135,8 @@
   {
    "bin": "20-29 min",
    "est": -20.06,
-   "lo": -22.91,
-   "hi": -17.22,
+   "lo": -22.28,
+   "hi": -17.35,
    "people": 500,
    "rows": 18218,
    "n_meals": 311
@@ -130,8 +144,8 @@
   {
    "bin": "30+ min",
    "est": -16.79,
-   "lo": -19.07,
-   "hi": -14.52,
+   "lo": -19.08,
+   "hi": -14.45,
    "people": 500,
    "rows": 18218,
    "n_meals": 362
@@ -148,8 +162,8 @@
   {
    "bin": "6-7pm",
    "est": 6.32,
-   "lo": 3.43,
-   "hi": 8.91,
+   "lo": 3.52,
+   "hi": 9.01,
    "people": 471,
    "rows": 4707,
    "n_meals": 817
@@ -157,8 +171,8 @@
   {
    "bin": "7-8pm",
    "est": 11.18,
-   "lo": 8.23,
-   "hi": 14.22,
+   "lo": 7.91,
+   "hi": 14.1,
    "people": 471,
    "rows": 4707,
    "n_meals": 1014
@@ -166,8 +180,8 @@
   {
    "bin": "8-9pm",
    "est": 15.89,
-   "lo": 12.37,
-   "hi": 19.79,
+   "lo": 12.24,
+   "hi": 19.71,
    "people": 471,
    "rows": 4707,
    "n_meals": 964
@@ -175,8 +189,8 @@
   {
    "bin": "9-10pm",
    "est": 21.06,
-   "lo": 17.08,
-   "hi": 24.66,
+   "lo": 17.31,
+   "hi": 24.71,
    "people": 471,
    "rows": 4707,
    "n_meals": 738
@@ -184,8 +198,8 @@
   {
    "bin": "10pm or later",
    "est": 28.89,
-   "lo": 23.9,
-   "hi": 33.62,
+   "lo": 24.2,
+   "hi": 34.13,
    "people": 471,
    "rows": 4707,
    "n_meals": 532
@@ -331,19 +345,19 @@
     },
     "coaching + overnight fast vs coaching": {
      "est": -1.31,
-     "lo": -2.17,
-     "hi": -0.45,
+     "lo": -2.16,
+     "hi": -0.46,
      "n": 1126
     },
     "coaching vs tips by email": {
      "est": -2.75,
-     "lo": -3.52,
-     "hi": -2.01,
+     "lo": -3.54,
+     "hi": -1.98,
      "n": 1134
     },
     "coaching + overnight fast vs tips by email": {
      "est": -4.07,
-     "lo": -4.88,
+     "lo": -4.86,
      "hi": -3.25,
      "n": 1124
     }
@@ -363,8 +377,8 @@
     },
     "coaching + overnight fast vs coaching": {
      "est": -0.41,
-     "lo": -0.64,
-     "hi": -0.18,
+     "lo": -0.65,
+     "hi": -0.17,
      "n": 1126
     },
     "coaching vs tips by email": {
@@ -395,20 +409,20 @@
     },
     "coaching + overnight fast vs coaching": {
      "est": -0.09,
-     "lo": -0.61,
-     "hi": 0.44,
+     "lo": -0.63,
+     "hi": 0.45,
      "n": 1126
     },
     "coaching vs tips by email": {
      "est": 0.8,
      "lo": 0.28,
-     "hi": 1.31,
+     "hi": 1.29,
      "n": 1134
     },
     "coaching + overnight fast vs tips by email": {
      "est": 0.71,
      "lo": 0.19,
-     "hi": 1.22,
+     "hi": 1.21,
      "n": 1124
     }
    },
@@ -427,22 +441,108 @@
     },
     "coaching + overnight fast vs coaching": {
      "est": -1.44,
-     "lo": -4.89,
-     "hi": 1.94,
+     "lo": -4.87,
+     "hi": 1.9,
      "n": 1126
     },
     "coaching vs tips by email": {
      "est": 12.02,
-     "lo": 8.73,
-     "hi": 15.13,
+     "lo": 8.74,
+     "hi": 15.3,
      "n": 1134
     },
     "coaching + overnight fast vs tips by email": {
      "est": 10.58,
-     "lo": 7.44,
-     "hi": 13.76,
+     "lo": 7.5,
+     "hi": 13.8,
      "n": 1124
     }
+   }
+  },
+  "fastVsCoachingBySubgroup": {
+   "hba1c_pct": {
+    "blood sugar: normal": {
+     "est": -0.02,
+     "lo": -0.04,
+     "hi": 0.0,
+     "n": 513
+    },
+    "blood sugar: prediabetes": {
+     "est": -0.04,
+     "lo": -0.08,
+     "hi": -0.01,
+     "n": 334
+    },
+    "blood sugar: type 2 diabetes": {
+     "est": -0.08,
+     "lo": -0.15,
+     "hi": -0.01,
+     "n": 279
+    },
+    "excluding night shift": {
+     "est": -0.03,
+     "lo": -0.06,
+     "hi": -0.01,
+     "n": 1098
+    },
+    "night shift only": {
+     "est": 0.09,
+     "lo": -0.04,
+     "hi": 0.22,
+     "n": 28
+    }
+   },
+   "fasting_glucose_mg_dl": {
+    "blood sugar: normal": {
+     "est": -0.39,
+     "lo": -1.58,
+     "hi": 0.69,
+     "n": 513
+    },
+    "blood sugar: prediabetes": {
+     "est": -1.45,
+     "lo": -2.81,
+     "hi": -0.07,
+     "n": 334
+    },
+    "blood sugar: type 2 diabetes": {
+     "est": -3.41,
+     "lo": -5.27,
+     "hi": -1.5,
+     "n": 279
+    },
+    "excluding night shift": {
+     "est": -1.29,
+     "lo": -2.21,
+     "hi": -0.46,
+     "n": 1098
+    },
+    "night shift only": {
+     "est": -2.11,
+     "lo": -7.54,
+     "hi": 3.46,
+     "n": 28
+    }
+   }
+  },
+  "adherence": {
+   "coaching": {
+    "overnightFastHours": 12.07,
+    "nightsAtLeast13hPct": 35.67,
+    "eveningCaloriesPct": 19.99,
+    "walkAfterDinnerMin": 7.29
+   },
+   "coaching + overnight fast": {
+    "overnightFastHours": 13.05,
+    "nightsAtLeast13hPct": 62.26,
+    "eveningCaloriesPct": 12.87,
+    "walkAfterDinnerMin": 7.7
+   },
+   "tips by email": {
+    "overnightFastHours": 11.74,
+    "nightsAtLeast13hPct": 29.14,
+    "eveningCaloriesPct": 22.3,
+    "walkAfterDinnerMin": 3.86
    }
   }
  },

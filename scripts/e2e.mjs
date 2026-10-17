@@ -5,10 +5,16 @@ import { mkdirSync, writeFileSync } from "node:fs";
 
 const BASE = (process.argv[2] ?? "https://c4-glucose-guide.zay-259.workers.dev").replace(/\/$/, "");
 const STATUS = ["alert", "watch", "ok"];
-// Fixed numbers in advice wording that are rules, not measurements: 10 to 20 min walk, 8 pm,
-// 13-hour fast, 70-180 range, 70% target, walk bins 10-19 / 20-29 / 30+, weeks 1-2 / 11-12,
-// dinner clock times 6 pm / 8-9 pm, the 95% confidence level, and the 4% low-sugar target.
-const RULE_NUMBERS = new Set([1, 2, 4, 6, 8, 9, 10, 11, 12, 13, 19, 20, 29, 30, 70, 95, 180]);
+// Exact wording constants (rules and labels, not measurements). They are removed before
+// number extraction; every number left must trace to the cited evidence.
+const CONSTANT_PHRASES = [
+  /\b8-9 pm\b/g, /\bbefore 6 pm\b/g, /\b8 pm\b/g, /\b13-hour\b/g, /\b13 hours\b/g, /\b70-180\b/g, /95% CI\b/g,
+  /\bweeks 1-2\b/g, /\bweeks 11-12\b/g, /\b10 to 20 minutes?\b/g, /\b10 to 19 minutes?\b/g, /\b20-29 minutes\b/g,
+  /\b30\+ minutes\b/g, /under 4%/g, /more than 70%/g, /below 70 mg\/dL/g, /below 70%/g, /below 90%/g,
+  /\bHbA1c\b/g, /\btype 2 diabetes\b/g, /more than 5% of readings above (180|250)/g, /more than 4% of readings below 70/g, /up 10\+ mg\/dL/g,
+];
+const CAUSAL = /\b(caus\w*|help(s|ed)?|lower(s|ed)?|reduc\w*|prevent\w*|cur(e|es|ed))\b/gi;
+const strip = (t) => CONSTANT_PHRASES.reduce((acc, re) => acc.replace(re, " "), t);
 
 const failures = [];
 const check = (ok, msg) => { if (!ok) failures.push(msg); return ok; };
@@ -44,7 +50,7 @@ roster.body.forEach((s, i) => {
   if (i) check(rank(roster.body[i - 1].status) <= rank(s.status), `roster not sorted by status at ${i}`);
 });
 
-let recCount = 0, numberCount = 0, ruleNumberCount = 0;
+let recCount = 0, numberCount = 0, constantsStripped = 0;
 for (const tile of roster.body) {
   const d = await get(`/api/c4/survivors/${tile.survivorId}`);
   run.responses[`/api/c4/survivors/${tile.survivorId}`] = d;
@@ -64,12 +70,18 @@ for (const tile of roster.body) {
     recCount++;
     const refs = r.evidenceIds.map((x) => ev.get(x));
     check(refs.every(Boolean), `${id}/${r.id}: evidenceId does not resolve`);
-    for (const n of nums(r.text)) {
+    constantsStripped += nums(r.text).length - nums(strip(r.text)).length;
+    for (const n of nums(strip(r.text))) {
       numberCount++;
-      if (traced(n, refs.filter(Boolean))) continue;
-      if (RULE_NUMBERS.has(n)) { ruleNumberCount++; continue; }
-      check(false, `${id}/${r.id}: number ${n} in advice is not in its evidence`);
+      check(traced(n, refs.filter(Boolean)), `${id}/${r.id}: number ${n} in advice is not in its evidence`);
     }
+  }
+  // headline and summary numbers are rounded person-level evidence values (+-0.5)
+  const personEv = b.evidence.filter((e) => e.scope === "person");
+  for (const field of ["headline", "summary"]) {
+    const text = strip(b[field].replace(/\d+-year-old|[\d.]+ years after treatment|\(made-up data\)/g, " "));
+    for (const n of nums(text))
+      check(personEv.some((e) => typeof e.value === "number" && Math.abs(Math.abs(e.value) - n) <= 0.5), `${id}: ${field} number ${n} not in evidence`);
   }
 }
 
@@ -86,7 +98,11 @@ for (const it of advice.body?.items ?? []) {
   const rec = detailEv.recommendations.find((r) => r.id === it.id);
   const refs = it.evidenceIds.map((x) => detailEv.evidence.find((e) => e.id === x)).filter(Boolean);
   const allowed = new Set(nums(rec.text));
-  for (const n of nums(it.text)) check(allowed.has(n) || traced(n, refs), `advice ${it.id}: AI number ${n} not traced`);
+  for (const n of nums(strip(it.text))) check(allowed.has(n) || traced(n, refs), `advice ${it.id}: AI number ${n} not traced`);
+  if (it.source === "ai") {
+    const added = (it.text.match(CAUSAL) ?? []).filter((w) => !new RegExp(`\\b${w}\\b`, "i").test(rec.text));
+    check(added.length === 0, `advice ${it.id}: AI added causal wording ${added.join(",")}`);
+  }
 }
 const aiUsed = (advice.body?.items ?? []).filter((i) => i.source === "ai").length;
 
@@ -102,7 +118,7 @@ const counts = Object.fromEntries(STATUS.map((s) => [s, roster.body.filter((x) =
 run.summary = {
   pass: failures.length === 0, failures,
   survivors: roster.body.length, statusCounts: counts, recommendations: recCount,
-  adviceNumbers: numberCount, numbersTracedToEvidence: numberCount - ruleNumberCount, ruleNumbers: ruleNumberCount,
+  adviceNumbersTracedToEvidence: numberCount, wordingConstantsStripped: constantsStripped,
   aiAdvice: { survivorId: alertId, model: advice.body?.model, ms: advice.body?.ms, itemsRephrasedByAi: aiUsed, items: advice.body?.items?.length },
   finishedAt: new Date().toISOString(),
 };
