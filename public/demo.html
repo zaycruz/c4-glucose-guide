@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glucose Guide</title>
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--ink:#1d2327;--mute:#5f6b73;--line:#e3e5e8;--accent:#1f6feb;--late:#d9480f;--ok:#2b8a3e;--watch:#e8a400;--alert:#c92a2a;--band:#e8f5e9}
+@media (prefers-color-scheme:dark){:root{--bg:#121416;--card:#1b1e21;--ink:#e8eaed;--mute:#9aa4ad;--line:#2c3136;--accent:#58a6ff;--late:#ff8a4c;--band:#1d2e22}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:16px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}
+header h1{font-size:18px;margin:0}header span{color:var(--mute);font-size:13px}
+nav button{background:none;border:1px solid var(--line);color:var(--ink);padding:6px 12px;border-radius:6px;cursor:pointer}
+nav button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+main{display:grid;grid-template-columns:300px 1fr;gap:16px;padding:16px;max-width:1300px;margin:auto}
+@media (max-width:800px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+#roster{max-height:80vh;overflow:auto;padding:6px}
+.tile{padding:8px 10px;border-radius:8px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.tile:hover,.tile.sel{background:var(--bg)}
+.dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex:none}
+.ok{background:var(--ok)}.watch{background:var(--watch)}.alert{background:var(--alert)}
+.tile b{font-size:14px;display:block}.tile small{color:var(--mute)}
+.pill{display:inline-block;padding:2px 8px;border-radius:99px;color:#fff;font-size:12px;font-weight:600;text-transform:uppercase}
+h2{margin:0 0 4px;font-size:20px}h3{margin:0 0 8px;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px;margin-top:14px}
+.rec{border-left:4px solid var(--accent);padding:8px 12px;margin:10px 0;background:var(--bg);border-radius:0 8px 8px 0}
+.rec .basis{font-size:11px;text-transform:uppercase;color:var(--mute);letter-spacing:.04em}
+.chip{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:6px;padding:1px 6px;margin:4px 4px 0 0;cursor:pointer;color:var(--mute)}
+.ev{font-size:13px;border-top:1px solid var(--line);padding:6px 0}.ev.hl{background:#fff3bf33}
+.ev .v{font-weight:600}.ev small{color:var(--mute);display:block}
+svg text{fill:var(--mute);font-size:11px}.legend{font-size:12px;color:var(--mute)}.legend i{display:inline-block;width:14px;height:3px;margin:0 4px 3px 10px;vertical-align:middle}
+table{border-collapse:collapse;width:100%;font-size:13px}td,th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}
+.note{color:var(--mute);font-size:12px}
+#aiBtn{margin-left:8px;font-size:12px;padding:3px 8px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;cursor:pointer}
+
+#roster{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 90px);overflow:auto;padding:8px}
+#filters{display:flex;gap:6px;flex-wrap:wrap;padding:4px 4px 10px;position:sticky;top:-8px;background:var(--card);z-index:1}
+#filters button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:3px 10px;font-size:12px;cursor:pointer}
+#filters button span{color:var(--mute)}#filters button.on{background:var(--ink);color:var(--card)}#filters button.on span{color:var(--card)}
+.tile{display:block;padding:9px 10px;border-radius:8px;border:1px solid transparent}.tile.sel{border-color:var(--accent)}
+.row1{display:flex;gap:8px;align-items:center}.row1 .dot{margin:0}.tile .hl{font-size:13px;margin:2px 0 4px 18px}
+.tags{display:flex;flex-wrap:wrap;gap:4px}.tile .tags{margin-left:18px}
+.tag{font-size:11.5px;padding:1px 7px;border-radius:99px;border:1px solid;white-space:nowrap}
+.tag.risk{color:var(--alert);border-color:var(--alert)}.tag.warn{color:#9a6b00;border-color:var(--watch)}.tag.good{color:var(--ok);border-color:var(--ok)}.tag.info{color:var(--mute);border-color:var(--line)}
+@media (prefers-color-scheme:dark){.tag.warn{color:var(--watch)}}
+.head h2{display:inline;font-size:20px}.big{font-size:19px;font-weight:600;margin:8px 0 2px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;border-top:4px solid var(--line)}
+.kpi.k-ok{border-top-color:var(--ok)}.kpi.k-bad{border-top-color:var(--alert)}.kl{font-size:12px;color:var(--mute)}.kv{font-size:24px;font-weight:700}.ks{font-size:11px;color:var(--mute)}
+.sec{display:flex;align-items:center;gap:10px;margin:18px 0 8px;flex-wrap:wrap}.sec h3{margin:0;font-size:17px}
+.advice{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;margin-bottom:12px}
+@media (max-width:1000px){.advice{grid-template-columns:1fr}}
+.advice h3{font-size:16px;margin:2px 0 6px}.advice .txt{margin:0 0 8px}
+.basis{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}.b-personal{color:var(--ok)}.b-cohort{color:var(--accent)}.b-trial{color:#7048e8}.b-rule{color:var(--alert)}.rdc{display:inline-block;margin:6px 0 2px;font-size:12px;padding:2px 8px;border-radius:10px;border:1px solid var(--line,#ccd);color:var(--mute)}.rdc-agrees{color:var(--ok);border-color:var(--ok)}.rdc-same{color:var(--accent);border-color:var(--accent)}.rdc-disagrees{color:var(--alert);border-color:var(--alert)}
+details summary{cursor:pointer;color:var(--accent);font-size:13px}h4{margin:0 0 4px;font-size:13px;color:var(--mute);font-weight:600}
+#panel{min-width:0}
+</style>
+</head>
+<body>
+<header><h1>Glucose Guide</h1><span>Meals, meal timing and movement vs blood sugar · Coach Console module C4 · synthetic data, nobody is real</span>
+<nav><button id="tabP" class="on">Survivors</button> <button id="tabC">Cohort findings</button></nav></header>
+<main id="vP"><aside class="card" id="roster"><div id="filters"></div><div id="rosterList"></div></aside><div id="panel"></div></main>
+<main id="vC" style="display:none;grid-template-columns:1fr"><div id="cohort"></div></main>
+<script>
+const $=s=>document.querySelector(s), el=(t,a={},h='')=>{const e=document.createElement(t);Object.assign(e,a);e.innerHTML=h;return e};
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt=(v,u)=>v==null?'–':`${v}${u?(u==='%'?'%':' '+u):''}`;
+
+// minimal SVG charts
+function axes(W,H,P,xs,ymin,ymax,xl,yl){
+  const X=i=>P+i*(W-2*P)/(xs.length-1), Y=v=>H-P-(v-ymin)/(ymax-ymin)*(H-2*P);
+  let g=`<line x1="${P}" y1="${H-P}" x2="${W-P}" y2="${H-P}" stroke="${css('--line')}"/>`;
+  const ticks=5;for(let k=0;k<=ticks;k++){const v=ymin+k*(ymax-ymin)/ticks;g+=`<text x="${P-4}" y="${Y(v)+4}" text-anchor="end">${Math.round(v)}</text><line x1="${P}" x2="${W-P}" y1="${Y(v)}" y2="${Y(v)}" stroke="${css('--line')}" stroke-dasharray="2 3"/>`}
+  const step=Math.ceil(xs.length/8);xs.forEach((x,i)=>{if(i%step===0)g+=`<text x="${X(i)}" y="${H-P+14}" text-anchor="middle">${x}</text>`});
+  g+=`<text x="${W/2}" y="${H-2}" text-anchor="middle">${xl}</text><text x="10" y="${P-8}">${yl}</text>`;
+  return {g,X,Y};
+}
+function lineChart(xs,series,{xl='',yl='',band=null,zero=false,W=420,H=230}={}){
+  const P=38;const all=series.flatMap(s=>s.v||[]).filter(v=>v!=null);if(!all.length)return '<p class="note">Not enough data.</p>';
+  let lo=Math.min(...all,zero?0:Infinity),hi=Math.max(...all);if(band){lo=Math.min(lo,band[0]-10);hi=Math.max(hi,band[1]+10)}
+  const pad=(hi-lo)*.08||5;const {g,X,Y}=axes(W,H,P,xs,Math.floor(lo-pad),Math.ceil(hi+pad),xl,yl);
+  let b=band?`<rect x="${P}" width="${W-2*P}" y="${Y(band[1])}" height="${Y(band[0])-Y(band[1])}" fill="${css('--band')}"/>`:'';
+  let lines='';for(const s of series){if(!s.v)continue;let d='';s.v.forEach((v,i)=>{if(v==null)return;d+=(d?'L':'M')+X(i)+' '+Y(v)});
+    lines+=`<path d="${d}" fill="none" stroke="${s.c}" stroke-width="${s.w||2.5}" ${s.dash?'stroke-dasharray="5 4"':''}/>`}
+  const leg=series.filter(s=>s.v).map(s=>`<i style="background:${s.c}"></i>${s.l}`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%">${b}${g}${lines}</svg><div class="legend">${leg}</div>`;
+}
+function ciChart(bins,est,lo,hi,{yl='',xl='',color}={}){
+  const W=420,H=230,P=38;const ymin=Math.min(0,...lo)-3,ymax=Math.max(0,...hi)+3;const {g,X,Y}=axes(W,H,P,bins,ymin,ymax,xl,yl);
+  let m=`<line x1="${P}" x2="${W-P}" y1="${Y(0)}" y2="${Y(0)}" stroke="${css('--mute')}"/>`;
+  bins.forEach((_,i)=>{m+=`<line x1="${X(i)}" x2="${X(i)}" y1="${Y(lo[i])}" y2="${Y(hi[i])}" stroke="${color}" stroke-width="3" opacity=".45"/><circle cx="${X(i)}" cy="${Y(est[i])}" r="5" fill="${color}"/><text x="${X(i)+8}" y="${Y(est[i])-6}">${est[i]>0?'+':''}${est[i]}</text>`});
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%">${g}${m}</svg><div class="legend">dot = estimate · bar = 95% confidence interval</div>`;
+}
+function scatter(xs,ys){
+  if(!xs.length)return '<p class="note">No nights with sensor data.</p>';
+  const W=420,H=230,P=38,x0=Math.floor(Math.min(...xs))-1,x1=Math.ceil(Math.max(...xs))+1,y0=Math.min(...ys)-10,y1=Math.max(...ys)+10;
+  const X=v=>P+(v-x0)/(x1-x0)*(W-2*P),Y=v=>H-P-(v-y0)/(y1-y0)*(H-2*P);
+  let g='';for(let v=x0;v<=x1;v+=2)g+=`<text x="${X(v)}" y="${H-P+14}" text-anchor="middle">${v}</text>`;
+  for(let k=0;k<=4;k++){const v=y0+k*(y1-y0)/4;g+=`<text x="${P-4}" y="${Y(v)+4}" text-anchor="end">${Math.round(v)}</text>`}
+  g+=`<line x1="${X(13)}" x2="${X(13)}" y1="${P}" y2="${H-P}" stroke="${css('--ok')}" stroke-dasharray="4 3"/><text x="${X(13)+4}" y="${P+10}">13 h</text>`;
+  const pts=xs.map((x,i)=>`<circle cx="${X(x)}" cy="${Y(ys[i])}" r="4" fill="${css('--accent')}" opacity=".7"/>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%">${g}${pts}<text x="${W/2}" y="${H-2}" text-anchor="middle">overnight fast (hours)</text><text x="10" y="${P-8}">pre-breakfast mg/dL</text></svg>`;
+}
+
+let roster=[],cur=null,filter='all';
+const TONE={risk:'var(--alert)',warn:'var(--watch)',good:'var(--ok)',info:'var(--mute)'};
+const tagHtml=t=>`<span class="tag ${t.tone}">${t.label}</span>`;
+function renderRoster(){
+  const r=$('#rosterList');r.innerHTML='';
+  for(const s of roster.filter(x=>filter==='all'||x.status===filter)){
+    const t=el('div',{className:'tile'+(cur&&cur.survivorId===s.survivorId?' sel':'')},`<div class="row1"><span class="dot ${s.status}"></span><b>${s.displayName}</b></div><div class="hl">${s.headline}</div><div class="tags">${s.tags.map(tagHtml).join('')}</div>`);
+    t.onclick=()=>show(s.survivorId);r.append(t)}
+}
+async function load(){
+  roster=await (await fetch('/api/c4/survivors')).json();
+  const n=k=>roster.filter(x=>k==='all'||x.status===k).length;
+  $('#filters').innerHTML=['all','alert','watch','ok'].map(k=>`<button data-f="${k}" class="${k===filter?'on':''}">${k==='all'?'All':k[0].toUpperCase()+k.slice(1)} <span>${n(k)}</span></button>`).join('');
+  document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{filter=b.dataset.f;document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('on',x===b));renderRoster()});
+  renderRoster();show((roster.find(x=>x.survivorId==='c4-N0632')||roster[0]).survivorId);
+}
+async function show(id){
+  const d=await (await fetch('/api/c4/survivors/'+id)).json();cur=d;renderRoster();const C=d.charts;
+  const ev=Object.fromEntries(d.evidence.map(e=>[e.id,e]));
+  const acc=css('--accent'),late=css('--late'),mute=css('--mute'),okc=css('--ok');
+  const kpi=(id,label,good,sub)=>{const e=ev[id];if(!e)return'';return `<div class="kpi ${good==null?'':good?'k-ok':'k-bad'}"><div class="kl">${label}</div><div class="kv">${fmt(e.value,e.unit)}</div><div class="ks">${sub}</div></div>`};
+  const tir=ev.tir?.value,tbr=ev.tbr70?.value,avg=ev.mean_glucose?.value,dr_=ev.dinner_rise?.value;
+  const kpis=kpi('tir','Time in range',tir>=70&&tir>=90?true:tir<70?false:null,'target over 70%, ideal 90%+')+kpi('tbr70','Lows (below 70)',tbr<=4,'target under 4%')+kpi('mean_glucose','Average sugar',avg<=154,'mg/dL, '+(ev.tir.label.match(/\(([^)]+)\)/)||['',''])[1])+(dr_!=null?kpi('dinner_rise','Rise after dinner',dr_<=50?true:dr_>=80?false:null,'typical, mg/dL above pre-meal'):'');
+  const dr=C.dinnerResponse,wr=C.walkResponse;
+  const charts={
+    walk:`<h4>Walk after a meal vs not</h4>`+lineChart(wr.minutes,[{l:`you, no walk (${wr.you.nNoWalk})`,v:wr.you.noWalk,c:late},{l:`you, walked (${wr.you.nWalk})`,v:wr.you.walk,c:okc},{l:'program, no walk',v:wr.cohort.noWalk,c:late,dash:1,w:1.5},{l:'program, walked',v:wr.cohort.walk,c:okc,dash:1,w:1.5}],{xl:'minutes after meal',yl:'mg/dL above pre-meal',zero:true}),
+    late_dinner:`<h4>Early vs late dinner (8 pm or later)</h4>`+lineChart(dr.minutes,[{l:`you, early (${dr.you.nEarly})`,v:dr.you.early,c:acc},{l:`you, late (${dr.you.nLate})`,v:dr.you.late,c:late},{l:'program, early',v:dr.cohort.early,c:acc,dash:1,w:1.5},{l:'program, late',v:dr.cohort.late,c:late,dash:1,w:1.5}],{xl:'minutes after dinner',yl:'mg/dL above pre-meal',zero:true}),
+    overnight_fast:`<h4>Overnight fast vs next-morning sugar</h4>`+scatter(C.overnightFast.hours,C.overnightFast.morningGlucose),
+    talk_to_team:`<h4>Check-ups</h4><table><tr><th></th><th>week 0</th><th>week 12</th></tr>${C.checkups.metrics.map((m,i)=>`<tr><td>${{hba1c_pct:'HbA1c %',fasting_glucose_mg_dl:'Fasting glucose',weight_kg:'Weight kg'}[m]||m}</td><td>${fmt(C.checkups.week0[i])}</td><td>${fmt(C.checkups.week12[i])}</td></tr>`).join('')}</table>`,
+  };
+  const basis={personal:'From your own data',cohort:'From the program',trial:'From the randomized trial',rule:'Safety rule'};
+  const evRow=e=>`<div class="ev"><span class="v">${fmt(e.value,e.unit)}</span>${e.ci?` <span class="note">95% CI ${e.ci[0]} to ${e.ci[1]}</span>`:''} · ${e.label}${e.n!=null?` <span class="note">(n=${e.n})</span>`:''}<small>${e.method}${e.caveat?' '+e.caveat:''}</small></div>`;
+  const recs=d.recommendations.map((r,i)=>`<div class="card advice"><div class="atext"><div class="basis b-${r.basis}">${i+1} · ${basis[r.basis]||r.basis}</div><h3>${r.title}</h3><p class="txt" data-id="${r.id}">${r.text}</p>${r.realDataCheck?`<div class="rdc rdc-${r.realDataCheck.label.split(/[ ,]/)[0]}">Real-data check: ${r.realDataCheck.label}</div>`:''}
+     <details><summary>Show the numbers (${r.evidenceIds.length})</summary>${r.evidenceIds.map(x=>ev[x]).filter(Boolean).map(evRow).join('')}</details></div>
+     <div class="achart">${charts[r.id]||''}</div></div>`).join('');
+  const p=d.profile;
+  $('#panel').innerHTML=`<div class="card head"><div><span class="pill ${d.status}">${d.status}</span> <h2>${d.displayName}</h2></div><p class="big">${d.headline}</p>
+    <p class="note">${p.age}${p.sex==='female'?'F':'M'} · ${p.cancerType} cancer, ${p.yearsSinceTreatment} y after treatment · ${p.bloodSugarGroup} at start · ${p.group} · ${p.workSchedule}</p>
+    <div class="tags">${d.tags.map(tagHtml).join('')}</div></div>
+  <div class="kpis">${kpis}</div>
+  <div class="card"><h4>A typical day</h4>${lineChart(C.dailyProfile.hours,C.dailyProfile.series.map((s,i)=>({l:s.label,v:s.values,c:i?acc:mute})),{xl:'hour of day',yl:'mg/dL',band:C.dailyProfile.targetRange,W:1000,H:220})}<p class="note">Green band: 70-180 mg/dL target range.</p></div>
+  <div class="sec"><h3>What to try</h3><button id="aiBtn">Rephrase with Workers AI</button><span class="note" id="aiNote"></span></div>
+  ${recs}
+  <p class="note">${d.dataNote}</p>`;
+  $('#panel').scrollTop=0;window.scrollTo({top:0});
+  $('#aiBtn').onclick=async()=>{$('#aiNote').textContent='Asking Workers AI…';const a=await (await fetch(`/api/c4/survivors/${d.survivorId}/advice`)).json();
+    for(const it of a.items){const box=document.querySelector(`.txt[data-id="${it.id}"]`);if(box)box.textContent=it.text}
+    const ai=a.items.filter(i=>i.source==='ai').length,rej=a.items.filter(i=>i.rejected).length;
+    $('#aiNote').textContent=`${ai} of ${a.items.length} rephrased in ${a.ms} ms · ${rej} rejected (number not in evidence, or causal wording)${a.error?' · AI error: '+a.error:''}`};
+}
+async function cohort(){
+  const c=await (await fetch('/api/c4/cohort')).json(),E=c.effects,T=c.trial.contrasts;
+  const wd=c.walkDose,dh=c.dinnerHour,acc=css('--accent'),late=css('--late');
+  const row=(l,e,u)=>`<tr><td>${l}</td><td>${e.est>0?'+':''}${e.est} ${u}</td><td>${e.lo} to ${e.hi}</td><td>${e.people??''}</td><td>${e.rows??e.n??''}</td></tr>`;
+  const bg=c.effectsByBloodSugarGroup;
+  $('#cohort').innerHTML=`<div class="card"><h2>Cohort findings</h2><p class="note">${c.source}. ${c.statusCounts.alert} alert, ${c.statusCounts.watch} watch, ${c.statusCounts.ok} ok among all sensor wearers.</p></div>
+  <div class="grid"><div class="card"><h3>How much walking is enough?</h3>${ciChart(wd.map(d=>d.bin),wd.map(d=>d.est),wd.map(d=>d.lo),wd.map(d=>d.hi),{yl:'mg/dL vs no walk',xl:'walk after the meal',color:css('--ok')})}<p class="note">Same person, same carbs: sugar rise after a meal with a walk of that length vs no walk. 10 minutes gets most of the benefit. Walking was self-chosen, so this is a pattern, not proof.</p></div>
+  <div class="card"><h3>Does a late dinner matter?</h3>${ciChart(dh.map(d=>d.bin),dh.map(d=>d.est),dh.map(d=>d.lo),dh.map(d=>d.hi),{yl:'mg/dL vs before 6 pm',xl:'dinner start time',color:late})}<p class="note">Same person, same carbs: every hour later adds to the rise. Night-shift workers left out.</p></div></div>
+  <div class="grid"><div class="card"><h3>Within-person effects on the post-meal rise <span class="note">· ML engine (double ML)</span></h3><table><tr><th>effect</th><th>estimate</th><th>95% CI</th><th>people</th><th>meals</th></tr>
+   ${row('Walk after meal (any length)',E.walk,'mg/dL')}${row('Walk after dinner (evening walk)',E.walkAfterDinner,'mg/dL')}${row('Walk after other meals',E.walkAfterOtherMeals,'mg/dL')}${row('Dinner at 8 pm or later',E.lateDinner,'mg/dL')}${row('+10 g carbs',E.carbsPer10g,'mg/dL')}${row('Overnight fast, per extra hour → pre-breakfast',E.fastMorningPerHour,'mg/dL')}${row('Overnight fast ≥ 13 h → pre-breakfast',E.fast13Morning,'mg/dL')}</table>
+   <h3 style="margin-top:14px">By blood sugar group</h3><table><tr><th>group</th><th>walk</th><th>late dinner</th></tr>${Object.entries(bg).map(([k,v])=>`<tr><td>${k}</td><td>${v.walk.est} (${v.walk.lo} to ${v.walk.hi})</td><td>+${v.lateDinner.est} (${v.lateDinner.lo} to ${v.lateDinner.hi})</td></tr>`).join('')}</table><p class="note">The walk goes with the biggest drop in type 2 diabetes (the intervals don't overlap with normal blood sugar), and most after dinner.</p></div>
+  <div class="card"><h3>Randomized program: week 12 minus week 0</h3><table><tr><th>outcome</th><th>fast + coaching vs coaching</th><th>coaching vs tips</th></tr>
+   ${['hba1c_pct','fasting_glucose_mg_dl','weight_kg','fatigue_score_0_to_52','six_minute_walk_m'].map(o=>{const a=T[o]['coaching + overnight fast vs coaching'],b=T[o]['coaching vs tips by email'];return `<tr><td>${o}</td><td>${a.est} (${a.lo} to ${a.hi})</td><td>${b.est} (${b.lo} to ${b.hi})</td></tr>`}).join('')}</table>
+   <h3 style="margin-top:14px">Who gains from the overnight fast? (fast + coaching vs coaching)</h3><table><tr><th>subgroup</th><th>HbA1c</th><th>fasting glucose</th></tr>${Object.keys(c.trial.fastVsCoachingBySubgroup.hba1c_pct).map(k=>{const a=c.trial.fastVsCoachingBySubgroup.hba1c_pct[k],b=c.trial.fastVsCoachingBySubgroup.fasting_glucose_mg_dl[k];return `<tr><td>${k} (n=${a.n})</td><td>${a.est} (${a.lo} to ${a.hi})</td><td>${b.est} (${b.lo} to ${b.hi})</td></tr>`}).join('')}</table>
+   <h3 style="margin-top:14px">Did the arms do what they were told?</h3><table><tr><th>arm</th><th>overnight fast h</th><th>nights ≥ 13 h</th><th>evening kcal %</th><th>walk after dinner min</th></tr>${Object.entries(c.trial.adherence).map(([k,v])=>`<tr><td>${k}</td><td>${v.overnightFastHours}</td><td>${v.nightsAtLeast13hPct}%</td><td>${v.eveningCaloriesPct}</td><td>${v.walkAfterDinnerMin}</td></tr>`).join('')}</table>
+   <p class="note">Groups were assigned at random, so these are fair comparisons. Completers only: ${Object.entries(c.trial.arms).map(([k,v])=>`${k} ${v.finished}/${v.randomized}`).join(', ')}.</p></div></div>
+  ${c.robustness?(()=>{const NM={walk:'walk after a meal',lateDinner:'late dinner',overnightFast:'overnight fast'},R=c.robustness,ci=e=>`${e.est>0?'+':''}${e.est} (${e.lo} to ${e.hi})`,H=c.trial.heterogeneity.hba1c_pct,t2=c.trial.fastVsCoachingBySubgroup.hba1c_pct['blood sugar: type 2 diabetes'];return `<div class="card" style="margin-top:14px"><h3>How sure are we?</h3>
+   <table><tr><th>check</th><th>result</th><th>what it means</th></tr>
+   <tr><td>Negative control: pre-meal sugar before walk meals (mg/dL)</td><td>${ci(R.negativeControl)}</td><td>A later walk can't change it. Near zero vs the walk effect of ${E.walk.est}, so walk meals don't start from a different place.</td></tr>
+   <tr><td>E-value for the walk effect</td><td>${R.eValue.estimate} (CI bound ${R.eValue.ciBound})</td><td>A hidden factor would need a risk ratio of about ${R.eValue.estimate} with both walking and the rise to explain it away.</td></tr>
+   <tr><td>Randomized arm as an instrument for walking</td><td>first stage +${R.instrument.firstStage.est} pts (${R.instrument.firstStage.lo} to ${R.instrument.firstStage.hi})</td><td>${R.instrumentVerdict}</td></tr>
+   <tr><td>Do blood sugar groups differ in the fast effect?</td><td>Q test p = ${H.p}; type 2 diabetes p = ${t2.pHolm} after Holm</td><td>${c.trial.groupSpecificAdvice?'Yes: advice uses each group\'s number.':'Not shown: the program could not tell the groups apart, so advice uses the overall fast number.'}</td></tr>
+   ${Object.entries(R.realDataChecks).map(([k,v])=>`<tr><td>Real-data check: ${NM[k]||k}</td><td>${v.real?ci(v.real):'–'} vs program ${v.program}</td><td><b>${v.label}</b> · ${v.source}</td></tr>`).join('')}
+   ${Object.entries(R.power).map(([k,v])=>`<tr><td>People needed to confirm (${NM[k]||k})</td><td>${v.peopleForRealEffect} for the real-data size (${v.realEffect}); ${v.peopleForProgramEffect} for the program size (${v.programEffect})</td><td>80% power, from ${v.realPeople} real people today.</td></tr>`).join('')}
+   </table></div>`})():''}
+  ${c.mlCompare?(()=>{const M=c.mlCompare,P=M.predictProgram.splits,G=M.predictCgmacros.splits['new people (5-fold)'],B=M.effectBenchmark,Q=M.personalBenchmark,R=M.realEffects,FE='Fixed effects (statistics)',DM='Double ML (gradient boosting, shipped)',ci=e=>`${e.est>0?'+':''}${e.est} (${e.lo} to ${e.hi})`,mods=['Linear, per-person intercept (fixed effects)','Random forest','Gradient boosting'],cell=v=>`${v.mae.est} · R² ${v.r2.est}`;return `<div class="card" style="margin-top:14px"><h3>Statistics vs machine learning</h3>${c.forecast?`<p class="note"><b>Forecast model</b> (gradient boosting, every meal forecast by a model that never saw it): typical miss ${c.forecast.mae} mg/dL, R² ${c.forecast.r2}. Each person's panel shows the forecast for their typical dinner.</p>`:''}
+   <p class="note">Why the advice runs on machine learning. Same inputs for every model. ML predicts the rise better for new people and in real data, and double ML recovers planted effects best, so it now produces every meal-level number in the advice. The classic regression stays as a cross-check and agrees on the real data. Randomized trial results and NHANES stay statistical: randomization and survey weights need no model. Details: ML_COMPARISON.md.</p>
+   <table><tr><th>predict the rise (MAE mg/dL · R²)</th><th>linear (statistics)</th><th>random forest</th><th>gradient boosting</th></tr>
+   ${[['Program, same people, later days',P['later days (same people)']],['Program, new people',P['new people (5-fold)']],['Real adults (CGMacros), new people',G]].map(([l,S])=>`<tr><td>${l}</td>${mods.map(m=>`<td>${cell(S[m])}</td>`).join('')}</tr>`).join('')}</table>
+   <table style="margin-top:10px"><tr><th>recover a planted ${M.plantedEffect} mg/dL effect</th><th>linear confounding: bias · CI covers truth</th><th>nonlinear confounding: bias · CI covers truth</th></tr>
+   ${Object.keys(B.linear).map(k=>`<tr><td>${k}</td>${['linear','nonlinear'].map(s=>`<td>${B[s][k].bias>0?'+':''}${B[s][k].bias} · ${B[s][k].coverage95===null?'no CI':B[s][k].coverage95+'%'}</td>`).join('')}</tr>`).join('')}</table>
+   <table style="margin-top:10px"><tr><th>check</th><th>statistics</th><th>machine learning</th></tr>
+   <tr><td>Personal effects, error vs planted truth (RMSE)</td><td>${Q.rmse['Blend with cohort (empirical Bayes, statistics)']} (blend)</td><td>${Q.rmse['S-learner per person (gradient boosting)']} (S-learner)</td></tr>
+   <tr><td>Walk after a meal, real program data</td><td>${ci(R.walk[FE])}</td><td>${ci(R.walk[DM])} (double ML)</td></tr>
+   <tr><td>Dinner at 8 pm or later, real program data</td><td>${ci(R.lateDinner[FE])}</td><td>${ci(R.lateDinner[DM])} (double ML)</td></tr></table></div>`})():''}
+  ${c.realWorld?(()=>{const g=c.realWorld.cgmacros,n=c.realWorld.nhanesSurvivors,ci=e=>`${e.est>0?'+':''}${e.est} (${e.lo} to ${e.hi})`;return `<div class="card" style="margin-top:14px"><h3>Does it hold in real people?</h3>
+   <table><tr><th>check</th><th>program (synthetic)</th><th>real data</th></tr>
+   <tr><td>Late dinner (8 pm+), rise in mg/dL</td><td>${ci(E.lateDinner)}</td><td>${ci(g.lateDinner)} · CGMacros, ${g.lateDinner.people} people</td></tr>
+   <tr><td>Movement after a meal, rise in mg/dL</td><td>walk: ${ci(E.walk)}</td><td>per MET: ${ci(g.movementPerMet)} · CGMacros</td></tr>
+   <tr><td>+10 g carbs, rise in mg/dL</td><td>${ci(E.carbsPer10g)}</td><td>${ci(g.carbsPer10g)} · CGMacros</td></tr>
+   <tr><td>Overnight fast, HbA1c per extra hour</td><td>trial arm: ${ci(T.hba1c_pct['coaching + overnight fast vs coaching'])} total</td><td>${ci(n.hba1cPerFastHour)} · NHANES survivors (n=${n.hba1cPerFastHour.n})</td></tr>
+   <tr><td>Daily movement, HbA1c per 1,000 MIMS</td><td>–</td><td>${ci(n.hba1cPer1000Mims)} · NHANES survivors (n=${n.hba1cPer1000Mims.n})</td></tr>
+   ${c.realWorld.nhanesSurvivorsWeighted?(()=>{const w=c.realWorld.nhanesSurvivorsWeighted;return `<tr><td>Overnight fast, HbA1c per extra hour · <b>survey-weighted</b></td><td>–</td><td>${ci(w.hba1cPerFastHour)} · US survivors (n=${w.hba1cPerFastHour.n})</td></tr><tr><td>Daily movement, HbA1c per 1,000 MIMS · <b>survey-weighted</b></td><td>–</td><td>${ci(w.hba1cPer1000Mims)} · US survivors (n=${w.hba1cPer1000Mims.n})</td></tr>`})():''}
+   ${g.walk10?`<tr><td>Walk after a meal (${g.walkDefinition}), rise in mg/dL</td><td>walk: ${ci(E.walk)}</td><td>${ci(g.walk10)} · CGMacros, ${g.walk10MealCount} walk meals</td></tr>`:''}</table>
+   <p class="note">Real data points the same way for late dinners and post-meal walks but is far noisier: both intervals include zero. The real walk interval also stops short of the program's size, so expect a smaller effect in real people. With survey weights, the NHANES movement link also loses its clear signal, and fast length shows none. CGMacros rows use the same double-ML engine as the program. Treat program numbers as the method working, not as proof for real survivors. NHANES models adjust for age and sex only.</p></div>`})():''}
+  <div class="card" style="margin-top:14px"><h3>Methods</h3><pre class="note" style="white-space:pre-wrap">${c.methods}</pre></div>`;
+}
+$('#tabP').onclick=()=>{$('#vP').style.display='';$('#vC').style.display='none';$('#tabP').classList.add('on');$('#tabC').classList.remove('on')};
+$('#tabC').onclick=()=>{$('#vP').style.display='none';$('#vC').style.display='';$('#tabC').classList.add('on');$('#tabP').classList.remove('on');if(!$('#cohort').innerHTML)cohort()};
+load();
+if(location.hash==='#cohort')$('#tabC').onclick();
+</script>
+</body>
+</html>
