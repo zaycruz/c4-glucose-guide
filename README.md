@@ -21,6 +21,18 @@ scripts/reproduce.sh $D                      # about 10 min on 4 vCPU; ends by m
 
 Live API: https://c4-glucose-guide.zay-259.workers.dev/api/c4/survivors · contract: [CONTRACT.md](CONTRACT.md) · proof: [REPRODUCE.md](REPRODUCE.md), [`/api/c4/verification`](https://c4-glucose-guide.zay-259.workers.dev/api/c4/verification)
 
+## How it works
+
+**Technical architecture:** files, endpoints, models and fallbacks, each box checked against this repo.
+
+![C4 technical architecture](docs/arch-c4.png)
+
+**Results panel:** the data, the model, how it was validated, what the user sees, the held-out results and the honest limits.
+
+![C4 Glucose Guide](docs/c4.png)
+
+Method in full, with every choice and why: [METHODOLOGY.md](METHODOLOGY.md).
+
 ---
 
 ## Details
