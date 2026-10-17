@@ -1625,7 +1625,7 @@
  },
  "methods": "- Meal response: baseline = last 15-min reading at or before the meal (<= 15 min earlier).\n  Rise = peak of the readings 15..120 min after the meal minus baseline. iAUC = area above\n  baseline over 0..120 min (mg/dL x h). Meals with another item of >= 100 kcal in the next\n  120 min are dropped, so the curve belongs to one meal.\n- Late dinner: dinner starting at or after 20:00. Within-person comparison (person fixed\n  effects), adjusted for carbs. Night-shift workers are left out.\n- Post-meal walk: walked_after_min > 0. Within-person, adjusted for carbs and meal type.\n  Walking was self-chosen, so this is an association, not proof.\n- Overnight fast: the randomized arm comparison (coaching + overnight fast vs coaching) on\n  week 12 minus week 0 change is the fair causal estimate. Within-person night-to-night\n  link between the overnight fast and next-morning glucose is shown as an association.\n- Cohort CIs: cluster bootstrap that resamples people. Personal CIs: bootstrap of that\n  person's meals, then empirical-Bayes shrinkage toward the cohort estimate.\n- Robustness of the walk effect (see ROBUSTNESS.md):\n  negative control = same model with the reading 15 min BEFORE the meal as outcome (a later\n  walk cannot change it); E-value (VanderWeele & Ding 2017) with the within-person residual SD;\n  instrument = randomized arm (coaching vs email tips) as encouragement to walk, Wald ratio at\n  person level. The instrument proved inconclusive (exclusion restriction fails) and is not\n  counted as support.\n- Fast by subgroup: Cochran Q test of arm x blood-sugar-group interaction, Holm adjustment across\n  all subgroup contrasts. Advice uses group-specific fast numbers only if Q p < 0.05.\n- Real-data agreement labels: agrees (same sign, CI excludes 0), same direction not proven,\n  no clear signal, disagrees (opposite sign, CI excludes 0). Power: people needed for 80% power,\n  scaling the real study's SE by sqrt(people).",
  "plainLanguage": {
-  "headline": "Late dinner +9, evening walk -18 in the program (about -3 in real adults, not proven), 10 minutes is enough.",
+  "headline": "Walk after a meal: about -3 mg/dL in 44 real adults, not distinguishable from zero; -18 after dinner in the synthetic program. Late dinner +9 in the program. 10 minutes of walking is enough.",
   "points": [
    {
     "id": "late_dinner",
@@ -1637,7 +1637,7 @@
    },
    {
     "id": "evening_walk",
-    "text": "A walk after dinner: sugar rose about 18 mg/dL less (95% CI 17 to 20 less) in the program, but only about 3 mg/dL less in 44 real adults (CGMacros, 95% CI -6.9 to +0.5, not proven).",
+    "text": "In 44 real adults (CGMacros), a walk after a meal went with a rise only about 3.2 mg/dL smaller (95% CI -6.9 to +0.5): not distinguishable from zero. In the synthetic program, a walk after dinner went with a rise about 18 mg/dL smaller (95% CI 17 to 20).",
     "est": -18.31,
     "lo": -20.08,
     "hi": -16.55,
@@ -1656,7 +1656,9 @@
   "source": "Synthetic 12-week program (made up), 500 sensor wearers; ML engine (double ML), within person."
  },
  "fairness": {
-  "note": "Synthetic program: these show whether the engine treats groups alike, not real-world fairness. Groups under 20 people get no effect estimate. walkDiffersP / lateDinnerDiffersP: Cochran Q test that the group effects differ (under 0.05 = they differ).",
+  "note": "Synthetic program: these show whether the engine treats groups alike, not real-world fairness. Groups under 20 people get no effect estimate. walkDiffersP / lateDinnerDiffersP: Cochran Q test that the group effects differ; *Holm: the same p after a Holm correction across all 10 tests (under 0.05 = they differ).",
+  "plainLanguage": "After correcting for testing 10 group differences at once (Holm), the effects differ only by sex (walk). The forecast misses by a similar amount in every group. This is synthetic data, so it checks the engine, not real-world fairness.",
+  "monitoring": "Before real use: recompute this table on real patients every quarter; where a group's effect or forecast error differs after Holm, use the pooled cohort number for that group and send its alerts to care-team review instead of automatic advice.",
   "attributes": {
    "race_ethnicity": {
     "label": "Race and ethnicity",
@@ -1773,7 +1775,9 @@
      }
     ],
     "walkDiffersP": 0.1183644865143533,
-    "lateDinnerDiffersP": 0.36902754885447936
+    "lateDinnerDiffersP": 0.36902754885447936,
+    "walkDiffersPHolm": 0.5918,
+    "lateDinnerDiffersPHolm": 1.0
    },
    "sex": {
     "label": "Sex",
@@ -1836,7 +1840,9 @@
      }
     ],
     "walkDiffersP": 0.0017079648825604424,
-    "lateDinnerDiffersP": 0.009950489891626743
+    "lateDinnerDiffersP": 0.009950489891626743,
+    "walkDiffersPHolm": 0.0171,
+    "lateDinnerDiffersPHolm": 0.0796
    },
    "age_band": {
     "label": "Age",
@@ -1927,7 +1933,9 @@
      }
     ],
     "walkDiffersP": 0.008092942471134639,
-    "lateDinnerDiffersP": 0.941614224191666
+    "lateDinnerDiffersP": 0.941614224191666,
+    "walkDiffersPHolm": 0.0728,
+    "lateDinnerDiffersPHolm": 1.0
    },
    "preferred_language": {
     "label": "Preferred language",
@@ -2018,7 +2026,9 @@
      }
     ],
     "walkDiffersP": 0.3093883598559299,
-    "lateDinnerDiffersP": 0.03260779467184743
+    "lateDinnerDiffersP": 0.03260779467184743,
+    "lateDinnerDiffersPHolm": 0.1956,
+    "walkDiffersPHolm": 1.0
    },
    "cancer_type": {
     "label": "Cancer type",
@@ -2299,12 +2309,14 @@
      }
     ],
     "walkDiffersP": 0.6319768483318269,
-    "lateDinnerDiffersP": 0.013069035555097747
+    "lateDinnerDiffersP": 0.013069035555097747,
+    "lateDinnerDiffersPHolm": 0.0915,
+    "walkDiffersPHolm": 1.0
    }
   }
  },
  "careTeamToday": {
-  "rule": "More than 4% of readings below 70 mg/dL, an average above 250 mg/dL, or more than 5% of readings above 250 mg/dL.",
+  "rule": "More than 4% of readings below 70 mg/dL, more than 1% below 54 mg/dL, an average above 250 mg/dL, or more than 5% of readings above 250 mg/dL.",
   "count": 10
  }
 }

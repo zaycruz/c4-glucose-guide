@@ -67,21 +67,6 @@
     "label": "Lows 5.3%",
     "tone": "risk",
     "evidenceId": "tbr70"
-   },
-   {
-    "label": "Late dinners 57%",
-    "tone": "warn",
-    "evidenceId": "late_share"
-   },
-   {
-    "label": "Walks work: -18.7 mg/dL",
-    "tone": "good",
-    "evidenceId": "walk_effect_blend"
-   },
-   {
-    "label": "Fast 9.9 h",
-    "tone": "warn",
-    "evidenceId": "fast_avg"
    }
   ],
   "updatedAt": "2024-06-23T23:45:00",
@@ -101,16 +86,6 @@
     "label": "Lows 5.5%",
     "tone": "risk",
     "evidenceId": "tbr70"
-   },
-   {
-    "label": "Late dinners 75%",
-    "tone": "warn",
-    "evidenceId": "late_share"
-   },
-   {
-    "label": "Walks work: -23.7 mg/dL",
-    "tone": "good",
-    "evidenceId": "walk_effect_blend"
    }
   ],
   "updatedAt": "2025-03-28T19:15:00",
@@ -256,21 +231,6 @@
     "label": "Lows 10.3%",
     "tone": "risk",
     "evidenceId": "tbr70"
-   },
-   {
-    "label": "In range 90%",
-    "tone": "warn",
-    "evidenceId": "tir"
-   },
-   {
-    "label": "Late dinners 67%",
-    "tone": "warn",
-    "evidenceId": "late_share"
-   },
-   {
-    "label": "Walks work: -13.1 mg/dL",
-    "tone": "good",
-    "evidenceId": "walk_effect_blend"
    }
   ],
   "updatedAt": "2024-07-07T23:45:00",
@@ -611,7 +571,7 @@
     "evidenceId": "late_share"
    },
    {
-    "label": "Walks work: -19.9 mg/dL",
+    "label": "Own walks: -19.9 mg/dL (synthetic)",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },
@@ -664,7 +624,7 @@
     "evidenceId": "late_share"
    },
    {
-    "label": "Walks work: -22.3 mg/dL",
+    "label": "Own walks: -22.3 mg/dL (synthetic)",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },
@@ -765,7 +725,7 @@
   "headline": "Steady: 100% in range",
   "tags": [
    {
-    "label": "Walks work: -11.1 mg/dL",
+    "label": "Own walks: -11.1 mg/dL (synthetic)",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    }
@@ -901,7 +861,7 @@
     "evidenceId": "late_share"
    },
    {
-    "label": "Walks work: -14.9 mg/dL",
+    "label": "Own walks: -14.9 mg/dL (synthetic)",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },
@@ -986,7 +946,7 @@
   "headline": "Steady: 100% in range",
   "tags": [
    {
-    "label": "Walks work: -14.5 mg/dL",
+    "label": "Own walks: -14.5 mg/dL (synthetic)",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },
@@ -1063,7 +1023,7 @@
   "headline": "Steady: 98% in range",
   "tags": [
    {
-    "label": "Walks work: -26.0 mg/dL",
+    "label": "Own walks: -26.0 mg/dL (synthetic)",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },
@@ -1092,7 +1052,7 @@
     "evidenceId": "late_share"
    },
    {
-    "label": "Walks work: -18.1 mg/dL",
+    "label": "Own walks: -18.1 mg/dL (synthetic)",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },
@@ -1193,7 +1153,7 @@
   "headline": "Steady: 99% in range",
   "tags": [
    {
-    "label": "Walks work: -18.7 mg/dL",
+    "label": "Own walks: -18.7 mg/dL (synthetic)",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },

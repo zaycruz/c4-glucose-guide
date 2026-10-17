@@ -3,7 +3,7 @@
 // Usage: node scripts/e2e.mjs [baseUrl]
 import { createHash } from "node:crypto";
 import { execSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const args = process.argv.slice(2);
 const STRICT = args.includes("--strict"); // also require cached advice and a verification record that matches the live data
@@ -16,7 +16,7 @@ const CONSTANT_PHRASES = [
   /\b8-9 pm\b/g, /\bbefore 6 pm\b/g, /\b8 pm\b/g, /\b13-hour\b/g, /\b13 hours\b/g, /\b70-180\b/g, /95% CI\b/g,
   /\bweeks 1-2\b/g, /\bweeks 11-12\b/g, /\b10 to 20 minutes?\b/g, /\b10 to 19 minutes?\b/g, /\b20-29 minutes\b/g,
   /\b30\+ minutes\b/g, /under 4%/g, /under 5%/g, /more than 70%/g, /below 70 mg\/dL/g, /below 70%/g, /below 90%/g,
-  /\bHbA1c\b/g, /\btype 2 diabetes\b/g, /more than 5% of readings above (180|250)/g, /\babove 250\b/g, /more than 4% of readings below 70/g, /up 10\+ mg\/dL/g,
+  /below 54( mg\/dL)?/g, /under 1%/g, /more than 1% (are )?below 54/g, /\bHbA1c\b/g, /\btype 2 diabetes\b/g, /more than 5% of readings above (180|250)/g, /\babove 250\b/g, /more than 4% of readings below 70/g, /up 10\+ mg\/dL/g,
   /readings below 70\b/g, /Spikes above 180\b/g, // headline thresholds
 ];
 const CAUSAL = /\b(caus\w*|help(s|ed)?|lower(s|ed)?|reduc\w*|prevent\w*|cur(e|es|ed))\b/gi;
@@ -96,9 +96,9 @@ for (const tile of roster.body) {
     const label = t.evidenceId === "walk_meals" ? t.label.replace(/\/\d+/, "") : t.label; // "Walks after 2/37 meals": 37 = meals_scored
     for (const n of nums(label)) check([e.value, e.n].some((v) => typeof v === "number" && Math.abs(Math.abs(v) - n) <= 0.5), `${id}: tag ${t.label} number ${n} not in evidence`);
   }
-  // safety routing: frequent lows (>4% below 70), average above 250 or sustained highs (>5% above 250) -> care team today
-  const tbr = ev.get("tbr70")?.value, mean = ev.get("mean_glucose")?.value, tar = ev.get("tar250")?.value;
-  const lows = typeof tbr === "number" && tbr > 4, high = (typeof mean === "number" && mean > 250) || (typeof tar === "number" && tar > 5);
+  // safety routing: frequent lows (>4% below 70 or >1% below 54), average above 250 or sustained highs (>5% above 250) -> care team today
+  const tbr = ev.get("tbr70")?.value, tbr54 = ev.get("tbr54")?.value, mean = ev.get("mean_glucose")?.value, tar = ev.get("tar250")?.value;
+  const lows = (typeof tbr === "number" && tbr > 4) || (typeof tbr54 === "number" && tbr54 > 1), high = (typeof mean === "number" && mean > 250) || (typeof tar === "number" && tar > 5);
   const cf = b.careTeamFlag;
   if (check(cf && typeof cf.today === "boolean" && Array.isArray(cf.reasons), `${id}: careTeamFlag missing`)) {
     check(cf.today === (lows || high), `${id}: careTeamFlag.today=${cf.today} but lows=${lows} high=${high}`);
@@ -109,11 +109,13 @@ for (const tile of roster.body) {
     check(tile.careTeamToday === cf.today, `${id}: roster careTeamToday differs from detail`);
   }
   check(lows === (b.hypoglycaemiaWarning != null), `${id}: hypoglycaemiaWarning presence does not match frequent lows`);
-  if (lows) {
-    const w = b.recommendations.find((r) => r.id === "walk");
-    if (w) check(Boolean(w.caution) && w.text.includes(w.caution), `${id}: walk advice for frequent lows has no low-sugar caution`);
-    check(!b.recommendations.some((r) => r.title.startsWith("Aim for a 13-hour")), `${id}: frequent lows but told to fast longer`);
-  }
+  check(typeof tbr54 === "number", `${id}: no below-54 evidence`);
+  if (lows) { // care team first: no exercise, fasting or meal-timing nudges, and a medication question
+    check(b.recommendations.every((r) => r.id === "talk_to_team"), `${id}: frequent lows but given ${b.recommendations.map((r) => r.id)} (care team only)`);
+    check(/medicine/.test(b.recommendations[0]?.text ?? ""), `${id}: lows card does not ask about medicines`);
+    check(cf?.medicationCheck?.recorded === false && /sulfonylurea/.test(cf.medicationCheck.ask), `${id}: lows but no medicationCheck`);
+    check((b.tags ?? []).every((t) => ["risk", "info"].includes(t.tone)), `${id}: lows but behaviour tags shown`);
+  } else check(cf?.medicationCheck == null, `${id}: medicationCheck without lows`);
   check(typeof b.todayReason === "string" && b.todayReason.length <= 90 && b.todayReason === tile.todayReason, `${id}: todayReason missing, too long or differs from roster`);
   check(b.priority === tile.priority && Number.isInteger(b.priority), `${id}: priority missing or differs`);
   // patient copy: three languages, same actions, fixed rule numbers only, care-team line when flagged, help route
@@ -122,7 +124,7 @@ for (const tile of roster.body) {
     const ids = JSON.stringify(pv.en.actions.map((a) => a.id));
     for (const l of ["en", "es", "ht"]) {
       const v = pv[l];
-      check(JSON.stringify(v.actions.map((a) => a.id)) === ids && v.actions.length >= 1 && v.actions.length <= 3, `${id}: patientView.${l} actions differ`);
+      check(JSON.stringify(v.actions.map((a) => a.id)) === ids && v.actions.length >= (lows ? 0 : 1) && v.actions.length <= (lows ? 0 : 3), `${id}: patientView.${l} actions differ`);
       check(/211/.test(v.help), `${id}: patientView.${l} has no help route`);
       check(v.reviewed === (l === "en") && (l === "en" || /machine-translated/.test(v.translation)), `${id}: patientView.${l} translation status missing`);
       check(!cf?.today || Boolean(v.careTeam), `${id}: flagged but patientView.${l} has no care-team line`);
@@ -211,6 +213,13 @@ const dataHash = createHash("sha256").update(JSON.stringify([roster.body, cohort
 const ver = await get("/api/c4/verification");
 const verFresh = ver.status === 200 && ver.body?.dataHash === dataHash;
 if (STRICT) check(verFresh, "published verification record does not match the live data");
+// The flagged count must agree in the README, the live roster and the published verification record.
+const WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen"];
+const flaggedLive = roster.body.filter((x) => x.careTeamToday).length;
+const readmeM = readFileSync(new URL("../README.md", import.meta.url), "utf8").match(/(\w+) of the (\d+) survivors are flagged today/i);
+const readmeN = readmeM ? (/^\d+$/.test(readmeM[1]) ? Number(readmeM[1]) : WORDS.indexOf(readmeM[1].toLowerCase())) : null;
+check(readmeN === flaggedLive && Number(readmeM?.[2]) === roster.body.length, `README says ${readmeM?.[0]} but the live roster flags ${flaggedLive} of ${roster.body.length}`);
+if (STRICT) check(ver.body?.e2e?.careTeamToday === flaggedLive, `published verification says ${ver.body?.e2e?.careTeamToday} flagged, live roster ${flaggedLive}`);
 const counts = Object.fromEntries(STATUS.map((s) => [s, roster.body.filter((x) => x.status === s).length]));
 run.summary = {
   pass: failures.length === 0, failures,

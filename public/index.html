@@ -37,38 +37,38 @@
 <main class="wrap stack" id="main">
   <section class="intro" aria-labelledby="title">
     <p class="eyebrow"><span class="dot c4" aria-hidden="true"></span>Challenge 4 · Meals, timing and movement</p>
-    <h1 id="title">A short walk after dinner, and an earlier dinner</h1>
+    <h1 id="title">A walk after a meal: honest about how much it helps</h1>
     <p>From 12 weeks of glucose sensor data, it measures how meals, meal timing and movement shape each survivor's blood sugar, and turns that into advice they can follow. Every number in the advice traces to its evidence.</p>
   </section>
 
   <section class="hero" aria-labelledby="hero-label">
     <div>
       <div class="chips">
-        <span class="chip source synthetic"><b>Synthetic</b> · Crane Lab</span>
-        <span class="chip source">Within person · 471 people</span>
+        <span class="chip source"><b>Real data</b> · CGMacros</span>
+        <span class="chip source">Within person · 44 people</span>
       </div>
-      <p class="hero-num num" aria-describedby="hero-label">−18<span class="unit">&nbsp;mg/dL</span></p>
-      <p class="hero-label" id="hero-label">smaller rise in blood sugar after dinner when the person walked</p>
+      <p class="hero-num num" aria-describedby="hero-label">−3.2<span class="unit">&nbsp;mg/dL</span></p>
+      <p class="hero-label" id="hero-label">smaller rise after a meal when 44 real adults walked: not distinguishable from zero</p>
       <div class="compare" aria-hidden="true">
-        <div class="lbl"><span>Program, walk after any meal</span><span class="num">−17.8</span></div>
-        <div class="track"><span class="fill" style="width:89%"></span></div>
         <div class="lbl"><span>44 real adults (CGMacros), any meal</span><span class="num">−3.2</span></div>
-        <div class="track"><span class="fill base" style="width:16%"></span></div>
+        <div class="track"><span class="fill" style="width:16%"></span></div>
+        <div class="lbl"><span>Synthetic program, after dinner</span><span class="num">−18.3</span></div>
+        <div class="track"><span class="fill base" style="width:92%"></span></div>
       </div>
       <div class="hero-vs">
-        <p class="vs-row"><span class="k">Compared</span><span>The <b>same person's dinners</b> without a walk, same carbs</span></p>
-        <p class="vs-row"><span class="k">95% CI</span><span><b>17 to 20 mg/dL</b> less (−20.1 to −16.6)</span></p>
-        <p class="vs-row"><span class="k">Real data</span><span>After any meal the program shows −17.8; in 44 real adults <b>−3.2</b> (−6.9 to +0.5), about a fifth. Same direction, not proven</span></p>
+        <p class="vs-row"><span class="k">Compared</span><span>The <b>same person's meals</b> without a walk</span></p>
+        <p class="vs-row"><span class="k">95% CI</span><span><b>−6.9 to +0.5 mg/dL</b>: includes zero</span></p>
+        <p class="vs-row"><span class="k">Program</span><span>The synthetic program shows <b>−18.3</b> after dinner (−20.1 to −16.6). The real interval excludes the program's all-meal −17.8, so expect a much smaller effect in real people</span></p>
       </div>
     </div>
     <div class="hero-side">
       <div class="meaning">
         <h3>What it means for a care team</h3>
-        <p>A walk after dinner is the simplest advice with the largest measured effect, and 10 minutes gets most of it. mg/dL is the unit on a glucose meter.</p>
+        <p>A short walk after a meal is low-risk, but real data does not yet show it lowers the sugar rise. The large effect is in the synthetic program only. mg/dL is the unit on a glucose meter.</p>
       </div>
       <div class="meaning">
         <h3>What to do</h3>
-        <p>Suggest a short walk after dinner and an earlier dinner. Survivors with frequent lows get a low-sugar caution and are never told to fast longer.</p>
+        <p>Offer a short walk after a meal and an earlier dinner as habits to try, not proven fixes. Survivors with lows get one message: call the care team today, with no exercise or meal-time advice.</p>
       </div>
       <div class="btn-row">
         <a class="btn primary" href="https://patient-360.raava.dev/#p-c4-N0072.c4">See it in Patient 360 <span aria-hidden="true">→</span></a>
@@ -134,16 +134,16 @@
       <p class="eyebrow">Safety routing</p>
       <h2 class="mt-2">Who gets a call today</h2>
       <ul class="notes mt-3">
-        <li><span><b>Care team today</b> when more than 4% of readings are below 70 mg/dL, the average is above 250, or more than 5% of readings are above 250. 10 of 50 survivors today.</span></li>
-        <li><span><b>Next visit</b> for other alerts (time in range under 70%), so same-day calls stay rare.</span></li>
-        <li><span><b>Frequent lows</b> get the 15-15 low-sugar warning, a caution on walk advice, and are never told to fast longer.</span></li>
+        <li><span><b>Care team today</b> when more than 4% of readings are below 70 mg/dL, more than 1% are below 54 (level 2 lows), the average is above 250, or more than 5% of readings are above 250. 10 of 50 survivors today.</span></li>
+        <li><span><b>Next visit</b> for other alerts (time in range under 70%). 21 of 50 are alert or watch, but only the 10 above interrupt anyone.</span></li>
+        <li><span><b>Lows mean care team first:</b> one card, no walking, fasting or meal-time advice, the 15-15 warning, and a medication check. Medicines are not recorded in this data, so it asks about insulin or a sulfonylurea (glipizide, glyburide, glimepiride).</span></li>
         <li class="info"><span>Spanish and Kreyòl patient text is <b>machine-translated and not yet reviewed</b> by a native speaker; each language is marked in the API.</span></li>
       </ul>
     </div>
     <div class="card">
       <p class="eyebrow">Fairness by group</p>
       <h2 class="mt-2">Does it work the same for everyone?</h2>
-      <p class="muted mt-3">The forecast miss is similar across groups. Effects can't be told apart by race or ethnicity; they are larger in men and smaller at 70+ and in Kreyòl speakers (24 people). Synthetic data: this checks the engine, not real-world fairness. Miss is the forecast's typical error in mg/dL; walk and late dinner are effects in mg/dL. Groups under 20 people get no effect estimate.</p>
+      <p class="muted mt-3"><b>In plain words:</b> after correcting for 10 tests at once (Holm), only the walk effect by sex differs (larger in men, p = 0.02). The forecast miss is similar across groups. Before real use, recompute this every quarter on real patients; a group that differs gets the pooled number and care-team review instead of automatic advice. Synthetic data: this checks the engine, not real-world fairness. Miss is the forecast's typical error in mg/dL; walk and late dinner are effects in mg/dL. Groups under 20 people get no effect estimate.</p>
       <div class="ftable-wrap mt-3"><table class="ftable">
         <thead><tr><th>Group</th><th class="num">People</th><th class="num">Miss</th><th class="num">Walk</th><th class="num">Late dinner</th></tr></thead>
         <tbody>
