@@ -1,0 +1,231 @@
+{
+ "tool": "pycaret compare_models, grouped 5-fold by person, default settings",
+ "program": {
+  "meals": 18218,
+  "people": 500,
+  "board": [
+   {
+    "model": "Light Gradient Boosting Machine",
+    "mae": 16.91,
+    "rmse": 23.95,
+    "r2": 0.436
+   },
+   {
+    "model": "Gradient Boosting Regressor",
+    "mae": 17.15,
+    "rmse": 24.18,
+    "r2": 0.426
+   },
+   {
+    "model": "Random Forest Regressor",
+    "mae": 17.58,
+    "rmse": 24.65,
+    "r2": 0.402
+   },
+   {
+    "model": "Extra Trees Regressor",
+    "mae": 17.87,
+    "rmse": 25.01,
+    "r2": 0.385
+   },
+   {
+    "model": "Huber Regressor",
+    "mae": 18.36,
+    "rmse": 26.14,
+    "r2": 0.329
+   },
+   {
+    "model": "Linear Regression",
+    "mae": 18.47,
+    "rmse": 25.78,
+    "r2": 0.347
+   },
+   {
+    "model": "Ridge Regression",
+    "mae": 18.47,
+    "rmse": 25.78,
+    "r2": 0.347
+   },
+   {
+    "model": "Bayesian Ridge",
+    "mae": 18.48,
+    "rmse": 25.78,
+    "r2": 0.347
+   },
+   {
+    "model": "Lasso Least Angle Regression",
+    "mae": 18.71,
+    "rmse": 26.04,
+    "r2": 0.334
+   },
+   {
+    "model": "Lasso Regression",
+    "mae": 18.71,
+    "rmse": 26.04,
+    "r2": 0.334
+   },
+   {
+    "model": "Elastic Net",
+    "mae": 18.72,
+    "rmse": 26.07,
+    "r2": 0.333
+   },
+   {
+    "model": "Least Angle Regression",
+    "mae": 19.31,
+    "rmse": 27.03,
+    "r2": 0.276
+   },
+   {
+    "model": "K Neighbors Regressor",
+    "mae": 19.52,
+    "rmse": 27.66,
+    "r2": 0.248
+   },
+   {
+    "model": "Orthogonal Matching Pursuit",
+    "mae": 20.21,
+    "rmse": 28.24,
+    "r2": 0.218
+   },
+   {
+    "model": "Dummy Regressor",
+    "mae": 23.6,
+    "rmse": 32.01,
+    "r2": -0.004
+   },
+   {
+    "model": "Decision Tree Regressor",
+    "mae": 24.43,
+    "rmse": 34.47,
+    "r2": -0.177
+   },
+   {
+    "model": "AdaBoost Regressor",
+    "mae": 29.77,
+    "rmse": 35.1,
+    "r2": -0.255
+   },
+   {
+    "model": "Passive Aggressive Regressor",
+    "mae": 45.03,
+    "rmse": 54.72,
+    "r2": -3.185
+   }
+  ]
+ },
+ "cgmacros": {
+  "meals": 1338,
+  "people": 45,
+  "board": [
+   {
+    "model": "Gradient Boosting Regressor",
+    "mae": 23.73,
+    "rmse": 31.01,
+    "r2": 0.289
+   },
+   {
+    "model": "Random Forest Regressor",
+    "mae": 24.19,
+    "rmse": 31.61,
+    "r2": 0.258
+   },
+   {
+    "model": "Extra Trees Regressor",
+    "mae": 24.32,
+    "rmse": 31.83,
+    "r2": 0.245
+   },
+   {
+    "model": "Light Gradient Boosting Machine",
+    "mae": 24.37,
+    "rmse": 32.06,
+    "r2": 0.236
+   },
+   {
+    "model": "K Neighbors Regressor",
+    "mae": 24.78,
+    "rmse": 32.74,
+    "r2": 0.203
+   },
+   {
+    "model": "Huber Regressor",
+    "mae": 25.78,
+    "rmse": 35.44,
+    "r2": 0.072
+   },
+   {
+    "model": "Elastic Net",
+    "mae": 26.28,
+    "rmse": 34.48,
+    "r2": 0.121
+   },
+   {
+    "model": "Bayesian Ridge",
+    "mae": 26.29,
+    "rmse": 34.52,
+    "r2": 0.119
+   },
+   {
+    "model": "Lasso Least Angle Regression",
+    "mae": 26.29,
+    "rmse": 34.48,
+    "r2": 0.121
+   },
+   {
+    "model": "Lasso Regression",
+    "mae": 26.29,
+    "rmse": 34.48,
+    "r2": 0.121
+   },
+   {
+    "model": "Ridge Regression",
+    "mae": 26.34,
+    "rmse": 34.39,
+    "r2": 0.124
+   },
+   {
+    "model": "Linear Regression",
+    "mae": 26.35,
+    "rmse": 34.39,
+    "r2": 0.124
+   },
+   {
+    "model": "Least Angle Regression",
+    "mae": 26.42,
+    "rmse": 34.77,
+    "r2": 0.107
+   },
+   {
+    "model": "AdaBoost Regressor",
+    "mae": 27.73,
+    "rmse": 33.97,
+    "r2": 0.135
+   },
+   {
+    "model": "Orthogonal Matching Pursuit",
+    "mae": 28.39,
+    "rmse": 37.02,
+    "r2": -0.012
+   },
+   {
+    "model": "Dummy Regressor",
+    "mae": 28.65,
+    "rmse": 37.23,
+    "r2": -0.024
+   },
+   {
+    "model": "Passive Aggressive Regressor",
+    "mae": 30.35,
+    "rmse": 40.42,
+    "r2": -0.25
+   },
+   {
+    "model": "Decision Tree Regressor",
+    "mae": 31.99,
+    "rmse": 43.51,
+    "r2": -0.434
+   }
+  ]
+ }
+}

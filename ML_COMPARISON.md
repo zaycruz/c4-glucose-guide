@@ -58,6 +58,18 @@ Ran on Proxmox (pve-03, about 2 minutes). Every model got the same pre-meal inpu
 - With walk length added (known only after the meal), every model improves a little. The ranking stays the same.
 - For new people, "linear" means one pooled regression, because nobody in the test fold has a personal intercept.
 
+**pycaret leaderboard** (`public/data/pycaret.json`): all 18 regression models pycaret ships (CatBoost excluded for time), default settings, the same features, 5-fold grouped by person. Run on pve-01, Python 3.11.
+
+| Rank, program data (new people) | MAE · R² | Rank, CGMacros (new people) | MAE · R² |
+|---|---|---|---|
+| 1. LightGBM | 16.9 · 0.44 | 1. Gradient boosting | 23.7 · 0.29 |
+| 2. Gradient boosting | 17.2 · 0.43 | 2. Random forest | 24.2 · 0.26 |
+| 3. Random forest | 17.6 · 0.40 | 3. Extra trees | 24.3 · 0.25 |
+| 6. Linear regression | 18.5 · 0.35 | 12. Linear regression | 26.4 · 0.12 |
+| 15. Dummy (mean) | 23.6 · 0.00 | 16. Dummy (mean) | 28.7 · −0.02 |
+
+This independently confirms the hand-built benchmark: tree ensembles on top, linear models in the middle, the same R² gap. No exotic model changes the picture.
+
 ### B. Recovering a planted −10 mg/dL effect from confounded data (20 repetitions)
 
 | Estimator | Linear confounding: bias · RMSE · 95% CI coverage | Nonlinear confounding: bias · RMSE · coverage |
