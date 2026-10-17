@@ -187,6 +187,7 @@ const advice = await get(`/api/c4/survivors/${alertId}/advice`);
 run.responses[`/api/c4/survivors/${alertId}/advice`] = advice;
 check(advice.status === 200 && Array.isArray(advice.body?.items), "advice endpoint failed");
 check(!advice.body?.error || /unavailable/.test(advice.body.error), "advice passes a raw model error through");
+check(!("rawPreview" in (advice.body ?? {})) && !JSON.stringify(advice.body ?? {}).includes("chatcmpl"), "advice exposes the raw provider response");
 if (STRICT) check(advice.body?.cached === true && advice.ms < 2000, `advice not served from cache (cached=${advice.body?.cached}, ${advice.ms} ms)`);
 const detailEv = run.responses[`/api/c4/survivors/${alertId}`].body;
 for (const it of advice.body?.items ?? []) {

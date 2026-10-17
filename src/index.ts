@@ -106,8 +106,9 @@ async function phrase(env: Env, detail: Detail) {
       ? { id: rec.id, title: rec.title, text: rec.text, source: "template", evidenceIds: rec.evidenceIds, rejected: { text: ai, untracedNumbers: bad, addedCausalWords: causal } }
       : { id: rec.id, title: rec.title, text: ai, source: "ai", evidenceIds: rec.evidenceIds, rejected: null };
   });
-  const rawPreview = aiItems.size ? null : JSON.stringify(raw)?.slice(0, 600) ?? null;
-  return { survivorId: detail.survivorId, model: AI_MODEL, ms: Date.now() - started, error, rawPreview, items };
+  // The provider may serve an alias of the requested model; report both, never the raw provider response.
+  const served = typeof (raw as { model?: unknown } | null)?.model === "string" ? (raw as { model: string }).model : null;
+  return { survivorId: detail.survivorId, model: AI_MODEL, servedModel: served, ms: Date.now() - started, error, items };
 }
 
 /** SHA-256 of the recommendation ids and texts: a cached rewrite is served only if the advice it rephrased is unchanged. */
@@ -122,8 +123,11 @@ async function advice(env: Env, req: Request, detail: Detail, fresh: boolean) {
   const started = Date.now();
   const hash = await recHash(detail);
   if (!fresh) {
-    const cached = (await asset(env, req, `/data/advice/${detail.survivorId}.json`)) as { recHash?: string } | null;
-    if (cached && cached.recHash === hash) return { ...cached, cached: true, ms: Date.now() - started };
+    const cached = (await asset(env, req, `/data/advice/${detail.survivorId}.json`)) as { recHash?: string; rawPreview?: unknown } | null;
+    if (cached && cached.recHash === hash) {
+      const { rawPreview: _raw, ...keep } = cached;
+      return { ...keep, cached: true, ms: Date.now() - started };
+    }
   }
   const live = await phrase(env, detail);
   // Never pass a raw model error through: on any failure the items are the checked templates.

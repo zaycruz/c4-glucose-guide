@@ -75,6 +75,16 @@ Status (ok / watch / alert) uses fixed CGM consensus thresholds (time in range, 
 3b. **N0013** (20 s). A survivor without lows: the walk card opens with the real-data figure (about 3.2 mg/dL, not distinguishable from zero), then the synthetic program's. "Show the numbers" opens the evidence behind each number.
 4. **Rephrase with Workers AI** (10 s). The text becomes warmer. The note shows how many rewrites were rejected, either for a number that isn't in the evidence or for causal words like "helped".
 
+## Future work (from the judges' panel; not built)
+
+- **Red flags beyond glucose:** a model-free route to a human for chest pain, neurological symptoms, fever on chemo or suicidal thoughts (911 / 988), not only glucose rules.
+- **Medicines:** this data records none, so the lows rule asks about insulin or a sulfonylurea. With a medication list, anyone on those drugs should get the lows protection before lows appear.
+- **Two-speed care list:** split the 10 "today" flags into "call now" and "review this week".
+- **Who the real data covers:** describe the 45 CGMacros adults by race, ethnicity, language and insurance (or state they are unknown), and compare the synthetic cohort's make-up with Miami-Dade, including Haitian and Caribbean patients.
+- **Review the Spanish and Kreyòl text** with native speakers, then set `reviewed: true` in the API.
+- **Forecast:** a calibration check and a clinic-baseline comparison with a CI. **Serving:** p95 latency and cost per AI call, and a model-file hash proving served = evaluated.
+- **Survivor-facing numbers:** show only the real-data figure to survivors; keep the synthetic −18.3 / +9.2 in the clinician view.
+
 ## Run
 
 See [REPRODUCE.md](REPRODUCE.md) for the one-command path from the raw data to every number in this README (`scripts/reproduce.sh <data dir>`). The steps it wraps:

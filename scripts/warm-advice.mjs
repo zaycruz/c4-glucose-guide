@@ -21,7 +21,7 @@ for (const { survivorId } of roster) {
   const local = JSON.parse(readFileSync(`public/data/survivors/${survivorId}.json`, "utf8"));
   const want = createHash("sha256").update(JSON.stringify(local.recommendations.map((r) => [r.id, r.text]))).digest("hex");
   if (body.recHash !== want) { console.error(`${survivorId}: live advice is for stale recommendations; wait a minute after deploying and rerun`); process.exit(1); }
-  const { cached, ms, ...keep } = body;
+  const { cached, ms, rawPreview, ...keep } = body;
   writeFileSync(`public/data/advice/${survivorId}.json`, JSON.stringify({ ...keep, generatedAt: new Date().toISOString(), generationMs: ms }));
   for (const it of body.items) it.source === "ai" ? ai++ : template++;
   await new Promise((r) => setTimeout(r, 1500));
