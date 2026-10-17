@@ -61,7 +61,7 @@ async function phrase(env: Env, detail: Detail) {
           content:
             "You rewrite health-coaching advice for a cancer survivor in warm, plain English (reading age 12). " +
             "Keep each item to two short sentences. Use ONLY numbers that appear in the given text; never add, change or round numbers. " +
-            "Do not add medical claims. Answer JSON: {\"items\":[{\"id\":string,\"text\":string}]}.",
+            "Do not add medical claims. Keep links as patterns (\"went with\", \"was linked to\"); never say a habit caused, helped or lowered something unless the text says so. Answer JSON: {\"items\":[{\"id\":string,\"text\":string}]}.",
         },
         { role: "user", content: JSON.stringify(detail.recommendations.map((r) => ({ id: r.id, text: r.text }))) },
       ],

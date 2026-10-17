@@ -1,6 +1,6 @@
 {
  "base": "https://c4-glucose-guide.zay-259.workers.dev",
- "file": "runs/e2e-2026-10-17T14-10-55-988Z.json",
+ "file": "runs/e2e-2026-10-17T14-12-32-371Z.json",
  "pass": true,
  "failures": [],
  "survivors": 50,
@@ -16,9 +16,9 @@
  "aiAdvice": {
   "survivorId": "c4-N0072",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-  "ms": 3231,
+  "ms": 2805,
   "itemsRephrasedByAi": 3,
   "items": 3
  },
- "finishedAt": "2026-10-17T14:11:05.655Z"
+ "finishedAt": "2026-10-17T14:12:41.086Z"
 }
