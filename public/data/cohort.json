@@ -1,0 +1,455 @@
+{
+ "source": "synthetic 12-week program (made up), 500 sensor wearers; checkups for all 2,000",
+ "effects": {
+  "lateDinner": {
+   "est": 9.08,
+   "lo": 7.05,
+   "hi": 11.23,
+   "people": 471,
+   "rows": 4711
+  },
+  "lateDinnerIauc": {
+   "est": 12.82,
+   "lo": 9.74,
+   "hi": 15.65,
+   "people": 471,
+   "rows": 4711
+  },
+  "walk": {
+   "est": -17.62,
+   "lo": -18.98,
+   "hi": -16.26,
+   "people": 500,
+   "rows": 18218
+  },
+  "walkIauc": {
+   "est": -23.48,
+   "lo": -25.3,
+   "hi": -21.66,
+   "people": 500,
+   "rows": 18218
+  },
+  "carbsPer10g": {
+   "est": 5.34,
+   "lo": 5.07,
+   "hi": 5.6,
+   "people": 500,
+   "rows": 18218
+  },
+  "fastMorningPerHour": {
+   "est": -0.44,
+   "lo": -0.76,
+   "hi": -0.15,
+   "people": 389,
+   "rows": 3029
+  },
+  "fast13Morning": {
+   "est": -1.14,
+   "lo": -2.39,
+   "hi": 0.03,
+   "people": 389,
+   "rows": 3029
+  }
+ },
+ "effectsByBloodSugarGroup": {
+  "normal": {
+   "walk": {
+    "est": -13.42,
+    "lo": -14.95,
+    "hi": -11.97,
+    "people": 230,
+    "rows": 8525
+   },
+   "lateDinner": {
+    "est": 5.79,
+    "lo": 3.92,
+    "hi": 7.77,
+    "people": 217,
+    "rows": 2200
+   }
+  },
+  "prediabetes": {
+   "walk": {
+    "est": -18.87,
+    "lo": -21.72,
+    "hi": -16.01,
+    "people": 145,
+    "rows": 5289
+   },
+   "lateDinner": {
+    "est": 13.74,
+    "lo": 8.88,
+    "hi": 19.93,
+    "people": 139,
+    "rows": 1371
+   }
+  },
+  "type 2 diabetes": {
+   "walk": {
+    "est": -24.95,
+    "lo": -28.56,
+    "hi": -21.51,
+    "people": 125,
+    "rows": 4404
+   },
+   "lateDinner": {
+    "est": 9.6,
+    "lo": 4.5,
+    "hi": 14.03,
+    "people": 115,
+    "rows": 1140
+   }
+  }
+ },
+ "walkDose": [
+  {
+   "bin": "none",
+   "est": 0.0,
+   "lo": 0.0,
+   "hi": 0.0,
+   "n_meals": 16679
+  },
+  {
+   "bin": "10-19 min",
+   "est": -17.13,
+   "lo": -18.81,
+   "hi": -15.63,
+   "people": 500,
+   "rows": 18218,
+   "n_meals": 866
+  },
+  {
+   "bin": "20-29 min",
+   "est": -20.06,
+   "lo": -22.91,
+   "hi": -17.22,
+   "people": 500,
+   "rows": 18218,
+   "n_meals": 311
+  },
+  {
+   "bin": "30+ min",
+   "est": -16.79,
+   "lo": -19.07,
+   "hi": -14.52,
+   "people": 500,
+   "rows": 18218,
+   "n_meals": 362
+  }
+ ],
+ "dinnerHour": [
+  {
+   "bin": "before 6pm",
+   "est": 0.0,
+   "lo": 0.0,
+   "hi": 0.0,
+   "n_meals": 642
+  },
+  {
+   "bin": "6-7pm",
+   "est": 6.32,
+   "lo": 3.43,
+   "hi": 8.91,
+   "people": 471,
+   "rows": 4707,
+   "n_meals": 817
+  },
+  {
+   "bin": "7-8pm",
+   "est": 11.18,
+   "lo": 8.23,
+   "hi": 14.22,
+   "people": 471,
+   "rows": 4707,
+   "n_meals": 1014
+  },
+  {
+   "bin": "8-9pm",
+   "est": 15.89,
+   "lo": 12.37,
+   "hi": 19.79,
+   "people": 471,
+   "rows": 4707,
+   "n_meals": 964
+  },
+  {
+   "bin": "9-10pm",
+   "est": 21.06,
+   "lo": 17.08,
+   "hi": 24.66,
+   "people": 471,
+   "rows": 4707,
+   "n_meals": 738
+  },
+  {
+   "bin": "10pm or later",
+   "est": 28.89,
+   "lo": 23.9,
+   "hi": 33.62,
+   "people": 471,
+   "rows": 4707,
+   "n_meals": 532
+  }
+ ],
+ "curves": {
+  "minutes": [
+   0,
+   15,
+   30,
+   45,
+   60,
+   75,
+   90,
+   105,
+   120,
+   135,
+   150,
+   165,
+   180
+  ],
+  "earlyDinner": [
+   0.0,
+   5.5,
+   24.9,
+   39.5,
+   44.9,
+   43.6,
+   37.7,
+   30.8,
+   24.2,
+   18.3,
+   13.8,
+   10.6,
+   7.6
+  ],
+  "lateDinner": [
+   0.0,
+   9.5,
+   36.4,
+   56.4,
+   63.9,
+   61.8,
+   54.7,
+   46.5,
+   38.0,
+   30.8,
+   25.0,
+   20.1,
+   15.9
+  ],
+  "noWalk": [
+   0.0,
+   5.2,
+   22.2,
+   34.7,
+   38.9,
+   36.9,
+   31.6,
+   25.1,
+   18.9,
+   13.4,
+   9.2,
+   6.4,
+   4.7
+  ],
+  "walk": [
+   0.0,
+   3.4,
+   18.7,
+   30.0,
+   35.5,
+   35.1,
+   30.4,
+   25.0,
+   19.8,
+   15.1,
+   11.6,
+   9.2,
+   7.3
+  ]
+ },
+ "trial": {
+  "arms": {
+   "coaching": {
+    "randomized": 667,
+    "finished": 568
+   },
+   "coaching + overnight fast": {
+    "randomized": 666,
+    "finished": 558
+   },
+   "tips by email": {
+    "randomized": 667,
+    "finished": 566
+   }
+  },
+  "contrasts": {
+   "hba1c_pct": {
+    "mean:coaching": {
+     "est": -0.22,
+     "n": 568
+    },
+    "mean:coaching + overnight fast": {
+     "est": -0.26,
+     "n": 558
+    },
+    "mean:tips by email": {
+     "est": -0.06,
+     "n": 566
+    },
+    "coaching + overnight fast vs coaching": {
+     "est": -0.03,
+     "lo": -0.06,
+     "hi": -0.01,
+     "n": 1126
+    },
+    "coaching vs tips by email": {
+     "est": -0.17,
+     "lo": -0.19,
+     "hi": -0.15,
+     "n": 1134
+    },
+    "coaching + overnight fast vs tips by email": {
+     "est": -0.2,
+     "lo": -0.23,
+     "hi": -0.18,
+     "n": 1124
+    }
+   },
+   "fasting_glucose_mg_dl": {
+    "mean:coaching": {
+     "est": -3.78,
+     "n": 568
+    },
+    "mean:coaching + overnight fast": {
+     "est": -5.09,
+     "n": 558
+    },
+    "mean:tips by email": {
+     "est": -1.02,
+     "n": 566
+    },
+    "coaching + overnight fast vs coaching": {
+     "est": -1.31,
+     "lo": -2.17,
+     "hi": -0.45,
+     "n": 1126
+    },
+    "coaching vs tips by email": {
+     "est": -2.75,
+     "lo": -3.52,
+     "hi": -2.01,
+     "n": 1134
+    },
+    "coaching + overnight fast vs tips by email": {
+     "est": -4.07,
+     "lo": -4.88,
+     "hi": -3.25,
+     "n": 1124
+    }
+   },
+   "weight_kg": {
+    "mean:coaching": {
+     "est": -1.49,
+     "n": 568
+    },
+    "mean:coaching + overnight fast": {
+     "est": -1.9,
+     "n": 558
+    },
+    "mean:tips by email": {
+     "est": -0.36,
+     "n": 566
+    },
+    "coaching + overnight fast vs coaching": {
+     "est": -0.41,
+     "lo": -0.64,
+     "hi": -0.18,
+     "n": 1126
+    },
+    "coaching vs tips by email": {
+     "est": -1.13,
+     "lo": -1.35,
+     "hi": -0.91,
+     "n": 1134
+    },
+    "coaching + overnight fast vs tips by email": {
+     "est": -1.54,
+     "lo": -1.76,
+     "hi": -1.33,
+     "n": 1124
+    }
+   },
+   "fatigue_score_0_to_52": {
+    "mean:coaching": {
+     "est": 2.95,
+     "n": 568
+    },
+    "mean:coaching + overnight fast": {
+     "est": 2.87,
+     "n": 558
+    },
+    "mean:tips by email": {
+     "est": 2.16,
+     "n": 566
+    },
+    "coaching + overnight fast vs coaching": {
+     "est": -0.09,
+     "lo": -0.61,
+     "hi": 0.44,
+     "n": 1126
+    },
+    "coaching vs tips by email": {
+     "est": 0.8,
+     "lo": 0.28,
+     "hi": 1.31,
+     "n": 1134
+    },
+    "coaching + overnight fast vs tips by email": {
+     "est": 0.71,
+     "lo": 0.19,
+     "hi": 1.22,
+     "n": 1124
+    }
+   },
+   "six_minute_walk_m": {
+    "mean:coaching": {
+     "est": 25.28,
+     "n": 568
+    },
+    "mean:coaching + overnight fast": {
+     "est": 23.84,
+     "n": 558
+    },
+    "mean:tips by email": {
+     "est": 13.25,
+     "n": 566
+    },
+    "coaching + overnight fast vs coaching": {
+     "est": -1.44,
+     "lo": -4.89,
+     "hi": 1.94,
+     "n": 1126
+    },
+    "coaching vs tips by email": {
+     "est": 12.02,
+     "lo": 8.73,
+     "hi": 15.13,
+     "n": 1134
+    },
+    "coaching + overnight fast vs tips by email": {
+     "est": 10.58,
+     "lo": 7.44,
+     "hi": 13.76,
+     "n": 1124
+    }
+   }
+  }
+ },
+ "statusCounts": {
+  "ok": 339,
+  "watch": 84,
+  "alert": 77
+ },
+ "methods": "- Meal response: baseline = last 15-min reading at or before the meal (<= 15 min earlier).\n  Rise = peak of the readings 15..120 min after the meal minus baseline. iAUC = area above\n  baseline over 0..120 min (mg/dL x h). Meals with another item of >= 100 kcal in the next\n  120 min are dropped, so the curve belongs to one meal.\n- Late dinner: dinner starting at or after 20:00. Within-person comparison (person fixed\n  effects), adjusted for carbs. Night-shift workers are left out.\n- Post-meal walk: walked_after_min > 0. Within-person, adjusted for carbs and meal type.\n  Walking was self-chosen, so this is an association, not proof.\n- Overnight fast: the randomized arm comparison (coaching + overnight fast vs coaching) on\n  week 12 minus week 0 change is the fair causal estimate. Within-person night-to-night\n  link between the overnight fast and next-morning glucose is shown as an association.\n- Cohort CIs: cluster bootstrap that resamples people. Personal CIs: bootstrap of that\n  person's meals, then empirical-Bayes shrinkage toward the cohort estimate."
+}

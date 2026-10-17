@@ -1,0 +1,6 @@
+node_modules/
+.wrangler/
+*.csv
+data-raw/
+__pycache__/
+.dev.vars

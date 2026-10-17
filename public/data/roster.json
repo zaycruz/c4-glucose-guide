@@ -1,0 +1,352 @@
+[
+ {
+  "survivorId": "c4-N0072",
+  "displayName": "N0072 \u00b7 61F \u00b7 ovarian",
+  "status": "alert",
+  "headline": "63% time in range (weeks 1-2); time in range below 70%",
+  "updatedAt": "2024-08-01T19:15:00"
+ },
+ {
+  "survivorId": "c4-N0085",
+  "displayName": "N0085 \u00b7 67M \u00b7 melanoma",
+  "status": "alert",
+  "headline": "64% time in range (weeks 11-12); time in range below 70%",
+  "updatedAt": "2025-05-11T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0632",
+  "displayName": "N0632 \u00b7 76F \u00b7 colorectal",
+  "status": "alert",
+  "headline": "95% time in range (weeks 11-12); more than 4% of readings below 70",
+  "updatedAt": "2024-06-23T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0767",
+  "displayName": "N0767 \u00b7 71M \u00b7 bladder",
+  "status": "alert",
+  "headline": "94% time in range (weeks 11-12); more than 4% of readings below 70",
+  "updatedAt": "2025-03-28T19:15:00"
+ },
+ {
+  "survivorId": "c4-N0872",
+  "displayName": "N0872 \u00b7 47F \u00b7 lung",
+  "status": "alert",
+  "headline": "0% time in range (weeks 11-12); time in range below 70%",
+  "updatedAt": "2024-11-10T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0950",
+  "displayName": "N0950 \u00b7 60M \u00b7 prostate",
+  "status": "alert",
+  "headline": "69% time in range (weeks 11-12); time in range below 70%",
+  "updatedAt": "2024-12-29T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1097",
+  "displayName": "N1097 \u00b7 79M \u00b7 prostate",
+  "status": "alert",
+  "headline": "15% time in range (weeks 11-12); time in range below 70%",
+  "updatedAt": "2024-04-07T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1303",
+  "displayName": "N1303 \u00b7 63M \u00b7 prostate",
+  "status": "alert",
+  "headline": "1% time in range (weeks 11-12); time in range below 70%",
+  "updatedAt": "2024-07-28T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1530",
+  "displayName": "N1530 \u00b7 65F \u00b7 colorectal",
+  "status": "alert",
+  "headline": "90% time in range (weeks 11-12); more than 4% of readings below 70",
+  "updatedAt": "2024-07-07T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1774",
+  "displayName": "N1774 \u00b7 76M \u00b7 prostate",
+  "status": "alert",
+  "headline": "40% time in range (weeks 11-12); time in range below 70%",
+  "updatedAt": "2025-10-05T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1938",
+  "displayName": "N1938 \u00b7 79M \u00b7 melanoma",
+  "status": "alert",
+  "headline": "59% time in range (weeks 11-12); time in range below 70%",
+  "updatedAt": "2025-07-13T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0097",
+  "displayName": "N0097 \u00b7 48F \u00b7 lymphoma",
+  "status": "watch",
+  "headline": "85% time in range; time in range below 90%",
+  "updatedAt": "2025-06-15T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0434",
+  "displayName": "N0434 \u00b7 69M \u00b7 prostate",
+  "status": "watch",
+  "headline": "94% time in range; more than 5% of readings above 180",
+  "updatedAt": "2025-04-06T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0587",
+  "displayName": "N0587 \u00b7 74M \u00b7 prostate",
+  "status": "watch",
+  "headline": "80% time in range; time in range below 90%",
+  "updatedAt": "2024-09-29T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0828",
+  "displayName": "N0828 \u00b7 69M \u00b7 prostate",
+  "status": "watch",
+  "headline": "84% time in range; time in range below 90%",
+  "updatedAt": "2024-06-16T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0964",
+  "displayName": "N0964 \u00b7 44F \u00b7 thyroid",
+  "status": "watch",
+  "headline": "78% time in range; time in range below 90%",
+  "updatedAt": "2024-09-10T17:00:00"
+ },
+ {
+  "survivorId": "c4-N1337",
+  "displayName": "N1337 \u00b7 78M \u00b7 prostate",
+  "status": "watch",
+  "headline": "75% time in range; time in range below 90%",
+  "updatedAt": "2025-12-07T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1447",
+  "displayName": "N1447 \u00b7 58M \u00b7 prostate",
+  "status": "watch",
+  "headline": "91% time in range; more than 5% of readings above 180",
+  "updatedAt": "2025-07-27T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1557",
+  "displayName": "N1557 \u00b7 64M \u00b7 bladder",
+  "status": "watch",
+  "headline": "91% time in range; more than 5% of readings above 180",
+  "updatedAt": "2024-10-27T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1797",
+  "displayName": "N1797 \u00b7 79M \u00b7 melanoma",
+  "status": "watch",
+  "headline": "92% time in range; more than 5% of readings above 180",
+  "updatedAt": "2025-10-12T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1877",
+  "displayName": "N1877 \u00b7 66M \u00b7 kidney",
+  "status": "watch",
+  "headline": "75% time in range; time in range below 90%",
+  "updatedAt": "2024-08-14T12:30:00"
+ },
+ {
+  "survivorId": "c4-N0013",
+  "displayName": "N0013 \u00b7 79M \u00b7 prostate",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2025-03-02T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0214",
+  "displayName": "N0214 \u00b7 82M \u00b7 prostate",
+  "status": "ok",
+  "headline": "96% time in range, steady",
+  "updatedAt": "2024-11-10T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0254",
+  "displayName": "N0254 \u00b7 81M \u00b7 prostate",
+  "status": "ok",
+  "headline": "99% time in range, steady",
+  "updatedAt": "2024-08-18T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0358",
+  "displayName": "N0358 \u00b7 72M \u00b7 prostate",
+  "status": "ok",
+  "headline": "97% time in range, steady",
+  "updatedAt": "2024-02-04T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0383",
+  "displayName": "N0383 \u00b7 65M \u00b7 prostate",
+  "status": "ok",
+  "headline": "98% time in range, steady",
+  "updatedAt": "2025-08-24T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0579",
+  "displayName": "N0579 \u00b7 71F \u00b7 breast",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2025-10-17T17:45:00"
+ },
+ {
+  "survivorId": "c4-N0731",
+  "displayName": "N0731 \u00b7 44F \u00b7 colorectal",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2025-01-19T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0758",
+  "displayName": "N0758 \u00b7 73F \u00b7 breast",
+  "status": "ok",
+  "headline": "98% time in range, steady",
+  "updatedAt": "2024-09-01T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0766",
+  "displayName": "N0766 \u00b7 52F \u00b7 endometrial",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2024-08-04T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0833",
+  "displayName": "N0833 \u00b7 51F \u00b7 breast",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2024-09-15T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0850",
+  "displayName": "N0850 \u00b7 81M \u00b7 prostate",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2025-04-27T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0893",
+  "displayName": "N0893 \u00b7 72F \u00b7 ovarian",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2025-01-19T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0906",
+  "displayName": "N0906 \u00b7 53F \u00b7 melanoma",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2025-09-21T23:45:00"
+ },
+ {
+  "survivorId": "c4-N0920",
+  "displayName": "N0920 \u00b7 64F \u00b7 breast",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2024-05-19T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1160",
+  "displayName": "N1160 \u00b7 47F \u00b7 lymphoma",
+  "status": "ok",
+  "headline": "97% time in range, steady",
+  "updatedAt": "2024-12-01T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1277",
+  "displayName": "N1277 \u00b7 79M \u00b7 colorectal",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2024-11-24T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1286",
+  "displayName": "N1286 \u00b7 80F \u00b7 breast",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2024-12-08T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1313",
+  "displayName": "N1313 \u00b7 35M \u00b7 colorectal",
+  "status": "ok",
+  "headline": "99% time in range, steady",
+  "updatedAt": "2024-05-26T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1350",
+  "displayName": "N1350 \u00b7 64M \u00b7 prostate",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2024-09-07T11:15:00"
+ },
+ {
+  "survivorId": "c4-N1434",
+  "displayName": "N1434 \u00b7 78M \u00b7 prostate",
+  "status": "ok",
+  "headline": "98% time in range, steady",
+  "updatedAt": "2025-12-14T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1569",
+  "displayName": "N1569 \u00b7 52M \u00b7 head and neck",
+  "status": "ok",
+  "headline": "98% time in range, steady",
+  "updatedAt": "2025-11-02T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1590",
+  "displayName": "N1590 \u00b7 75F \u00b7 melanoma",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2024-05-05T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1706",
+  "displayName": "N1706 \u00b7 59F \u00b7 colorectal",
+  "status": "ok",
+  "headline": "100% time in range, steady",
+  "updatedAt": "2025-03-23T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1786",
+  "displayName": "N1786 \u00b7 37F \u00b7 cervical",
+  "status": "ok",
+  "headline": "97% time in range, steady",
+  "updatedAt": "2025-05-18T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1822",
+  "displayName": "N1822 \u00b7 80M \u00b7 lung",
+  "status": "ok",
+  "headline": "99% time in range, steady",
+  "updatedAt": "2024-11-24T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1861",
+  "displayName": "N1861 \u00b7 81F \u00b7 breast",
+  "status": "ok",
+  "headline": "98% time in range, steady",
+  "updatedAt": "2025-09-28T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1902",
+  "displayName": "N1902 \u00b7 75M \u00b7 colorectal",
+  "status": "ok",
+  "headline": "97% time in range, steady",
+  "updatedAt": "2024-09-01T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1912",
+  "displayName": "N1912 \u00b7 68M \u00b7 colorectal",
+  "status": "ok",
+  "headline": "99% time in range, steady",
+  "updatedAt": "2025-06-15T23:45:00"
+ },
+ {
+  "survivorId": "c4-N1944",
+  "displayName": "N1944 \u00b7 58F \u00b7 endometrial",
+  "status": "ok",
+  "headline": "98% time in range, steady",
+  "updatedAt": "2024-12-08T23:45:00"
+ }
+]
