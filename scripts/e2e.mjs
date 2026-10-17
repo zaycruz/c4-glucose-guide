@@ -7,8 +7,8 @@ const BASE = (process.argv[2] ?? "https://c4-glucose-guide.zay-259.workers.dev")
 const STATUS = ["alert", "watch", "ok"];
 // Fixed numbers in advice wording that are rules, not measurements: 10 to 20 min walk, 8 pm,
 // 13-hour fast, 70-180 range, 70% target, walk bins 10-19 / 20-29 / 30+, weeks 1-2 / 11-12,
-// dinner clock times 6 pm / 8-9 pm, and the 95% confidence level.
-const RULE_NUMBERS = new Set([1, 2, 6, 8, 9, 10, 11, 12, 13, 19, 20, 29, 30, 70, 95, 180]);
+// dinner clock times 6 pm / 8-9 pm, the 95% confidence level, and the 4% low-sugar target.
+const RULE_NUMBERS = new Set([1, 2, 4, 6, 8, 9, 10, 11, 12, 13, 19, 20, 29, 30, 70, 95, 180]);
 
 const failures = [];
 const check = (ok, msg) => { if (!ok) failures.push(msg); return ok; };

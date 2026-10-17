@@ -178,12 +178,14 @@ def person_effect(sub, flag, covars):
     return {"est": est, "se": se, "lo": lo, "hi": hi, "n_flag": int(sub[flag].sum()), "n_other": int((1 - sub[flag]).sum())}
 
 
-def shrink(own, cohort_est, tau2):
+def shrink(own, cohort, tau2):
+    """Empirical-Bayes blend; the interval keeps the cohort estimate's own uncertainty."""
     if own is None:
         return None
     w = tau2 / (tau2 + own["se"] ** 2) if tau2 > 0 else 0.0
-    est = w * own["est"] + (1 - w) * cohort_est
-    se = np.sqrt(w) * own["se"]
+    est = w * own["est"] + (1 - w) * cohort["est"]
+    se_c = (cohort["hi"] - cohort["lo"]) / 3.92
+    se = np.sqrt(w * own["se"] ** 2 + ((1 - w) * se_c) ** 2)
     return {"est": est, "lo": est - 1.96 * se, "hi": est + 1.96 * se, "weight": w}
 
 
@@ -411,6 +413,8 @@ def main(data_dir, out_dir):
             "Share of readings above 180 mg/dL.", n=m_last["readings"])
         add("tar250", f"Readings above 250 mg/dL ({latest_label})", m_last["tar250"], "%", "person",
             "Share of readings above 250 mg/dL.", n=m_last["readings"])
+        add("tbr70", f"Readings below 70 mg/dL ({latest_label})", m_last["tbr70"], "%", "person",
+            "Share of readings below 70 mg/dL.", n=m_last["readings"])
         add("gmi", f"Glucose management indicator ({latest_label})", m_last["gmi"], "%", "person",
             "GMI = 3.31 + 0.02392 x mean glucose; an estimate of HbA1c from sensor data.", n=m_last["readings"])
         if m_last is not m_first:
@@ -436,15 +440,16 @@ def main(data_dir, out_dir):
         add("walk_meals", "Meals followed by a walk", walks, "meals", "person", "Scored meals with walked_after_min > 0.")
 
         pw, pl = per[pid]["walk"], per[pid]["late"]
-        sw = shrink(pw, cohort["walk"]["est"], tau_w)
-        sl = shrink(pl, cohort["lateDinner"]["est"], tau_l)
+        sw = shrink(pw, cohort["walk"], tau_w)
+        sl = shrink(pl, cohort["lateDinner"], tau_l)
         if pw:
             add("walk_effect_own", "Your sugar rise after meals with a walk vs without", pw["est"], "mg/dL", "person",
                 "Your meals only: regression of rise on walk, carbs and meal type; 95% CI from 300 bootstrap resamples of your meals.",
                 ci=(pw["lo"], pw["hi"]), n=pw["n_flag"] + pw["n_other"],
                 caveat="You chose when to walk, so this is a pattern, not proof.")
             add("walk_effect_blend", "Best estimate for you (your data blended with the cohort)", sw["est"], "mg/dL", "person",
-                f"Empirical-Bayes: {r(100 * sw['weight'], 0)}% weight on your data, rest on the cohort estimate.",
+                f"Empirical-Bayes: {r(100 * sw['weight'], 0)}% weight on your data, rest on the cohort estimate. "
+                f"People differed by about {r(np.sqrt(tau_w))} mg/dL in this effect.",
                 ci=(sw["lo"], sw["hi"]))
         if pl:
             add("late_effect_own", "Your sugar rise after dinners at 8 pm or later vs earlier", pl["est"], "mg/dL", "person",
@@ -452,7 +457,8 @@ def main(data_dir, out_dir):
                 ci=(pl["lo"], pl["hi"]), n=pl["n_flag"] + pl["n_other"],
                 caveat="Late dinners may differ in other ways (what you ate, how tired you were).")
             add("late_effect_blend", "Best estimate for you (your data blended with the cohort)", sl["est"], "mg/dL", "person",
-                f"Empirical-Bayes: {r(100 * sl['weight'], 0)}% weight on your data, rest on the cohort estimate.",
+                f"Empirical-Bayes: {r(100 * sl['weight'], 0)}% weight on your data, rest on the cohort estimate. "
+                + ("People did not differ measurably in this effect, so the cohort estimate is the best guess for you." if tau_l == 0 else f"People differed by about {r(np.sqrt(tau_l))} mg/dL."),
                 ci=(sl["lo"], sl["hi"]))
 
         # overnight fast
@@ -501,10 +507,11 @@ def main(data_dir, out_dir):
             return evid[i]["value"]
 
         # walk recommendation
-        if pw and sw["hi"] < 0:
+        if pw and sw["hi"] < 0 and pw["hi"] < 0 and sw["weight"] >= 0.25:
             recs.append({"id": "walk", "title": "Take a short walk after meals",
                          "text": f"Your sugar rose about {abs(v('walk_effect_blend'))} mg/dL less after meals when you walked. "
                                  f"Aim for 10 to 20 minutes after your biggest meal.",
+                         "weightOnYourData": r(sw["weight"], 2),
                          "basis": "personal", "evidenceIds": ["walk_effect_own", "walk_effect_blend", "cohort_walk_10_19"]})
         else:
             why = f"You walked after {v('walk_meals')} of your scored meals, too few to measure your own effect yet. " if walks < 6 else \
@@ -519,7 +526,7 @@ def main(data_dir, out_dir):
                          "text": "You work nights, so clock-time rules about late dinners don't fit you. Keep your main meal at the same point in your waking day.",
                          "basis": "rule", "evidenceIds": ["cohort_late"]})
         elif len(din) and v("late_share") is not None and v("late_share") >= 20:
-            if pl and sl["lo"] > 0:
+            if pl and sl["lo"] > 0 and pl["lo"] > 0 and sl["weight"] >= 0.25:
                 text = f"{v('late_share')}% of your dinners started at 8 pm or later, and those raised your sugar about {v('late_effect_blend')} mg/dL more. Try to start dinner before 8 pm."
                 basis, ids = "personal", ["late_share", "late_effect_own", "late_effect_blend"]
             else:
@@ -532,16 +539,28 @@ def main(data_dir, out_dir):
                          "text": (f"None of your {v('dinner_count')} scored dinners started at 8 pm or later" if v('late_share') == 0 else f"Only {v('late_share')}% of your dinners started at 8 pm or later") + f". Keep it that way: across the program, late dinners raised sugar about {v('cohort_late')} mg/dL more.",
                          "basis": "cohort", "evidenceIds": ["dinner_count", "late_share", "cohort_late"]})
         # overnight fast
-        if not night_shift and "fast_avg" in evid:
+        low_sugar = m_last["tbr70"] > 4
+        if not night_shift and "fast_avg" in evid and low_sugar:
+            recs.append({"id": "overnight_fast", "title": "Hold off on longer fasts for now",
+                         "text": f"{v('tbr70')}% of your readings were below 70 mg/dL, so check with your care team before stretching your overnight fast. "
+                                 f"Right now it averages {v('fast_avg')} hours.",
+                         "basis": "rule", "evidenceIds": ["tbr70", "fast_avg", "status_rule"]})
+        elif not night_shift and "fast_avg" in evid:
             recs.append({"id": "overnight_fast", "title": "Aim for a 13-hour overnight break",
                          "text": f"Your overnight fast averaged {v('fast_avg')} hours, and {v('fast13_share')}% of nights reached 13 hours. "
                                  f"In the randomized program, adding a 13-hour overnight fast to coaching changed HbA1c by {v('trial_fast_hba1c')} points "
                                  f"(95% CI {evid['trial_fast_hba1c']['ci'][0]} to {evid['trial_fast_hba1c']['ci'][1]}) compared with coaching alone.",
                          "basis": "trial", "evidenceIds": ["fast_avg", "fast13_share", "trial_fast_hba1c"]})
-        if st == "alert":
+        if st == "alert" and low_sugar:
+            recs.insert(0, {"id": "talk_to_team", "title": "Tell your care team about low readings",
+                            "text": f"{v('tbr70')}% of your readings were below 70 mg/dL ({latest_label}); the usual target is under 4%. "
+                                    f"Low sugar can make you shaky or dizzy. Share this before your next visit.",
+                            "basis": "rule", "evidenceIds": ["tbr70", "status_rule"]})
+        elif st == "alert":
             recs.insert(0, {"id": "talk_to_team", "title": "Share these readings with your care team",
-                            "text": f"Only {v('tir')}% of your readings were in the 70-180 range ({latest_label}); the usual target is more than 70%. Bring this to your next visit.",
-                            "basis": "rule", "evidenceIds": ["tir", "status_rule"]})
+                            "text": f"Only {v('tir')}% of your readings were in the 70-180 range ({latest_label}); the usual target is more than 70%. "
+                                    f"Your average was {v('mean_glucose')} mg/dL. Bring this to your next visit.",
+                            "basis": "rule", "evidenceIds": ["tir", "mean_glucose", "status_rule"]})
 
         # charts
         hourly = []
