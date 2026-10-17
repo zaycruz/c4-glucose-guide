@@ -268,7 +268,7 @@ Example (`c4-N0632`, trimmed):
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "57.1% of your dinners started at 8 pm or later. Across the program, late dinners raised sugar about 9.1 mg/dL more than earlier ones in the same person, and a dinner at 8-9 pm raised it 15.9 mg/dL more than one before 6 pm. Try to start dinner before 8 pm.",
+      "text": "57.1% of your dinners started at 8 pm or later. Across the program, sugar rose about 9.1 mg/dL more after late dinners than after earlier ones in the same person, and 15.9 mg/dL more after a dinner at 8-9 pm than after one before 6 pm. Try to start dinner before 8 pm.",
       "basis": "cohort",
       "evidenceIds": [
         "late_share",
@@ -455,7 +455,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
 {
   "survivorId": "c4-N0632",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-  "ms": 4070,
+  "ms": 2932,
   "error": null,
   "rawPreview": null,
   "items": [
@@ -493,7 +493,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "Most of your dinners, 57.1%, started at 8 pm or later, which is linked to sugar rising about 9.1 mg/dL more. Try to eat dinner before 8 pm.",
+      "text": "You had dinner at 8 pm or later 57.1% of the time, which is linked to sugar rising 9.1 mg/dL more. Try to start dinner before 8 pm.",
       "source": "ai",
       "evidenceIds": [
         "late_share",

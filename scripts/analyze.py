@@ -581,16 +581,16 @@ def main(data_dir, out_dir):
                          "basis": "rule", "evidenceIds": ["cohort_late"]})
         elif len(din) and v("late_share") is not None and v("late_share") >= 20:
             if pl and sl["lo"] > 0 and pl["lo"] > 0 and sl["weight"] >= 0.25:
-                text = f"{v('late_share')}% of your dinners started at 8 pm or later, and those raised your sugar about {v('late_effect_blend')} mg/dL more. Try to start dinner before 8 pm."
+                text = f"{v('late_share')}% of your dinners started at 8 pm or later, and after those your sugar rose about {v('late_effect_blend')} mg/dL more. Try to start dinner before 8 pm."
                 basis, ids = "personal", ["late_share", "late_effect_own", "late_effect_blend"]
             else:
-                text = (f"{v('late_share')}% of your dinners started at 8 pm or later. Across the program, late dinners raised sugar about {v('cohort_late')} mg/dL more than earlier ones in the same person, "
-                        f"and a dinner at 8-9 pm raised it {v('cohort_dinner_8_9pm')} mg/dL more than one before 6 pm. Try to start dinner before 8 pm.")
+                text = (f"{v('late_share')}% of your dinners started at 8 pm or later. Across the program, sugar rose about {v('cohort_late')} mg/dL more after late dinners than after earlier ones in the same person, "
+                        f"and {v('cohort_dinner_8_9pm')} mg/dL more after a dinner at 8-9 pm than after one before 6 pm. Try to start dinner before 8 pm.")
                 basis, ids = "cohort", ["late_share", "cohort_late", "cohort_dinner_8_9pm"]
             recs.append({"id": "late_dinner", "title": "Move dinner earlier", "text": text, "basis": basis, "evidenceIds": ids})
         elif len(din):
             recs.append({"id": "late_dinner", "title": "Keep dinner early",
-                         "text": (f"None of your {v('dinner_count')} scored dinners started at 8 pm or later" if v('late_share') == 0 else f"Only {v('late_share')}% of your dinners started at 8 pm or later") + f". Keep it that way: across the program, late dinners raised sugar about {v('cohort_late')} mg/dL more.",
+                         "text": (f"None of your {v('dinner_count')} scored dinners started at 8 pm or later" if v('late_share') == 0 else f"Only {v('late_share')}% of your dinners started at 8 pm or later") + f". Keep it that way: across the program, sugar rose about {v('cohort_late')} mg/dL more after late dinners.",
                          "basis": "cohort", "evidenceIds": ["dinner_count", "late_share", "cohort_late"]})
         # overnight fast
         low_sugar = m_last["tbr70"] > 4
