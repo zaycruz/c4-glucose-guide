@@ -297,6 +297,7 @@ Example (`c4-N0632`, trimmed):
         "cohort_walk_10_19",
         "cohort_walk_negctrl",
         "cohort_walk_evalue",
+        "cohort_walk_dml",
         "real_walk"
       ],
       "realDataCheck": {
@@ -313,6 +314,7 @@ Example (`c4-N0632`, trimmed):
         "late_share",
         "cohort_late",
         "cohort_dinner_8_9pm",
+        "cohort_late_dml",
         "real_late_dinner"
       ],
       "realDataCheck": {
@@ -502,14 +504,14 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
 {
   "survivorId": "c4-N0632",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-  "ms": 2889,
+  "ms": 2873,
   "error": null,
   "rawPreview": null,
   "items": [
     {
       "id": "talk_to_team",
       "title": "Tell your care team about low readings",
-      "text": "You had low sugar readings 5.3% of the time, which can make you feel shaky or dizzy. Share this with your team before your next visit.",
+      "text": "Some of your readings were below 70 mg/dL, which can make you feel shaky or dizzy. Share this with your team before your next visit.",
       "source": "ai",
       "evidenceIds": [
         "tbr70",
@@ -529,6 +531,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
         "cohort_walk_10_19",
         "cohort_walk_negctrl",
         "cohort_walk_evalue",
+        "cohort_walk_dml",
         "real_walk"
       ],
       "rejected": {
@@ -542,12 +545,13 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "Most of your dinners, 57.1%, started at 8 pm or later, and sugar rose 9.1 mg/dL more after late dinners. Try to eat dinner before 8 pm.",
+      "text": "Most of your dinners were at 8 pm or later, and sugar rose 9.1 mg/dL more after late dinners. Try to start dinner before 8 pm.",
       "source": "ai",
       "evidenceIds": [
         "late_share",
         "cohort_late",
         "cohort_dinner_8_9pm",
+        "cohort_late_dml",
         "real_late_dinner"
       ],
       "rejected": null
@@ -626,6 +630,19 @@ Cohort findings for a program-level view. Top-level keys:
     "nhanesSurvivors",
     "nhanesSurvivorsWeighted",
     "methods"
+  ],
+  "mlCompare": [
+    "generated",
+    "seed",
+    "plantedEffect",
+    "treatShare",
+    "predictProgram",
+    "predictProgramWithWalk",
+    "predictCgmacros",
+    "effectBenchmark",
+    "personalBenchmark",
+    "realEffects",
+    "seconds"
   ],
   "methods": "str"
 }
