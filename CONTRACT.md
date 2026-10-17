@@ -49,9 +49,9 @@ For a mixed "Today" queue across modules, each tile also has:
       }
     ],
     "updatedAt": "2024-08-01T19:15:00",
-    "careTeamToday": false,
-    "todayReason": "Glucose: High most of the day: 63% in range, average 178 mg/dL",
-    "priority": 2,
+    "careTeamToday": true,
+    "todayReason": "Glucose: Often very high: 10.9% of readings above 250 (target under 5%)",
+    "priority": 1,
     "dataType": "synthetic",
     "module": "C4 Glucose Guide"
   },
@@ -78,9 +78,9 @@ For a mixed "Today" queue across modules, each tile also has:
       }
     ],
     "updatedAt": "2025-05-11T23:45:00",
-    "careTeamToday": false,
-    "todayReason": "Glucose: High most of the day: 64% in range, average 177 mg/dL",
-    "priority": 2,
+    "careTeamToday": true,
+    "todayReason": "Glucose: Often very high: 6.3% of readings above 250 (target under 5%)",
+    "priority": 1,
     "dataType": "synthetic",
     "module": "C4 Glucose Guide"
   }
@@ -98,11 +98,11 @@ For a mixed "Today" queue across modules, each tile also has:
 | `evidence[]` | `{id, label, value, unit, ci: [lo, hi] \| null, n, scope, method, caveat}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (real-data check: CGMacros or survey-weighted NHANES), `rule` (thresholds) |
 | `recommendations[]` | `{id, title, text, basis, evidenceIds[], realDataCheck, caution?}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
 | `recommendations[].realDataCheck` | `{label, evidenceId}` | does real data back this advice? `label`: `agrees`, `same direction, not proven`, `no clear signal`, `disagrees`, `not tested` (safety rules). `evidenceId` is the cited `scope: real` evidence item, or `null` when not tested. |
-| `careTeamFlag` | `{today, reasons[{reason, evidenceId}], rule}` | `today` is true for more than 4% of readings below 70 or an average above 250 mg/dL; same value as the roster's `careTeamToday` |
+| `careTeamFlag` | `{today, level, reasons[{reason, evidenceId}], rule}` | `today` is true for more than 4% of readings below 70, an average above 250 mg/dL, or more than 5% of readings above 250 (sustained highs); same value as the roster's `careTeamToday`. `level` is `today`, `next visit` (other alert: time in range under 70%) or null |
 | `hypoglycaemiaWarning` | `{level, reasonEvidenceId, text, translations{es, ht}} \| null` | set for anyone with frequent lows: the 15-15 rule and when to call 911. When it is set, the walk advice carries `caution` and there is no advice to fast longer. |
 | `todayReason`, `priority` | string, int | same as on the roster tile |
 | `plainSummary` | string | the care-team line plus the person's actions in plain English, with no measured numbers |
-| `patientView` | `{en, es, ht: {careTeam, lowSugarWarning, actions[≤3 {id, text}], help}, note}` | a patient-facing version in English, Spanish and Haitian Creole (Kreyòl). It uses only fixed rule numbers (10, 15, 20, 211, 911…), no measured values. Action ids are the same in every language. `help` gives 211 and a social-worker referral for food, money or transport. `careTeam` and `lowSugarWarning` are null when they don't apply. |
+| `patientView` | `{en, es, ht: {careTeam, lowSugarWarning, actions[≤3 {id, text}], help, translation, reviewed}, note}` | a patient-facing version in English, Spanish and Haitian Creole (Kreyòl). It uses only fixed rule numbers (10, 15, 20, 211, 911…), no measured values. Action ids are the same in every language. `help` gives 211 and a social-worker referral for food, money or transport. `careTeam` and `lowSugarWarning` are null when they don't apply. Spanish and Kreyòl are machine-translated and not yet reviewed (`translation: "machine-translated, needs review"`, `reviewed: false`). |
 | `charts` | object of plain arrays | see below |
 | `dataNote` | string | notice that the data is synthetic |
 
@@ -152,13 +152,14 @@ Example (`c4-N0632`, trimmed):
   "updatedAt": "2024-06-23T23:45:00",
   "careTeamFlag": {
     "today": true,
+    "level": "today",
     "reasons": [
       {
         "reason": "Frequent lows: 5.3% of readings below 70 (target under 4%)",
         "evidenceId": "tbr70"
       }
     ],
-    "rule": "Send to the care team today if more than 4% of readings are below 70 mg/dL or the average is above 250 mg/dL."
+    "rule": "Send to the care team today if more than 4% of readings are below 70 mg/dL, the average is above 250 mg/dL, or more than 5% of readings are above 250 mg/dL (sustained highs). Time in range under 70% alone goes to the next visit."
   },
   "hypoglycaemiaWarning": {
     "level": "high",
@@ -189,7 +190,9 @@ Example (`c4-N0632`, trimmed):
           "text": "Don't make your overnight fast longer for now; talk to your care team first."
         }
       ],
-      "help": "Need help with food, money or transport? Call 211 (free, any time) or ask your coach to connect you with a social worker."
+      "help": "Need help with food, money or transport? Call 211 (free, any time) or ask your coach to connect you with a social worker.",
+      "translation": "original",
+      "reviewed": true
     },
     "es": {
       "careTeam": "Hoy: avise a su equipo médico sobre sus niveles bajos de azúcar.",
@@ -208,7 +211,9 @@ Example (`c4-N0632`, trimmed):
           "text": "Por ahora no alargue su ayuno de la noche; hable primero con su equipo médico."
         }
       ],
-      "help": "¿Necesita ayuda con comida, dinero o transporte? Llame al 211 (gratis, a cualquier hora) o pida a su coach que le conecte con un trabajador social."
+      "help": "¿Necesita ayuda con comida, dinero o transporte? Llame al 211 (gratis, a cualquier hora) o pida a su coach que le conecte con un trabajador social.",
+      "translation": "machine-translated, needs review",
+      "reviewed": false
     },
     "ht": {
       "careTeam": "Jodi a: di ekip swen ou sou sik ki desann twò ba.",
@@ -227,9 +232,11 @@ Example (`c4-N0632`, trimmed):
           "text": "Pou kounye a, pa fè jèn lannwit ou pi long; pale ak ekip swen ou anvan."
         }
       ],
-      "help": "Ou bezwen èd pou manje, lajan oswa transpò? Rele 211 (gratis, nenpòt lè) oswa mande antrenè ou mete ou an kontak ak yon travayè sosyal."
+      "help": "Ou bezwen èd pou manje, lajan oswa transpò? Rele 211 (gratis, nenpòt lè) oswa mande antrenè ou mete ou an kontak ak yon travayè sosyal.",
+      "translation": "machine-translated, needs review",
+      "reviewed": false
     },
-    "note": "Spanish and Haitian Creole drafted by the team; have a native speaker review before clinical use."
+    "note": "Spanish and Haitian Creole are machine-translated (AI-drafted) and not yet reviewed by a native speaker; review before clinical use."
   },
   "profile": {
     "age": 76,
@@ -377,7 +384,7 @@ Example (`c4-N0632`, trimmed):
     {
       "id": "talk_to_team",
       "title": "Tell your care team about low readings",
-      "text": "5.3% of your readings were below 70 mg/dL (weeks 11-12); the usual target is under 4%. Low sugar can make you shaky or dizzy. Share this before your next visit.",
+      "text": "5.3% of your readings were below 70 mg/dL (weeks 11-12); the usual target is under 4%. Low sugar can make you shaky or dizzy. Contact your care team today rather than waiting for your next visit.",
       "basis": "rule",
       "evidenceIds": [
         "tbr70",
@@ -622,13 +629,19 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
     {
       "id": "talk_to_team",
       "title": "Tell your care team about low readings",
-      "text": "You had low sugar readings, which can make you feel shaky or dizzy, so share this with your team before your next visit. Your readings were below 70 mg/dL 5.3% of the time, which is higher than the usual target of under 4%.",
-      "source": "ai",
+      "text": "5.3% of your readings were below 70 mg/dL (weeks 11-12); the usual target is under 4%. Low sugar can make you shaky or dizzy. Contact your care team today rather than waiting for your next visit.",
+      "source": "template",
       "evidenceIds": [
         "tbr70",
         "status_rule"
       ],
-      "rejected": null
+      "rejected": {
+        "text": "If your sugar readings are below 70 mg/dL, you might feel shaky or dizzy, so contact your care team today. Your care team can help you with readings that are below the usual target of under 4%.",
+        "untracedNumbers": [],
+        "addedCausalWords": [
+          "help"
+        ]
+      }
     },
     {
       "id": "walk",
@@ -646,17 +659,17 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
         "real_walk"
       ],
       "rejected": {
-        "text": "Walking after meals helped your sugar rise 18.7 mg/dL less, so try walking 10 to 20 minutes after dinner. Walk after eating, not on an empty stomach, and carry juice or glucose tablets in case you feel shaky or sweaty.",
+        "text": "Walking after meals can help with your sugar, which rose about 18.7 mg/dL less when you walked. Try walking 10 to 20 minutes after dinner, but check with your care team first because of your low readings.",
         "untracedNumbers": [],
         "addedCausalWords": [
-          "helped"
+          "help"
         ]
       }
     },
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "Eating dinner late, at 8 pm or later, is linked to sugar rising 9.2 mg/dL more, so try to start dinner before 8 pm. In the program, sugar rose 13.3 mg/dL more after a dinner at 8-9 pm than after one before 6 pm.",
+      "text": "Eating dinner late, like 57.1% of your dinners that started at 8 pm or later, is linked to sugar rising about 9.2 mg/dL more. Try to start dinner before 8 pm to see how it affects your sugar.",
       "source": "ai",
       "evidenceIds": [
         "late_share",
@@ -670,21 +683,27 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
     {
       "id": "overnight_fast",
       "title": "Hold off on longer fasts for now",
-      "text": "Your overnight fast currently averages 9.9 hours, but check with your care team before making any changes. You had low sugar readings 5.3% of the time, so it's a good idea to talk to your team before stretching your overnight fast.",
-      "source": "ai",
+      "text": "5.3% of your readings were below 70 mg/dL, so check with your care team before stretching your overnight fast. Right now it averages 9.9 hours.",
+      "source": "template",
       "evidenceIds": [
         "tbr70",
         "fast_avg",
         "status_rule"
       ],
-      "rejected": null
+      "rejected": {
+        "text": "Your overnight fast currently averages 9.9 hours, but check with your care team before making any changes. If 5.3% of your readings are below 70 mg/dL, your care team can help you decide what to do about your overnight fast.",
+        "untracedNumbers": [],
+        "addedCausalWords": [
+          "help"
+        ]
+      }
     }
   ],
-  "recHash": "3eaf1b35f56dec9faed56d214005710b1716c7c5cce5495f7869e61de2943d34",
-  "generatedAt": "2026-10-17T16:39:09.642Z",
-  "generationMs": 10320,
+  "recHash": "496ef1d9f23d92095c077b6087718392ec09580de976b81665850729f7a79570",
+  "generatedAt": "2026-10-17T17:06:54.713Z",
+  "generationMs": 3886,
   "cached": true,
-  "ms": 4
+  "ms": 3
 }
 ```
 
@@ -743,9 +762,9 @@ Cohort findings for a program-level view. Top-level keys:
   ],
   "realWorld": [
     "cgmacros",
+    "methods",
     "nhanesSurvivors",
-    "nhanesSurvivorsWeighted",
-    "methods"
+    "nhanesSurvivorsUnweighted"
   ],
   "engine": "str",
   "statistics": [
@@ -781,6 +800,10 @@ Cohort findings for a program-level view. Top-level keys:
     "realData",
     "source"
   ],
+  "fairness": [
+    "note",
+    "attributes"
+  ],
   "careTeamToday": [
     "rule",
     "count"
@@ -791,10 +814,10 @@ Cohort findings for a program-level view. Top-level keys:
 - `effects.<name>` = `{est, lo, hi, se, people, rows}`: within-person double-ML estimates (gradient boosting, 5-fold cross-fitting × 3) with person-clustered 95% CIs. The fixed-effects regression cross-check is under `statistics.effects`. Names: `walk`, `walkAfterDinner`, `walkAfterOtherMeals`, `lateDinner`, `carbsPer10g`, `fastMorningPerHour`, `fast13Morning`, plus iAUC versions.
 - `walkDose[]`, `dinnerHour[]`: `{bin, est, lo, hi, n_meals}`, for the dose-response charts.
 - `trial.contrasts.<outcome>["A vs B"]`: randomized difference in the week 12 minus week 0 change. `trial.fastVsCoachingBySubgroup`: the same difference by starting blood sugar group and by night shift. `trial.adherence`: what each arm actually did.
-- `realWorld.cgmacros`, `realWorld.nhanesSurvivors`: the same questions answered from real data.
+- `realWorld.cgmacros`, `realWorld.nhanesSurvivors`: the same questions answered from real data. `nhanesSurvivors` is survey-weighted (the fit every claim cites); `nhanesSurvivorsUnweighted` is the same models without weights, a labelled sensitivity that no claim uses.
 - `plainLanguage`: `{headline, points[{id, text, est, lo, hi, realDataCheck}], realData, source}`. A plain hero (late dinner, evening walk, 10 minutes is enough) whose numbers round the `effects` and `walkDose` values. `realData` says how large the real-data effect is next to the program's (for example "about a fifth"), computed from the actual ratio.
 - `careTeamToday`: `{rule, count}`.
-- `fairness` is not served yet. A per-group engine table is written but needs an engine rerun; this key appears only once it has run.
+- `fairness`: `{note, attributes: {race_ethnicity, sex, age_band, preferred_language, cancer_type: {label, groups[{group, people, meals, forecastMae, walk, lateDinner, note?}], walkDiffersP, lateDinnerDiffersP}}}`. Groups under 20 people have `walk`/`lateDinner` null. The Q-test p-values are not multiplicity-corrected. The data is synthetic, so this checks that the engine treats groups alike, not real-world fairness.
 
 ```json
 {
@@ -870,39 +893,44 @@ The latest E2E result for the deployed data: pass/fail, the count of traced numb
     },
     "recommendations": 156,
     "adviceNumbersTracedToEvidence": 614,
-    "wordingConstantsStripped": 563,
+    "wordingConstantsStripped": 557,
     "aiAdvice": {
       "survivorId": "c4-N0072",
       "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "ms": 40,
+      "ms": 8,
       "itemsRephrasedByAi": 3,
       "items": 3
     },
-    "careTeamToday": 4,
+    "careTeamToday": 10,
     "advice": {
       "cached": true,
-      "ms": 211
+      "ms": 98
     },
-    "strict": false,
-    "publishedVerificationMatchesLive": false,
-    "dataHash": "0c4855cbb317a154eca80147242fd8110f83a21b9c79a6065d2b0ee408658493",
-    "finishedAt": "2026-10-17T16:44:07.123Z",
-    "artifact": "runs/e2e-2026-10-17T16-43-56-293Z.json"
+    "dataHash": "3da4ed7dd923f2a0d8138e9433f487f6abdf92351e9bad0eb30f822a59efc76a",
+    "finishedAt": "2026-10-17T17:16:15.817Z",
+    "artifact": "runs/e2e-2026-10-17T17-16-06-432Z.json"
   },
-  "dataHash": "0c4855cbb317a154eca80147242fd8110f83a21b9c79a6065d2b0ee408658493",
-  "commit": "37aaa70713a46d1dee547d6616c50e987d24a0dc",
+  "dataHash": "3da4ed7dd923f2a0d8138e9433f487f6abdf92351e9bad0eb30f822a59efc76a",
+  "commit": "d28d7d21eb81c73ac6db64b32298f67ae9b12b2f",
   "repo": "https://github.com/zaycruz/c4-glucose-guide",
   "reproduce": [
-    "scripts/build-ml.sh <ssh host> <Challenge4_Dose_and_Timing dir>   # ML engine, minutes, on a server",
-    "scripts/build-data.sh <Challenge4_Dose_and_Timing dir>               # evidence, advice, roster",
+    "scripts/reproduce.sh <Challenge4_Dose_and_Timing dir> [out dir]   # data check, ML engine, benchmark, evidence; diffs every README number (REPRODUCE.md)",
     "npx wrangler deploy && node scripts/warm-advice.mjs && npx wrangler deploy",
-    "node scripts/e2e.mjs --strict                                          # this check"
+    "node scripts/e2e.mjs && npx wrangler deploy && node scripts/e2e.mjs --strict   # this check"
   ],
   "seeds": {
-    "engine": 20261017
+    "engine": 20261017,
+    "benchmark": 20261017,
+    "analysis": 20261017,
+    "realWorld": 7,
+    "models": "random_state=0"
   }
 }
 ```
+
+## `GET /api/c4/`
+
+Index: `{module, name, dataType, routes[], contract}`. Also answers at `/api/c4` without the slash.
 
 ## `GET /`
 

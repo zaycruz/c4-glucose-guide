@@ -138,6 +138,10 @@ export default {
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
     if (req.method !== "GET") return json({ error: "method not allowed" }, 405);
 
+    if (path === "/api/c4" || path === "/api/c4/")
+      return json({ module: "c4", name: "Glucose Guide", dataType: "synthetic program; CGMacros and NHANES as the real-data check",
+        routes: ["/api/c4/survivors", "/api/c4/survivors/:id", "/api/c4/survivors/:id/advice", "/api/c4/cohort", "/api/c4/verification"],
+        contract: "https://github.com/zaycruz/c4-glucose-guide/blob/main/CONTRACT.md" });
     if (path === "/api/c4/survivors") return json(await asset(env, req, "/data/roster.json"));
     if (path === "/api/c4/cohort") return json(await asset(env, req, "/data/cohort.json"));
     if (path === "/api/c4/verification") return json(await asset(env, req, "/data/verification.json"));

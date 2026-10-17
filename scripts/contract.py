@@ -148,6 +148,10 @@ The latest E2E result for the deployed data: pass/fail, the count of traced numb
 {j(ver)}
 ```
 
+## `GET /api/c4/`
+
+Index: `{{module, name, dataType, routes[], contract}}`. Also answers at `/api/c4` without the slash.
+
 ## `GET /`
 
 Standalone demo page (`public/index.html`). It shows the roster, the survivor panel with charts and evidence, and a **Cohort findings** tab (`/#cohort`).

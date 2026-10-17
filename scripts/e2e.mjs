@@ -15,7 +15,7 @@ const STATUS = ["alert", "watch", "ok"];
 const CONSTANT_PHRASES = [
   /\b8-9 pm\b/g, /\bbefore 6 pm\b/g, /\b8 pm\b/g, /\b13-hour\b/g, /\b13 hours\b/g, /\b70-180\b/g, /95% CI\b/g,
   /\bweeks 1-2\b/g, /\bweeks 11-12\b/g, /\b10 to 20 minutes?\b/g, /\b10 to 19 minutes?\b/g, /\b20-29 minutes\b/g,
-  /\b30\+ minutes\b/g, /under 4%/g, /more than 70%/g, /below 70 mg\/dL/g, /below 70%/g, /below 90%/g,
+  /\b30\+ minutes\b/g, /under 4%/g, /under 5%/g, /more than 70%/g, /below 70 mg\/dL/g, /below 70%/g, /below 90%/g,
   /\bHbA1c\b/g, /\btype 2 diabetes\b/g, /more than 5% of readings above (180|250)/g, /\babove 250\b/g, /more than 4% of readings below 70/g, /up 10\+ mg\/dL/g,
   /readings below 70\b/g, /Spikes above 180\b/g, // headline thresholds
 ];
@@ -149,6 +149,10 @@ const cohort = await get("/api/c4/cohort");
 run.responses["/api/c4/cohort"] = cohort;
 check(cohort.status === 200 && cohort.body?.effects?.walk && cohort.body?.trial, "cohort endpoint incomplete");
 const C = cohort.body ?? {};
+for (const p of ["/api/c4", "/api/c4/"]) {
+  const r = await fetch(BASE + p);
+  check(r.status === 200 && Array.isArray((await r.json()).routes), `${p} index missing`);
+}
 const pl = C.plainLanguage;
 if (check(pl && Array.isArray(pl.points) && pl.points.length === 3, "cohort plainLanguage missing")) {
   const rcw = C.robustness?.realDataChecks?.walk?.real;
