@@ -1,0 +1,15 @@
+// Fresh-clone reproduction runner: a Worker plus a Cloudflare Sandbox container (4 vCPU).
+// The sponsor data is in a private R2 bucket and is served to the sandbox only with RUNNER_TOKEN.
+{
+  "name": "c4-repro-runner",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "containers": [
+    { "class_name": "Sandbox", "image": "docker.io/cloudflare/sandbox:0.12.10-python", "instance_type": "standard-4", "max_instances": 2 }
+  ],
+  "durable_objects": { "bindings": [{ "class_name": "Sandbox", "name": "Sandbox" }] },
+  "migrations": [{ "new_sqlite_classes": ["Sandbox"], "tag": "v1" }],
+  "r2_buckets": [{ "binding": "DATA", "bucket_name": "c4-repro-data" }],
+  "observability": { "enabled": true }
+}

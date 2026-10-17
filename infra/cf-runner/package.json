@@ -1,0 +1,14 @@
+{
+  "name": "c4-repro-runner",
+  "private": true,
+  "description": "Runs scripts/reproduce.sh from a fresh clone inside a Cloudflare Sandbox (see REPRODUCE.md)",
+  "scripts": {
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@cloudflare/sandbox": "0.12.10"
+  },
+  "devDependencies": {
+    "wrangler": "4.151.1"
+  }
+}

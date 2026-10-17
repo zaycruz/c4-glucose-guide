@@ -4,3 +4,6 @@ node_modules/
 data-raw/
 __pycache__/
 .dev.vars
+repro_out/
+infra/cf-runner/node_modules/
+.venv/

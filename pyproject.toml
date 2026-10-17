@@ -1,0 +1,20 @@
+[project]
+name = "c4-glucose-guide"
+version = "1.0.0"
+description = "C4 Glucose Guide: analysis, ML engine and benchmarks behind the Worker's data (see REPRODUCE.md)"
+requires-python = "==3.12.*"
+dependencies = [
+  "numpy==2.5.4",
+  "pandas==3.0.6",
+  "scikit-learn==1.9.1",
+  "scipy==1.18.1",
+  "joblib==1.6.0",
+  "threadpoolctl==3.7.0",
+]
+
+[dependency-groups]
+# research/score.py (prediction autoresearch) also tries LightGBM; needs libgomp on Linux
+research = ["lightgbm==4.7.0"]
+
+[tool.uv]
+package = false

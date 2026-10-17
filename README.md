@@ -1,5 +1,30 @@
 # C4 Glucose Guide
 
+**A walk after dinner lowers the sugar rise by 18 mg/dL, and 10 minutes gets most of it.**
+For a survivor, that is one small habit with a measurable payoff. For the care team, the API flags who needs a call today (frequent lows or an average above 250 mg/dL), with the reason.
+
+| Result | Compared with | 95% CI |
+|---|---|---|
+| Walk after dinner: **−18.3 mg/dL** rise | the same person's dinners without a walk | 16.6 to 20.1 lower |
+| Dinner at 8 pm or later: **+9.2 mg/dL** rise | the same person's earlier dinners | 7.1 to 11.3 |
+| Real adults (CGMacros, n = 45), walk after a meal: **−3.2 mg/dL** | the program's −17.8 | −6.9 to 0.5 (same direction, not proven) |
+
+Program numbers come from a synthetic 12-week cohort (500 people, double ML within person). Real data agrees on direction but shows a much smaller walk effect, and the advice says so.
+
+**Reproduce in 3 commands** (needs [uv](https://docs.astral.sh/uv/) and the Challenge 4 data, see [data/README.md](data/README.md)):
+
+```sh
+git clone https://github.com/zaycruz/c4-glucose-guide && cd c4-glucose-guide
+D=/path/to/Challenge4_Dose_and_Timing        # checksums in data/SHA256SUMS
+scripts/reproduce.sh $D                      # about 10 min on 4 vCPU; ends by matching all 52 README numbers
+```
+
+Live API: https://c4-glucose-guide.zay-259.workers.dev/api/c4/survivors · contract: [CONTRACT.md](CONTRACT.md) · proof: [REPRODUCE.md](REPRODUCE.md), [`/api/c4/verification`](https://c4-glucose-guide.zay-259.workers.dev/api/c4/verification)
+
+---
+
+## Details
+
 Coach Console module C4 (eMerge hackathon, Healthcare track, Sylvester): **how meals, meal timing and movement shape blood sugar**, per survivor and across the cohort, with honest uncertainty, turned into advice a survivor can follow. Every number in the advice traces to an `evidence[]` item.
 
 - Live: https://c4-glucose-guide.zay-259.workers.dev (cohort view: `/#cohort`)
@@ -48,9 +73,11 @@ See [REPRODUCE.md](REPRODUCE.md) for the one-command path from the raw data to e
 ```sh
 npm install
 D=~/projects/emerge-hackathon/c4-data/Challenge4_Dose_and_Timing   # dataset extracted outside the repo
-# 1. ML engine + statistics-vs-ML benchmark, on a Proxmox node (a few minutes of CPU; not on the Mac):
-#    writes public/data/ml_effects.json and public/data/mlcompare.json. CLEAN=1 removes the node copy afterwards.
-scripts/build-ml.sh root@pve-03 $D
+# 0. check every README number from scratch (about 10 min on 4 vCPU; writes repro_out/, not public/data):
+scripts/reproduce.sh $D repro_out
+# 1. ML engine + statistics-vs-ML benchmark on a remote Linux host over ssh (a few minutes of CPU):
+#    writes public/data/ml_effects.json and public/data/mlcompare.json. CLEAN=1 removes the remote copy afterwards.
+scripts/build-ml.sh <ssh host> $D
 # 2. the data the Worker serves (offline, ~10 s). analyze.py stops if ml_effects.json is missing.
 scripts/build-data.sh $D
 # optional: pycaret leaderboard on the same features (Python 3.11; FEATURES_DIR=<dir> on ml_compare.py writes them)
@@ -83,9 +110,11 @@ It saves the full responses and a summary under `runs/` (`runs/e2e-latest-summar
 
 - `scripts/analyze.py`: synthetic-program analysis → `public/data/{roster,cohort}.json`, `public/data/survivors/*.json`
 - `scripts/realworld.py`: CGMacros + NHANES check → `public/data/realworld.json`
-- `scripts/ml_effects.py`: **the ML engine**: double-ML effects, personal effects, dinner forecast → `public/data/ml_effects.json` (run via `scripts/build-ml.sh` on Proxmox)
+- `scripts/ml_effects.py`: **the ML engine**: double-ML effects, personal effects, dinner forecast → `public/data/ml_effects.json` (run by `scripts/reproduce.sh`, or `scripts/build-ml.sh` on a remote host)
 - `scripts/ml_compare.py`: statistics vs machine learning (prediction, planted effects, personal effects, double ML) → `public/data/mlcompare.json`; see `ML_COMPARISON.md`
 - `scripts/pycaret_compare.py`: pycaret leaderboard of every regression model on the same features → `public/data/pycaret.json`
+- `scripts/reproduce.sh`, `scripts/headline.py`: one-command reproduction and the README-number diff (see REPRODUCE.md); `infra/cf-runner/`: runs it from a fresh clone in a Cloudflare Sandbox
+- `pyproject.toml`, `uv.lock`: pinned Python 3.12 environment; `data/README.md`: where the data goes and its SHA-256 sums
 - `src/index.ts`: Worker (routes, CORS, Workers AI rewrite with numeric guard)
 - `public/index.html`: standalone demo page (dependency-free SVG charts)
 

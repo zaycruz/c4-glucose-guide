@@ -341,9 +341,9 @@ def main(data_dir, out_dir):
 
     rw_path = f"{out_dir}/realworld.json"  # from scripts/realworld.py, run first
     realworld = json.load(open(rw_path)) if os.path.exists(rw_path) else None
-    ml_path = f"{out_dir}/ml_effects.json"  # the ML engine, from scripts/ml_effects.py (scripts/build-ml.sh, on Proxmox)
+    ml_path = f"{out_dir}/ml_effects.json"  # the ML engine, from scripts/ml_effects.py (scripts/reproduce.sh or scripts/build-ml.sh)
     if not os.path.exists(ml_path):
-        sys.exit(f"missing {ml_path}: the advice runs on the ML engine. Run scripts/build-ml.sh first.")
+        sys.exit(f"missing {ml_path}: the advice runs on the ML engine. Run scripts/build-ml.sh (or scripts/reproduce.sh) first.")
     ml = json.load(open(ml_path))
     mc_path = f"{out_dir}/mlcompare.json"  # statistics vs ML benchmark (scripts/ml_compare.py)
     mlc = json.load(open(mc_path)) if os.path.exists(mc_path) else None

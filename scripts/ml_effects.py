@@ -16,8 +16,8 @@ person and each person's mean meal is a feature (Mundlak). 5-fold cross-fitting,
 times (median estimate); 95% CI from person-clustered standard errors. Still observational:
 walks were self-chosen. See ML_COMPARISON.md for the benchmark that chose this engine.
 
-Minutes-long; run on Proxmox (scripts/build-ml.sh), not on the Mac:
-  uv run --with pandas --with numpy --with scikit-learn python -I scripts/ml_effects.py <dataset_dir> <out_dir>
+Minutes-long; run by scripts/reproduce.sh or scripts/build-ml.sh (a server or container, not a laptop if you can help it):
+  uv run --frozen python -I scripts/ml_effects.py <dataset_dir> <out_dir>
 """
 import json
 import os
