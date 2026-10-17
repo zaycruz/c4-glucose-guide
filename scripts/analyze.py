@@ -42,7 +42,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from patient_copy import WALK_CAUTION, patient_view, plain_summary  # noqa: E402
+from patient_copy import MED_CAUTION_CLINICIAN, MED_CAUTION_PATIENT, WALK_CAUTION, patient_view, plain_summary  # noqa: E402
 
 RNG = np.random.default_rng(20261017)
 B_COHORT = 400
@@ -865,23 +865,25 @@ def main(data_dir, out_dir):
                                  f"{v('trial_fast_hba1c_group')} points (95% CI {evid['trial_fast_hba1c_group']['ci'][0]} to {evid['trial_fast_hba1c_group']['ci'][1]}) compared with coaching alone"
                                  + (". The benefit was largest in type 2 diabetes." if info.blood_sugar_group != "type 2 diabetes" else ", the biggest gain of any group."),
                          "basis": "trial", "evidenceIds": ["fast_avg", "fast13_share", "trial_fast_hba1c_group", "trial_fast_hba1c"]})
+        # urgency (coordinator): only level 2 lows (>1% below 54) are same-day; every other care-team flag is this week
+        when = "today" if m_last["tbr54"] > 1 else "this week"
         if low_sugar:
             # care team first: no exercise, fasting or meal-timing nudges until the care team has reviewed the lows
-            recs = [{"id": "talk_to_team", "title": "Tell your care team about low readings today",
+            recs = [{"id": "talk_to_team", "title": f"Tell your care team about low readings {when}",
                      "text": f"{v('tbr70')}% of your readings were below 70 mg/dL and {v('tbr54')}% below 54 ({latest_label}); the usual targets are under 4% and under 1%. "
-                             f"Low sugar can make you shaky or dizzy. Contact your care team today rather than waiting for your next visit. "
+                             f"Low sugar can make you shaky or dizzy. Contact your care team {when} rather than waiting for your next visit. "
                              f"Ask whether a diabetes medicine needs changing: insulin and sulfonylureas (glipizide, glyburide, glimepiride) are the usual causes of lows, "
                              f"and this data does not record medicines. Until then, don't change your exercise, fasting or meal times.",
                      "basis": "rule", "evidenceIds": ["tbr70", "tbr54", "status_rule"]}]
         elif st == "alert" and m_last["mean"] > 250:
-            recs.insert(0, {"id": "talk_to_team", "title": "Send these readings to your care team today",
+            recs.insert(0, {"id": "talk_to_team", "title": f"Send these readings to your care team {when}",
                             "text": f"Your average was {v('mean_glucose')} mg/dL ({latest_label}), above 250, and only {v('tir')}% of readings were in the 70-180 range. "
-                                    f"Contact your care team today rather than waiting for your next visit.",
+                                    f"Contact your care team {when} rather than waiting for your next visit.",
                             "basis": "rule", "evidenceIds": ["mean_glucose", "tir", "status_rule"]})
         elif st == "alert" and m_last["tar250"] > 5:
-            recs.insert(0, {"id": "talk_to_team", "title": "Send these readings to your care team today",
+            recs.insert(0, {"id": "talk_to_team", "title": f"Send these readings to your care team {when}",
                             "text": f"{v('tar250')}% of your readings were above 250 mg/dL ({latest_label}); the usual target is under 5%. "
-                                    f"Your average was {v('mean_glucose')} mg/dL. Contact your care team today rather than waiting for your next visit.",
+                                    f"Your average was {v('mean_glucose')} mg/dL. Contact your care team {when} rather than waiting for your next visit.",
                             "basis": "rule", "evidenceIds": ["tar250", "mean_glucose", "status_rule"]})
         elif st == "alert":
             recs.insert(0, {"id": "talk_to_team", "title": "Share these readings with your care team",
@@ -931,18 +933,26 @@ def main(data_dir, out_dir):
         if not care and st == "alert":
             if m_last["tir"] < 70:
                 visit.append({"reason": f"Mostly high: {v('tir')}% of readings in 70-180 (target over 70%)", "evidenceId": "tir"})
-        care_flag = {"today": bool(care), "level": "today" if care else "next visit" if visit else None, "reasons": care or visit,
+        urgency = ("today" if m_last["tbr54"] > 1 else "this-week") if care else None
+        # `today` keeps its old meaning (flagged for the care team, any urgency) for API compatibility; tier by `urgency`.
+        care_flag = {"today": bool(care), "urgency": urgency,
+                     "level": "today" if urgency == "today" else "this week" if care else "next visit" if visit else None, "reasons": care or visit,
                      "medicationCheck": {"recorded": False, "ask": "insulin or a sulfonylurea (glipizide, glyburide, glimepiride)",
                                          "why": "the usual causes of lows; this data set records no medicines"} if low_sugar else None,
-                     "rule": "Send to the care team today if more than 4% of readings are below 70 mg/dL, more than 1% are below 54 mg/dL, the average is above 250 mg/dL, "
+                     "rule": "Send to the care team today if more than 1% of readings are below 54 mg/dL (level 2 lows). "
+                             "Send to the care team this week if more than 4% of readings are below 70 mg/dL, the average is above 250 mg/dL, "
                              "or more than 5% of readings are above 250 mg/dL (sustained highs). Time in range under 70% alone goes to the next visit."}
         if low_sugar:
             for rec in recs:
                 if rec["id"] == "walk":
                     rec["caution"] = WALK_CAUTION
                     rec["text"] += " " + WALK_CAUTION
+        for rec in recs:  # medicines are not recorded: every walk card carries the insulin / sulfonylurea check
+            if rec["id"] == "walk":
+                rec["medicationCaution"] = MED_CAUTION_CLINICIAN
+                rec["text"] += " " + MED_CAUTION_PATIENT
         team_key = "team_lows" if low_sugar else "team_high" if high_avg else "team_often_high" if often_high else "team_alert" if st == "alert" else None
-        pview = patient_view(recs, low_sugar, team_key)
+        pview = patient_view(recs, low_sugar, team_key, urgency)
         hypo = {"level": "high", "reasonEvidenceId": "tbr70", "text": pview["en"]["lowSugarWarning"],
                 "translations": {k: pview[k]["lowSugarWarning"] for k in ("es", "ht")}} if low_sugar else None
 
@@ -1037,7 +1047,7 @@ def main(data_dir, out_dir):
         today_reason = ("Glucose: " + (care[0]["reason"] if care else headline))[:90]
         priority = (0 if low_sugar else 1) if care else {"alert": 2, "watch": 3, "ok": 4}[st]
         detail = {"survivorId": sid, "displayName": display, "status": st, "statusReasons": reasons, "headline": headline, "tags": tags,
-                  "summary": summary, "plainSummary": plain_summary(recs, low_sugar, team_key), "updatedAt": updated,
+                  "summary": summary, "plainSummary": plain_summary(recs, low_sugar, team_key, urgency), "updatedAt": updated,
                   "careTeamFlag": care_flag, "hypoglycaemiaWarning": hypo, "todayReason": today_reason, "priority": priority,
                   "patientView": pview,
                   "profile": {"age": int(info.age), "sex": info.sex, "cancerType": info.cancer_type,
@@ -1048,7 +1058,7 @@ def main(data_dir, out_dir):
         with open(f"{out_dir}/survivors/{sid}.json", "w") as f:
             json.dump(detail, f, separators=(",", ":"))
         roster.append({"survivorId": sid, "displayName": display, "status": st, "headline": headline, "tags": tags, "updatedAt": updated,
-                       "careTeamToday": care_flag["today"], "todayReason": today_reason, "priority": priority,
+                       "careTeamToday": care_flag["today"], "careTeamUrgency": urgency, "todayReason": today_reason, "priority": priority,
                        "dataType": "synthetic", "module": "C4 Glucose Guide"})
 
     rank = {"alert": 0, "watch": 1, "ok": 2}
@@ -1118,8 +1128,10 @@ def main(data_dir, out_dir):
         "methods": __doc__.split("Methods (all numbers in evidence[] come from here):")[1].strip(),
         "plainLanguage": plain_language,
         **({"fairness": fairness_out(ml["fairness"])} if ml.get("fairness") else {}),  # only when the engine run produced it
-        "careTeamToday": {"rule": "More than 4% of readings below 70 mg/dL, more than 1% below 54 mg/dL, an average above 250 mg/dL, or more than 5% of readings above 250 mg/dL.",
-                          "count": sum(1 for x in roster if x["careTeamToday"])},
+        "careTeamToday": {"rule": "Flagged for the care team: more than 1% of readings below 54 mg/dL (urgency today), or more than 4% below 70 mg/dL, an average above 250 mg/dL, or more than 5% of readings above 250 mg/dL (urgency this week).",
+                          "count": sum(1 for x in roster if x["careTeamToday"]),
+                          "today": sum(1 for x in roster if x["careTeamUrgency"] == "today"),
+                          "thisWeek": sum(1 for x in roster if x["careTeamUrgency"] == "this-week")},
     }
     with open(f"{out_dir}/cohort.json", "w") as f:
         json.dump(cohort_out, f, indent=1)

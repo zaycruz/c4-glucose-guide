@@ -2316,7 +2316,9 @@
   }
  },
  "careTeamToday": {
-  "rule": "More than 4% of readings below 70 mg/dL, more than 1% below 54 mg/dL, an average above 250 mg/dL, or more than 5% of readings above 250 mg/dL.",
-  "count": 10
+  "rule": "Flagged for the care team: more than 1% of readings below 54 mg/dL (urgency today), or more than 4% below 70 mg/dL, an average above 250 mg/dL, or more than 5% of readings above 250 mg/dL (urgency this week).",
+  "count": 10,
+  "today": 0,
+  "thisWeek": 10
  }
 }

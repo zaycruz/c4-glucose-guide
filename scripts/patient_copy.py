@@ -6,9 +6,9 @@ LANGS = ("en", "es", "ht")
 ALLOWED_NUMBERS = {4, 8, 10, 13, 15, 20, 211, 911}
 
 TEXT = {
-    "walk": {"en": "Walk 10 to 20 minutes after dinner.",
-             "es": "Camine de 10 a 20 minutos después de la cena.",
-             "ht": "Mache 10 a 20 minit apre manje aswè."},
+    "walk": {"en": "Walk 10 to 20 minutes after dinner. If you take insulin or a sulfonylurea, ask your care team about low sugar first.",
+             "es": "Camine de 10 a 20 minutos después de la cena. Si usa insulina o una sulfonilurea, pregunte primero a su equipo médico sobre el azúcar baja.",
+             "ht": "Mache 10 a 20 minit apre manje aswè. Si ou pran ensilin oswa yon silfonilire, mande ekip swen ou sou sik ki ba anvan."},
     "walk_low": {"en": "Ask your care team before walking more, because of your low readings. Then walk 10 to 20 minutes after dinner and carry juice or glucose tablets.",
                  "es": "Por sus niveles bajos de azúcar, consulte a su equipo médico antes de caminar más. Luego camine de 10 a 20 minutos después de la cena y lleve jugo o tabletas de glucosa.",
                  "ht": "Paske sik ou konn desann twò ba, mande ekip swen ou anvan ou mache plis. Apre sa, mache 10 a 20 minit apre manje aswè, epi pote ji oswa grenn glikoz avè ou."},
@@ -56,11 +56,24 @@ ACTION_FOR_TITLE = {
 }
 
 # English caution appended to walk advice for people with frequent lows (no numbers, so nothing to trace)
+MED_CAUTION_CLINICIAN = ("Medicines are not recorded in this data. If the survivor takes insulin or a sulfonylurea (glipizide, glyburide, glimepiride), "
+                         "ask their care team about lows before adding post-meal walks. The coach does not change medication.")
+MED_CAUTION_PATIENT = "If you take insulin or a sulfonylurea (glipizide, glyburide, glimepiride), ask your care team about low sugar before adding walks after meals."
 WALK_CAUTION = ("Because of your low readings, check with your care team before walking more. Walk after eating, "
                 "not on an empty stomach, carry juice or glucose tablets, and stop to check your sugar if you feel shaky, sweaty or confused.")
 
 
-def patient_view(recs, low_sugar, team_key):
+THIS_WEEK = {"en": ("Today:", "This week:"), "es": ("Hoy:", "Esta semana:"), "ht": ("Jodi a:", "Semèn sa a:")}
+
+
+def team_line(team_key, lang, urgency):
+    """Care-team line; only level 2 lows (urgency "today") keep "Today:", every other flag says "This week:"."""
+    t = TEXT[team_key][lang]
+    old, new = THIS_WEEK[lang]
+    return t.replace(old, new, 1) if urgency == "this-week" else t
+
+
+def patient_view(recs, low_sugar, team_key, urgency=None):
     keys = []
     for rec in recs:
         k = ACTION_FOR_TITLE.get(rec["title"])
@@ -71,7 +84,7 @@ def patient_view(recs, low_sugar, team_key):
     keys = keys[:3]
     view = {}
     for lang in LANGS:
-        view[lang] = {"careTeam": TEXT[team_key][lang] if team_key else None,
+        view[lang] = {"careTeam": team_line(team_key, lang, urgency) if team_key else None,
                       "lowSugarWarning": TEXT["hypo"][lang] if low_sugar else None,
                       "actions": [{"id": rid, "text": TEXT[k][lang]} for rid, k in keys],
                       "help": TEXT["help"][lang],
@@ -81,8 +94,8 @@ def patient_view(recs, low_sugar, team_key):
     return view
 
 
-def plain_summary(recs, low_sugar, team_key):
+def plain_summary(recs, low_sugar, team_key, urgency=None):
     """One or two plain English sentences: the care-team line, then up to three actions."""
-    v = patient_view(recs, low_sugar, team_key)["en"]
+    v = patient_view(recs, low_sugar, team_key, urgency)["en"]
     parts = ([v["careTeam"]] if v["careTeam"] else []) + [a["text"] for a in v["actions"]]
     return " ".join(parts)

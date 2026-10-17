@@ -102,14 +102,21 @@ for (const tile of roster.body) {
   const cf = b.careTeamFlag;
   if (check(cf && typeof cf.today === "boolean" && Array.isArray(cf.reasons), `${id}: careTeamFlag missing`)) {
     check(cf.today === (lows || high), `${id}: careTeamFlag.today=${cf.today} but lows=${lows} high=${high}`);
-    check(cf.level === (cf.today ? "today" : b.status === "alert" ? "next visit" : null), `${id}: careTeamFlag.level=${cf.level} does not match today/status`);
+    // urgency: only level 2 lows (>1% below 54) are same-day; every other care-team flag is this week
+    const urgency = cf.today ? (typeof tbr54 === "number" && tbr54 > 1 ? "today" : "this-week") : null;
+    check(cf.urgency === urgency && tile.careTeamUrgency === urgency, `${id}: urgency ${cf.urgency} (roster ${tile.careTeamUrgency}), expected ${urgency}`);
+    check(cf.level === (urgency === "today" ? "today" : urgency ? "this week" : b.status === "alert" ? "next visit" : null), `${id}: careTeamFlag.level=${cf.level} does not match urgency/status`);
     check((cf.level !== null) === cf.reasons.length > 0, `${id}: careTeamFlag reasons do not match the level`);
-    if (cf.today) check(b.recommendations[0]?.id === "talk_to_team" && /today/.test(b.recommendations[0].text), `${id}: flagged today but the first card does not say today`);
+    const word = urgency === "today" ? /\btoday\b/ : /\bthis week\b/;
+    if (cf.today) check(b.recommendations[0]?.id === "talk_to_team" && word.test(b.recommendations[0].title) && word.test(b.recommendations[0].text)
+      && (urgency === "today" || !/\btoday\b/i.test(b.recommendations[0].title + " " + b.recommendations[0].text)), `${id}: first card does not match urgency ${urgency}`);
     for (const rs of cf.reasons) check(ev.has(rs.evidenceId), `${id}: care reason evidence ${rs.evidenceId} missing`);
     check(tile.careTeamToday === cf.today, `${id}: roster careTeamToday differs from detail`);
   }
   check(lows === (b.hypoglycaemiaWarning != null), `${id}: hypoglycaemiaWarning presence does not match frequent lows`);
   check(typeof tbr54 === "number", `${id}: no below-54 evidence`);
+  for (const r of b.recommendations.filter((x) => x.id === "walk")) // medicines are not recorded: every walk card asks about insulin / sulfonylureas
+    check(/sulfonylurea/.test(r.text) && /does not change medication/.test(r.medicationCaution ?? ""), `${id}: walk advice has no medication caution`);
   if (lows) { // care team first: no exercise, fasting or meal-timing nudges, and a medication question
     check(b.recommendations.every((r) => r.id === "talk_to_team"), `${id}: frequent lows but given ${b.recommendations.map((r) => r.id)} (care team only)`);
     check(/medicine/.test(b.recommendations[0]?.text ?? ""), `${id}: lows card does not ask about medicines`);
@@ -128,6 +135,7 @@ for (const tile of roster.body) {
       check(/211/.test(v.help), `${id}: patientView.${l} has no help route`);
       check(v.reviewed === (l === "en") && (l === "en" || /machine-translated/.test(v.translation)), `${id}: patientView.${l} translation status missing`);
       check(!cf?.today || Boolean(v.careTeam), `${id}: flagged but patientView.${l} has no care-team line`);
+      if (cf?.today) check(/^(Today|Hoy|Jodi a):/.test(v.careTeam) === (cf.urgency === "today"), `${id}: patientView.${l} care-team line does not match urgency`);
       check(lows === Boolean(v.lowSugarWarning), `${id}: patientView.${l} low-sugar warning mismatch`);
       for (const t of [v.careTeam, v.lowSugarWarning, v.help, ...v.actions.map((a) => a.text)].filter(Boolean))
         for (const n of nums(t)) check(PATIENT_NUMBERS.has(n), `${id}: patientView.${l} has measured number ${n}`);
@@ -181,6 +189,7 @@ if (C.fairness !== undefined && check(fair && Object.keys(fair).length >= 4, "co
     }
 }
 check(C.careTeamToday?.count === roster.body.filter((x) => x.careTeamToday).length, "cohort careTeamToday count differs from roster");
+check(C.careTeamToday?.today === roster.body.filter((x) => x.careTeamUrgency === "today").length && C.careTeamToday?.thisWeek === roster.body.filter((x) => x.careTeamUrgency === "this-week").length, "cohort urgency counts differ from roster");
 
 const alertId = roster.body.find((s) => s.status === "alert")?.survivorId ?? roster.body[0].survivorId;
 const advice = await get(`/api/c4/survivors/${alertId}/advice`);
@@ -217,7 +226,7 @@ if (STRICT) check(verFresh, "published verification record does not match the li
 // The flagged count must agree in the README, the live roster and the published verification record.
 const WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen"];
 const flaggedLive = roster.body.filter((x) => x.careTeamToday).length;
-const readmeM = readFileSync(new URL("../README.md", import.meta.url), "utf8").match(/(\w+) of the (\d+) survivors are flagged today/i);
+const readmeM = readFileSync(new URL("../README.md", import.meta.url), "utf8").match(/(\w+) of the (\d+) survivors are flagged for the care team/i);
 const readmeN = readmeM ? (/^\d+$/.test(readmeM[1]) ? Number(readmeM[1]) : WORDS.indexOf(readmeM[1].toLowerCase())) : null;
 check(readmeN === flaggedLive && Number(readmeM?.[2]) === roster.body.length, `README says ${readmeM?.[0]} but the live roster flags ${flaggedLive} of ${roster.body.length}`);
 if (STRICT) check(ver.body?.e2e?.careTeamToday === flaggedLive, `published verification says ${ver.body?.e2e?.careTeamToday} flagged, live roster ${flaggedLive}`);
