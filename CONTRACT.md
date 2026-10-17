@@ -98,8 +98,8 @@ For a mixed "Today" queue across modules, each tile also has:
 | `evidence[]` | `{id, label, value, unit, ci: [lo, hi] \| null, n, scope, method, caveat}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (real-data check: CGMacros or survey-weighted NHANES), `rule` (thresholds) |
 | `recommendations[]` | `{id, title, text, basis, evidenceIds[], realDataCheck, caution?}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
 | `recommendations[].realDataCheck` | `{label, evidenceId}` | does real data back this advice? `label`: `agrees`, `same direction, not proven`, `no clear signal`, `disagrees`, `not tested` (safety rules). `evidenceId` is the cited `scope: real` evidence item, or `null` when not tested. |
-| `careTeamFlag` | `{today, level, reasons[{reason, evidenceId}], rule}` | `today` is true for more than 4% of readings below 70, an average above 250 mg/dL, or more than 5% of readings above 250 (sustained highs); same value as the roster's `careTeamToday`. `level` is `today`, `next visit` (other alert: time in range under 70%) or null |
-| `hypoglycaemiaWarning` | `{level, reasonEvidenceId, text, translations{es, ht}} \| null` | set for anyone with frequent lows: the 15-15 rule and when to call 911. When it is set, the walk advice carries `caution` and there is no advice to fast longer. |
+| `careTeamFlag` | `{today, level, reasons[{reason, evidenceId}], medicationCheck, rule}` | `today` is true for more than 4% of readings below 70, more than 1% below 54 (level 2 lows, evidence `tbr54`), an average above 250 mg/dL, or more than 5% of readings above 250 (sustained highs); same value as the roster's `careTeamToday`. `level` is `today`, `next visit` (other alert: time in range under 70%) or null. `medicationCheck` is `{recorded: false, ask, why}` for anyone with lows (this data records no medicines; it asks about insulin or a sulfonylurea), otherwise null |
+| `hypoglycaemiaWarning` | `{level, reasonEvidenceId, text, translations{es, ht}} \| null` | set for anyone with lows (above 4% below 70 or above 1% below 54): the 15-15 rule and when to call 911. When it is set, `recommendations` holds only `talk_to_team` (care team first: no walking, fasting or meal-timing advice), `patientView.*.actions` is empty, and tags show only risk. |
 | `todayReason`, `priority` | string, int | same as on the roster tile |
 | `plainSummary` | string | the care-team line plus the person's actions in plain English, with no measured numbers |
 | `patientView` | `{en, es, ht: {careTeam, lowSugarWarning, actions[≤3 {id, text}], help, translation, reviewed}, note}` | a patient-facing version in English, Spanish and Haitian Creole (Kreyòl). It uses only fixed rule numbers (10, 15, 20, 211, 911…), no measured values. Action ids are the same in every language. `help` gives 211 and a social-worker referral for food, money or transport. `careTeam` and `lowSugarWarning` are null when they don't apply. Spanish and Kreyòl are machine-translated and not yet reviewed (`translation: "machine-translated, needs review"`, `reviewed: false`). |
@@ -130,25 +130,10 @@ Example (`c4-N0632`, trimmed):
       "label": "Lows 5.3%",
       "tone": "risk",
       "evidenceId": "tbr70"
-    },
-    {
-      "label": "Late dinners 57%",
-      "tone": "warn",
-      "evidenceId": "late_share"
-    },
-    {
-      "label": "Walks work: -18.7 mg/dL",
-      "tone": "good",
-      "evidenceId": "walk_effect_blend"
-    },
-    {
-      "label": "Fast 9.9 h",
-      "tone": "warn",
-      "evidenceId": "fast_avg"
     }
   ],
   "summary": "76-year-old female, colorectal cancer, 1.3 years after treatment; normal at start; group: coaching; day job. Average sugar 85 mg/dL in weeks 11-12, 95% of readings in range. Median rise after dinner 46 mg/dL. ML forecast for a typical dinner: 46 mg/dL. Synthetic participant (made-up data).",
-  "plainSummary": "Today: tell your care team about your low blood sugar readings. Ask your care team before walking more, because of your low readings. Then walk 10 to 20 minutes after dinner and carry juice or glucose tablets. Try to start dinner before 8 pm. Don't make your overnight fast longer for now; talk to your care team first.",
+  "plainSummary": "Today: tell your care team about your low blood sugar readings. Ask if a diabetes medicine needs changing, and don't change your exercise or meal times until then.",
   "updatedAt": "2024-06-23T23:45:00",
   "careTeamFlag": {
     "today": true,
@@ -159,7 +144,12 @@ Example (`c4-N0632`, trimmed):
         "evidenceId": "tbr70"
       }
     ],
-    "rule": "Send to the care team today if more than 4% of readings are below 70 mg/dL, the average is above 250 mg/dL, or more than 5% of readings are above 250 mg/dL (sustained highs). Time in range under 70% alone goes to the next visit."
+    "medicationCheck": {
+      "recorded": false,
+      "ask": "insulin or a sulfonylurea (glipizide, glyburide, glimepiride)",
+      "why": "the usual causes of lows; this data set records no medicines"
+    },
+    "rule": "Send to the care team today if more than 4% of readings are below 70 mg/dL, more than 1% are below 54 mg/dL, the average is above 250 mg/dL, or more than 5% of readings are above 250 mg/dL (sustained highs). Time in range under 70% alone goes to the next visit."
   },
   "hypoglycaemiaWarning": {
     "level": "high",
@@ -174,64 +164,25 @@ Example (`c4-N0632`, trimmed):
   "priority": 0,
   "patientView": {
     "en": {
-      "careTeam": "Today: tell your care team about your low blood sugar readings.",
+      "careTeam": "Today: tell your care team about your low blood sugar readings. Ask if a diabetes medicine needs changing, and don't change your exercise or meal times until then.",
       "lowSugarWarning": "Low sugar: if you feel shaky, sweaty or confused, eat or drink 15 grams of fast sugar (half a cup of juice or 4 glucose tablets), wait 15 minutes and check again. If someone passes out, call 911.",
-      "actions": [
-        {
-          "id": "walk",
-          "text": "Ask your care team before walking more, because of your low readings. Then walk 10 to 20 minutes after dinner and carry juice or glucose tablets."
-        },
-        {
-          "id": "late_dinner",
-          "text": "Try to start dinner before 8 pm."
-        },
-        {
-          "id": "overnight_fast",
-          "text": "Don't make your overnight fast longer for now; talk to your care team first."
-        }
-      ],
+      "actions": [],
       "help": "Need help with food, money or transport? Call 211 (free, any time) or ask your coach to connect you with a social worker.",
       "translation": "original",
       "reviewed": true
     },
     "es": {
-      "careTeam": "Hoy: avise a su equipo médico sobre sus niveles bajos de azúcar.",
+      "careTeam": "Hoy: avise a su equipo médico sobre sus niveles bajos de azúcar. Pregunte si hay que cambiar algún medicamento para la diabetes, y no cambie su ejercicio ni sus horarios de comida hasta entonces.",
       "lowSugarWarning": "Azúcar baja: si se siente tembloroso, sudoroso o confundido, coma o beba 15 gramos de azúcar rápida (media taza de jugo o 4 tabletas de glucosa), espere 15 minutos y vuelva a medirse. Si alguien se desmaya, llame al 911.",
-      "actions": [
-        {
-          "id": "walk",
-          "text": "Por sus niveles bajos de azúcar, consulte a su equipo médico antes de caminar más. Luego camine de 10 a 20 minutos después de la cena y lleve jugo o tabletas de glucosa."
-        },
-        {
-          "id": "late_dinner",
-          "text": "Trate de empezar a cenar antes de las 8 de la noche."
-        },
-        {
-          "id": "overnight_fast",
-          "text": "Por ahora no alargue su ayuno de la noche; hable primero con su equipo médico."
-        }
-      ],
+      "actions": [],
       "help": "¿Necesita ayuda con comida, dinero o transporte? Llame al 211 (gratis, a cualquier hora) o pida a su coach que le conecte con un trabajador social.",
       "translation": "machine-translated, needs review",
       "reviewed": false
     },
     "ht": {
-      "careTeam": "Jodi a: di ekip swen ou sou sik ki desann twò ba.",
+      "careTeam": "Jodi a: di ekip swen ou sou sik ki desann twò ba. Mande si yo dwe chanje yon medikaman pou dyabèt, epi pa chanje egzèsis ou ni lè ou manje jiska lè sa.",
       "lowSugarWarning": "Sik ba: si ou santi ou ap tranble, ou ap swe oswa ou konfonn, manje oswa bwè 15 gram sik rapid (yon mwatye tas ji oswa 4 grenn glikoz), tann 15 minit epi tcheke ankò. Si yon moun endispoze, rele 911.",
-      "actions": [
-        {
-          "id": "walk",
-          "text": "Paske sik ou konn desann twò ba, mande ekip swen ou anvan ou mache plis. Apre sa, mache 10 a 20 minit apre manje aswè, epi pote ji oswa grenn glikoz avè ou."
-        },
-        {
-          "id": "late_dinner",
-          "text": "Eseye kòmanse manje aswè anvan 8 è di swa."
-        },
-        {
-          "id": "overnight_fast",
-          "text": "Pou kounye a, pa fè jèn lannwit ou pi long; pale ak ekip swen ou anvan."
-        }
-      ],
+      "actions": [],
       "help": "Ou bezwen èd pou manje, lajan oswa transpò? Rele 211 (gratis, nenpòt lè) oswa mande antrenè ou mete ou an kontak ak yon travayè sosyal.",
       "translation": "machine-translated, needs review",
       "reviewed": false
@@ -383,67 +334,12 @@ Example (`c4-N0632`, trimmed):
   "recommendations": [
     {
       "id": "talk_to_team",
-      "title": "Tell your care team about low readings",
-      "text": "5.3% of your readings were below 70 mg/dL (weeks 11-12); the usual target is under 4%. Low sugar can make you shaky or dizzy. Contact your care team today rather than waiting for your next visit.",
+      "title": "Tell your care team about low readings today",
+      "text": "5.3% of your readings were below 70 mg/dL and 0.0% below 54 (weeks 11-12); the usual targets are under 4% and under 1%. Low sugar can make you shaky or dizzy. Contact your care team today rather than waiting for your next visit. Ask whether a diabetes medicine needs changing: insulin and sulfonylureas (glipizide, glyburide, glimepiride) are the usual causes of lows, and this data does not record medicines. Until then, don't change your exercise, fasting or meal times.",
       "basis": "rule",
       "evidenceIds": [
         "tbr70",
-        "status_rule"
-      ],
-      "realDataCheck": {
-        "label": "not tested",
-        "evidenceId": null
-      }
-    },
-    {
-      "id": "walk",
-      "title": "Take a short walk after meals",
-      "text": "Your sugar rose about 18.7 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.3 mg/dL). A check in real adults (CGMacros) pointed the same way, at about a fifth of the program's size, but it is not proven there yet. Because of your low readings, check with your care team before walking more. Walk after eating, not on an empty stomach, carry juice or glucose tablets, and stop to check your sugar if you feel shaky, sweaty or confused.",
-      "weightOnYourData": 0.53,
-      "basis": "personal",
-      "evidenceIds": [
-        "walk_effect_own",
-        "walk_effect_blend",
-        "cohort_walk_dinner",
-        "cohort_walk_10_19",
-        "cohort_walk_negctrl",
-        "cohort_walk_evalue",
-        "cohort_walk_fe",
-        "real_walk"
-      ],
-      "realDataCheck": {
-        "label": "same direction, not proven",
-        "evidenceId": "real_walk",
-        "realSize": "about a fifth of the program's size"
-      },
-      "caution": "Because of your low readings, check with your care team before walking more. Walk after eating, not on an empty stomach, carry juice or glucose tablets, and stop to check your sugar if you feel shaky, sweaty or confused."
-    },
-    {
-      "id": "late_dinner",
-      "title": "Move dinner earlier",
-      "text": "57.1% of your dinners started at 8 pm or later. Across the program, sugar rose about 9.2 mg/dL more after late dinners than after earlier ones in the same person, and 13.3 mg/dL more after a dinner at 8-9 pm than after one before 6 pm. Try to start dinner before 8 pm. A check in real adults (CGMacros) pointed the same way, at about a quarter of the program's size, but it is not proven there yet.",
-      "basis": "cohort",
-      "evidenceIds": [
-        "late_share",
-        "cohort_late",
-        "cohort_dinner_8_9pm",
-        "cohort_late_fe",
-        "real_late_dinner"
-      ],
-      "realDataCheck": {
-        "label": "same direction, not proven",
-        "evidenceId": "real_late_dinner",
-        "realSize": "about a quarter of the program's size"
-      }
-    },
-    {
-      "id": "overnight_fast",
-      "title": "Hold off on longer fasts for now",
-      "text": "5.3% of your readings were below 70 mg/dL, so check with your care team before stretching your overnight fast. Right now it averages 9.9 hours.",
-      "basis": "rule",
-      "evidenceIds": [
-        "tbr70",
-        "fast_avg",
+        "tbr54",
         "status_rule"
       ],
       "realDataCheck": {
@@ -624,86 +520,26 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
   "survivorId": "c4-N0632",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
   "error": null,
-  "rawPreview": null,
+  "rawPreview": "{\"id\":\"chatcmpl-762b34e5-35bb-44ad-9453-674513d7b983\",\"object\":\"chat.completion\",\"created\":1792260333,\"model\":\"@cf/meta/llama-3.3-70b-instruct-sd\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"{\\\"items\\\":[{\\\"id\\\":\\\"talk_to_team\\\",\\\"text\\\":\\\"If you have low sugar, you might feel shaky or dizzy. Contact your care team today to ask if you need to change your diabetes medicine, such as insulin or sulfonylureas like glipizide, glyburide, or glimepiride.\\\"}]\",\"refusal\":null,\"annotations\":null,\"audio\":null,\"function_call\":null,\"reasoning\":null},\"logprobs\":null,\"finish_reason\":\"stop\",",
   "items": [
     {
       "id": "talk_to_team",
-      "title": "Tell your care team about low readings",
-      "text": "5.3% of your readings were below 70 mg/dL (weeks 11-12); the usual target is under 4%. Low sugar can make you shaky or dizzy. Contact your care team today rather than waiting for your next visit.",
+      "title": "Tell your care team about low readings today",
+      "text": "5.3% of your readings were below 70 mg/dL and 0.0% below 54 (weeks 11-12); the usual targets are under 4% and under 1%. Low sugar can make you shaky or dizzy. Contact your care team today rather than waiting for your next visit. Ask whether a diabetes medicine needs changing: insulin and sulfonylureas (glipizide, glyburide, glimepiride) are the usual causes of lows, and this data does not record medicines. Until then, don't change your exercise, fasting or meal times.",
       "source": "template",
       "evidenceIds": [
         "tbr70",
+        "tbr54",
         "status_rule"
-      ],
-      "rejected": {
-        "text": "If your sugar readings are below 70 mg/dL, you might feel shaky or dizzy, so contact your care team today. Your care team can help you with readings that are below the usual target of under 4%.",
-        "untracedNumbers": [],
-        "addedCausalWords": [
-          "help"
-        ]
-      }
-    },
-    {
-      "id": "walk",
-      "title": "Take a short walk after meals",
-      "text": "Your sugar rose about 18.7 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.3 mg/dL). A check in real adults (CGMacros) pointed the same way, at about a fifth of the program's size, but it is not proven there yet. Because of your low readings, check with your care team before walking more. Walk after eating, not on an empty stomach, carry juice or glucose tablets, and stop to check your sugar if you feel shaky, sweaty or confused.",
-      "source": "template",
-      "evidenceIds": [
-        "walk_effect_own",
-        "walk_effect_blend",
-        "cohort_walk_dinner",
-        "cohort_walk_10_19",
-        "cohort_walk_negctrl",
-        "cohort_walk_evalue",
-        "cohort_walk_fe",
-        "real_walk"
-      ],
-      "rejected": {
-        "text": "Walking after meals can help with your sugar, which rose about 18.7 mg/dL less when you walked. Try walking 10 to 20 minutes after dinner, but check with your care team first because of your low readings.",
-        "untracedNumbers": [],
-        "addedCausalWords": [
-          "help"
-        ]
-      }
-    },
-    {
-      "id": "late_dinner",
-      "title": "Move dinner earlier",
-      "text": "Eating dinner late, like 57.1% of your dinners that started at 8 pm or later, is linked to sugar rising about 9.2 mg/dL more. Try to start dinner before 8 pm to see how it affects your sugar.",
-      "source": "ai",
-      "evidenceIds": [
-        "late_share",
-        "cohort_late",
-        "cohort_dinner_8_9pm",
-        "cohort_late_fe",
-        "real_late_dinner"
       ],
       "rejected": null
-    },
-    {
-      "id": "overnight_fast",
-      "title": "Hold off on longer fasts for now",
-      "text": "5.3% of your readings were below 70 mg/dL, so check with your care team before stretching your overnight fast. Right now it averages 9.9 hours.",
-      "source": "template",
-      "evidenceIds": [
-        "tbr70",
-        "fast_avg",
-        "status_rule"
-      ],
-      "rejected": {
-        "text": "Your overnight fast currently averages 9.9 hours, but check with your care team before making any changes. If 5.3% of your readings are below 70 mg/dL, your care team can help you decide what to do about your overnight fast.",
-        "untracedNumbers": [],
-        "addedCausalWords": [
-          "help"
-        ]
-      }
     }
   ],
-  "recHash": "496ef1d9f23d92095c077b6087718392ec09580de976b81665850729f7a79570",
-  "generatedAt": "2026-10-17T17:06:54.713Z",
-  "generationMs": 3886,
+  "recHash": "ebd6f3136790050bc96e63a93cbdbea65a1b72cae40a8d2dd39bf73df65be0d5",
+  "generatedAt": "2026-10-17T18:05:35.620Z",
+  "generationMs": 1701,
   "cached": true,
-  "ms": 7
+  "ms": 97
 }
 ```
 
@@ -802,6 +638,8 @@ Cohort findings for a program-level view. Top-level keys:
   ],
   "fairness": [
     "note",
+    "plainLanguage",
+    "monitoring",
     "attributes"
   ],
   "careTeamToday": [
@@ -817,7 +655,7 @@ Cohort findings for a program-level view. Top-level keys:
 - `realWorld.cgmacros`, `realWorld.nhanesSurvivors`: the same questions answered from real data. `nhanesSurvivors` is survey-weighted (the fit every claim cites); `nhanesSurvivorsUnweighted` is the same models without weights, a labelled sensitivity that no claim uses.
 - `plainLanguage`: `{headline, points[{id, text, est, lo, hi, realDataCheck}], realData, source}`. A plain hero (late dinner, evening walk, 10 minutes is enough) whose numbers round the `effects` and `walkDose` values. `realData` says how large the real-data effect is next to the program's (for example "about a fifth"), computed from the actual ratio.
 - `careTeamToday`: `{rule, count}`.
-- `fairness`: `{note, attributes: {race_ethnicity, sex, age_band, preferred_language, cancer_type: {label, groups[{group, people, meals, forecastMae, walk, lateDinner, note?}], walkDiffersP, lateDinnerDiffersP}}}`. Groups under 20 people have `walk`/`lateDinner` null. The Q-test p-values are not multiplicity-corrected. The data is synthetic, so this checks that the engine treats groups alike, not real-world fairness.
+- `fairness`: `{note, attributes: {race_ethnicity, sex, age_band, preferred_language, cancer_type: {label, groups[{group, people, meals, forecastMae, walk, lateDinner, note?}], walkDiffersP, lateDinnerDiffersP, walkDiffersPHolm, lateDinnerDiffersPHolm}}, plainLanguage, monitoring}`. Groups under 20 people have `walk`/`lateDinner` null. `*DiffersP` are Cochran Q p-values; `*PHolm` are Holm-adjusted across all 10 tests. `plainLanguage` is a one-line summary; `monitoring` is the rule for real use (quarterly recompute; a group that differs gets the pooled number and care-team review). The data is synthetic, so this checks that the engine treats groups alike, not real-world fairness.
 
 ```json
 {
@@ -891,27 +729,27 @@ The latest E2E result for the deployed data: pass/fail, the count of traced numb
       "watch": 10,
       "ok": 29
     },
-    "recommendations": 156,
-    "adviceNumbersTracedToEvidence": 614,
-    "wordingConstantsStripped": 557,
+    "recommendations": 147,
+    "adviceNumbersTracedToEvidence": 737,
+    "wordingConstantsStripped": 586,
     "aiAdvice": {
       "survivorId": "c4-N0072",
       "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "ms": 6,
-      "itemsRephrasedByAi": 3,
+      "ms": 3308,
+      "itemsRephrasedByAi": 2,
       "items": 3
     },
     "careTeamToday": 10,
     "advice": {
-      "cached": true,
-      "ms": 54
+      "cached": false,
+      "ms": 4298
     },
-    "dataHash": "3da4ed7dd923f2a0d8138e9433f487f6abdf92351e9bad0eb30f822a59efc76a",
-    "finishedAt": "2026-10-17T17:23:22.160Z",
-    "artifact": "runs/e2e-2026-10-17T17-23-17-945Z.json"
+    "dataHash": "70f1ec29177ca2cb8ce496a4d6c89ae70fe651db91dcd7fad0a77ec826b70143",
+    "finishedAt": "2026-10-17T18:04:37.850Z",
+    "artifact": "runs/e2e-2026-10-17T18-03-55-762Z.json"
   },
-  "dataHash": "3da4ed7dd923f2a0d8138e9433f487f6abdf92351e9bad0eb30f822a59efc76a",
-  "commit": "ed11424350e0e0276d6292e9dcc0454155fba8fa",
+  "dataHash": "70f1ec29177ca2cb8ce496a4d6c89ae70fe651db91dcd7fad0a77ec826b70143",
+  "commit": "7d930179ee5937eeff1656215123b48439391010",
   "repo": "https://github.com/zaycruz/c4-glucose-guide",
   "reproduce": [
     "scripts/reproduce.sh <Challenge4_Dose_and_Timing dir> [out dir]   # data check, ML engine, benchmark, evidence; diffs every README number (REPRODUCE.md)",
