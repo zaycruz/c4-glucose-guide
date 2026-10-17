@@ -58,7 +58,7 @@ The survivors are synthetic (Crane Lab hackathon set). Nobody in them is real.
 
 ## `GET /api/c4/survivors`
 
-Roster tiles: {len(roster)} survivors, the sensor wearers in the dataset's 100-person app sample.
+Roster tiles: {len(roster)} survivors, sorted alert → watch → ok. Each tile also carries `tags[]` (see the detail fields below) so a coach can scan the signal without opening the panel. These are the sensor wearers in the dataset's 100-person app sample.
 
 ```json
 {j(roster[:2])}
@@ -70,6 +70,7 @@ Roster tiles: {len(roster)} survivors, the sensor wearers in the dataset's 100-p
 |---|---|---|
 | `survivorId`, `displayName`, `status`, `headline`, `summary`, `updatedAt` | string | `updatedAt` is the time of the last sensor reading |
 | `statusReasons` | string[] | why the status was set |
+| `tags[]` | `{{label, tone, evidenceId}}` | up to 4 short signals, same as on the roster tile. `tone`: `risk`, `warn`, `good`, `info`. Each number in `label` is the value or n of the evidence item `evidenceId` (checked by `scripts/e2e.mjs`). |
 | `profile` | object | age, sex, cancerType, yearsSinceTreatment, bloodSugarGroup, group (trial arm), workSchedule |
 | `evidence[]` | `{{id, label, value, unit, ci: [lo, hi] \\| null, n, scope, method, caveat}}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (CGMacros real-data check), `rule` (thresholds) |
 | `recommendations[]` | `{{id, title, text, basis, evidenceIds[]}}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |

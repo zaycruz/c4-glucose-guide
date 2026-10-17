@@ -25,8 +25,8 @@ Status (ok / watch / alert) uses fixed CGM consensus thresholds (time in range, 
 ## Demo story (2 minutes)
 
 1. **Cohort first** (`/#cohort`, 40 s). "Does a late dinner matter? Same person, same carbs: every hour later adds to the rise, up to +29 mg/dL after 10 pm. Is an evening walk worth it? Yes: about 19 mg/dL lower after dinner, more than after other meals, and 10 minutes gets most of it. Overnight fast: the randomized arm helps most in type 2 diabetes (HbA1c -0.08). And here is the honest part: in 45 real people the late-dinner effect points the same way, but it isn't proven yet."
-2. **Roster** (`/`, 20 s). Sorted alert → watch → ok. Click **N0632** (alert, 76F, colorectal).
-3. **N0632** (50 s). Alert because 5.3% of readings are below 70. Advice: first tell the care team about the lows, and don't stretch the fast. Her own meals show a walk goes with an 18.2 mg/dL smaller rise (a personal estimate with a CI), so the advice points her to a walk after dinner. 57% of her dinners start after 8 pm, so the advice cites the cohort numbers and the real-data check. Click an evidence chip to show where each number comes from.
+2. **Roster** (`/`, 20 s). Each tile shows a plain headline and up to four signal tags (red = risk, amber = watch, green = working), so you can scan without opening anyone. Filter chips narrow it to Alert / Watch / Ok. Click **N0632** (alert, 76F, colorectal).
+3. **N0632** (50 s). Headline: "Frequent lows: 5.3% of readings below 70". The tags read Lows 5.3%, Late dinners 57%, Walks work: -18.2 mg/dL, Fast 9.9 h. The KPI strip and the typical-day chart sit under the header. Each piece of advice comes with its own chart: tell the care team about the lows and don't stretch the fast (check-ups table); walk after dinner (her own walk vs no-walk curve, a personal estimate with a CI); eat dinner earlier (her early vs late dinner curves next to the cohort's). "Show the numbers" opens the evidence behind each number.
 4. **Rephrase with Workers AI** (10 s). The text becomes warmer. The note shows how many rewrites were rejected, either for a number that isn't in the evidence or for causal words like "helped".
 
 ## Run
@@ -51,6 +51,7 @@ No dev server needed; verification runs against the deployed Worker. Raw data is
 - every `evidenceId` resolves;
 - **every measured number in every recommendation is in its cited evidence**: exact wording constants such as "8 pm", "13 hours", "70-180" and "95% CI" are removed first, and whatever number remains must trace;
 - headline and summary numbers match the person's evidence within ±0.5;
+- every tag's `evidenceId` resolves, its numbers match that evidence, and the tags on the roster tile match the panel;
 - AI rewrites add no untraced numbers and no new causal verbs (helped, caused, lowered, reduced).
 
 It saves the full responses and a summary under `runs/` (`runs/e2e-latest-summary.json`).

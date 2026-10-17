@@ -12,6 +12,7 @@ const CONSTANT_PHRASES = [
   /\bweeks 1-2\b/g, /\bweeks 11-12\b/g, /\b10 to 20 minutes?\b/g, /\b10 to 19 minutes?\b/g, /\b20-29 minutes\b/g,
   /\b30\+ minutes\b/g, /under 4%/g, /more than 70%/g, /below 70 mg\/dL/g, /below 70%/g, /below 90%/g,
   /\bHbA1c\b/g, /\btype 2 diabetes\b/g, /more than 5% of readings above (180|250)/g, /more than 4% of readings below 70/g, /up 10\+ mg\/dL/g,
+  /readings below 70\b/g, /Spikes above 180\b/g, // headline thresholds
 ];
 const CAUSAL = /\b(caus\w*|help(s|ed)?|lower(s|ed)?|reduc\w*|prevent\w*|cur(e|es|ed))\b/gi;
 const strip = (t) => CONSTANT_PHRASES.reduce((acc, re) => acc.replace(re, " "), t);
@@ -75,6 +76,14 @@ for (const tile of roster.body) {
       numberCount++;
       check(traced(n, refs.filter(Boolean)), `${id}/${r.id}: number ${n} in advice is not in its evidence`);
     }
+  }
+  check(Array.isArray(b.tags) && JSON.stringify(b.tags) === JSON.stringify(tile.tags), `${id}: tags missing or differ from roster`);
+  for (const t of b.tags ?? []) {
+    check(["risk", "warn", "good", "info"].includes(t.tone), `${id}: bad tag tone ${t.tone}`);
+    const e = ev.get(t.evidenceId);
+    if (!check(Boolean(e), `${id}: tag ${t.label} evidenceId does not resolve`)) continue;
+    const label = t.evidenceId === "walk_meals" ? t.label.replace(/\/\d+/, "") : t.label; // "Walks after 2/37 meals": 37 = meals_scored
+    for (const n of nums(label)) check([e.value, e.n].some((v) => typeof v === "number" && Math.abs(Math.abs(v) - n) <= 0.5), `${id}: tag ${t.label} number ${n} not in evidence`);
   }
   // headline and summary numbers are rounded person-level evidence values (+-0.5)
   const personEv = b.evidence.filter((e) => e.scope === "person");

@@ -1,6 +1,6 @@
 {
  "base": "https://c4-glucose-guide.zay-259.workers.dev",
- "startedAt": "2026-10-17T14:18:45.789Z",
+ "startedAt": "2026-10-17T14:25:34.267Z",
  "responses": {
   "/": {
    "status": 200,
@@ -9,7 +9,7 @@
   "/api/c4/survivors": {
    "path": "/api/c4/survivors",
    "status": 200,
-   "ms": 234,
+   "ms": 126,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": [
@@ -17,350 +17,1058 @@
      "survivorId": "c4-N0072",
      "displayName": "N0072 · 61F · ovarian",
      "status": "alert",
-     "headline": "63% time in range (weeks 1-2); time in range below 70%",
+     "headline": "High most of the day: 63% in range, average 178 mg/dL",
+     "tags": [
+      {
+       "label": "In range 63%",
+       "tone": "risk",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Night shift",
+       "tone": "info",
+       "evidenceId": "status_rule"
+      },
+      {
+       "label": "Walks after 0/23 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      }
+     ],
      "updatedAt": "2024-08-01T19:15:00"
     },
     {
      "survivorId": "c4-N0085",
      "displayName": "N0085 · 67M · melanoma",
      "status": "alert",
-     "headline": "64% time in range (weeks 11-12); time in range below 70%",
+     "headline": "High most of the day: 64% in range, average 177 mg/dL",
+     "tags": [
+      {
+       "label": "In range 64%",
+       "tone": "risk",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Walks after 1/29 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 14.5 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-05-11T23:45:00"
     },
     {
      "survivorId": "c4-N0632",
      "displayName": "N0632 · 76F · colorectal",
      "status": "alert",
-     "headline": "95% time in range (weeks 11-12); more than 4% of readings below 70",
+     "headline": "Frequent lows: 5.3% of readings below 70",
+     "tags": [
+      {
+       "label": "Lows 5.3%",
+       "tone": "risk",
+       "evidenceId": "tbr70"
+      },
+      {
+       "label": "Late dinners 57%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks work: -18.2 mg/dL",
+       "tone": "good",
+       "evidenceId": "walk_effect_blend"
+      },
+      {
+       "label": "Fast 9.9 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-06-23T23:45:00"
     },
     {
      "survivorId": "c4-N0767",
      "displayName": "N0767 · 71M · bladder",
      "status": "alert",
-     "headline": "94% time in range (weeks 11-12); more than 4% of readings below 70",
+     "headline": "Frequent lows: 5.5% of readings below 70",
+     "tags": [
+      {
+       "label": "Lows 5.5%",
+       "tone": "risk",
+       "evidenceId": "tbr70"
+      },
+      {
+       "label": "Late dinners 75%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks work: -20.1 mg/dL",
+       "tone": "good",
+       "evidenceId": "walk_effect_blend"
+      }
+     ],
      "updatedAt": "2025-03-28T19:15:00"
     },
     {
      "survivorId": "c4-N0872",
      "displayName": "N0872 · 47F · lung",
      "status": "alert",
-     "headline": "0% time in range (weeks 11-12); time in range below 70%",
+     "headline": "High most of the day: 0% in range, average 306 mg/dL",
+     "tags": [
+      {
+       "label": "In range 0%",
+       "tone": "risk",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Walks after 3/46 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 14.4 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-11-10T23:45:00"
     },
     {
      "survivorId": "c4-N0950",
      "displayName": "N0950 · 60M · prostate",
      "status": "alert",
-     "headline": "69% time in range (weeks 11-12); time in range below 70%",
+     "headline": "High most of the day: 69% in range, average 172 mg/dL",
+     "tags": [
+      {
+       "label": "In range 69%",
+       "tone": "risk",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Late dinners 50%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 0/19 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 11.9 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-12-29T23:45:00"
     },
     {
      "survivorId": "c4-N1097",
      "displayName": "N1097 · 79M · prostate",
      "status": "alert",
-     "headline": "15% time in range (weeks 11-12); time in range below 70%",
+     "headline": "High most of the day: 15% in range, average 212 mg/dL",
+     "tags": [
+      {
+       "label": "In range 15%",
+       "tone": "risk",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Walks after 1/24 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 8.2 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-04-07T23:45:00"
     },
     {
      "survivorId": "c4-N1303",
      "displayName": "N1303 · 63M · prostate",
      "status": "alert",
-     "headline": "1% time in range (weeks 11-12); time in range below 70%",
+     "headline": "High most of the day: 1% in range, average 235 mg/dL",
+     "tags": [
+      {
+       "label": "In range 1%",
+       "tone": "risk",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Late dinners 100%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 2/47 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 9.8 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-07-28T23:45:00"
     },
     {
      "survivorId": "c4-N1530",
      "displayName": "N1530 · 65F · colorectal",
      "status": "alert",
-     "headline": "90% time in range (weeks 11-12); more than 4% of readings below 70",
+     "headline": "Frequent lows: 10.3% of readings below 70",
+     "tags": [
+      {
+       "label": "Lows 10.3%",
+       "tone": "risk",
+       "evidenceId": "tbr70"
+      },
+      {
+       "label": "In range 90%",
+       "tone": "warn",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Late dinners 67%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks work: -11.4 mg/dL",
+       "tone": "good",
+       "evidenceId": "walk_effect_blend"
+      }
+     ],
      "updatedAt": "2024-07-07T23:45:00"
     },
     {
      "survivorId": "c4-N1774",
      "displayName": "N1774 · 76M · prostate",
      "status": "alert",
-     "headline": "40% time in range (weeks 11-12); time in range below 70%",
+     "headline": "High most of the day: 40% in range, average 198 mg/dL",
+     "tags": [
+      {
+       "label": "In range 40%",
+       "tone": "risk",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Late dinners 33%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 0/24 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 11.2 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-10-05T23:45:00"
     },
     {
      "survivorId": "c4-N1938",
      "displayName": "N1938 · 79M · melanoma",
      "status": "alert",
-     "headline": "59% time in range (weeks 11-12); time in range below 70%",
+     "headline": "High most of the day: 59% in range, average 182 mg/dL",
+     "tags": [
+      {
+       "label": "In range 59%",
+       "tone": "risk",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Late dinners 58%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 1/37 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      }
+     ],
      "updatedAt": "2025-07-13T23:45:00"
     },
     {
      "survivorId": "c4-N0097",
      "displayName": "N0097 · 48F · lymphoma",
      "status": "watch",
-     "headline": "85% time in range; time in range below 90%",
+     "headline": "Often above range: 85% in range",
+     "tags": [
+      {
+       "label": "In range 85%",
+       "tone": "warn",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Walks after 0/9 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      }
+     ],
      "updatedAt": "2025-06-15T23:45:00"
     },
     {
      "survivorId": "c4-N0434",
      "displayName": "N0434 · 69M · prostate",
      "status": "watch",
-     "headline": "94% time in range; more than 5% of readings above 180",
+     "headline": "Spikes above 180: 6.0% of readings",
+     "tags": [
+      {
+       "label": "Late dinners 67%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 0/12 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      }
+     ],
      "updatedAt": "2025-04-06T23:45:00"
     },
     {
      "survivorId": "c4-N0587",
      "displayName": "N0587 · 74M · prostate",
      "status": "watch",
-     "headline": "80% time in range; time in range below 90%",
+     "headline": "Often above range: 80% in range",
+     "tags": [
+      {
+       "label": "In range 80%",
+       "tone": "warn",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Late dinners 100%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 1/29 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 10.8 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-09-29T23:45:00"
     },
     {
      "survivorId": "c4-N0828",
      "displayName": "N0828 · 69M · prostate",
      "status": "watch",
-     "headline": "84% time in range; time in range below 90%",
+     "headline": "Often above range: 84% in range",
+     "tags": [
+      {
+       "label": "In range 84%",
+       "tone": "warn",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Walks after 1/19 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 15.5 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-06-16T23:45:00"
     },
     {
      "survivorId": "c4-N0964",
      "displayName": "N0964 · 44F · thyroid",
      "status": "watch",
-     "headline": "78% time in range; time in range below 90%",
+     "headline": "Often above range: 78% in range",
+     "tags": [
+      {
+       "label": "In range 78%",
+       "tone": "warn",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Late dinners 88%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 1/32 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 12.9 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-09-10T17:00:00"
     },
     {
      "survivorId": "c4-N1337",
      "displayName": "N1337 · 78M · prostate",
      "status": "watch",
-     "headline": "75% time in range; time in range below 90%",
+     "headline": "Often above range: 75% in range",
+     "tags": [
+      {
+       "label": "In range 75%",
+       "tone": "warn",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Late dinners 44%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 3/37 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      }
+     ],
      "updatedAt": "2025-12-07T23:45:00"
     },
     {
      "survivorId": "c4-N1447",
      "displayName": "N1447 · 58M · prostate",
      "status": "watch",
-     "headline": "91% time in range; more than 5% of readings above 180",
+     "headline": "Spikes above 180: 8.7% of readings",
+     "tags": [
+      {
+       "label": "Late dinners 33%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 2/26 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      }
+     ],
      "updatedAt": "2025-07-27T23:45:00"
     },
     {
      "survivorId": "c4-N1557",
      "displayName": "N1557 · 64M · bladder",
      "status": "watch",
-     "headline": "91% time in range; more than 5% of readings above 180",
+     "headline": "Spikes above 180: 8.7% of readings",
+     "tags": [
+      {
+       "label": "Late dinners 100%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 2/48 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      }
+     ],
      "updatedAt": "2024-10-27T23:45:00"
     },
     {
      "survivorId": "c4-N1797",
      "displayName": "N1797 · 79M · melanoma",
      "status": "watch",
-     "headline": "92% time in range; more than 5% of readings above 180",
+     "headline": "Spikes above 180: 7.6% of readings",
+     "tags": [
+      {
+       "label": "Late dinners 82%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 1/27 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 13.8 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-10-12T23:45:00"
     },
     {
      "survivorId": "c4-N1877",
      "displayName": "N1877 · 66M · kidney",
      "status": "watch",
-     "headline": "75% time in range; time in range below 90%",
+     "headline": "Often above range: 75% in range",
+     "tags": [
+      {
+       "label": "In range 75%",
+       "tone": "warn",
+       "evidenceId": "tir"
+      },
+      {
+       "label": "Late dinners 100%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Fast 11.8 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-08-14T12:30:00"
     },
     {
      "survivorId": "c4-N0013",
      "displayName": "N0013 · 79M · prostate",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Walks after 2/59 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 14.0 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-03-02T23:45:00"
     },
     {
      "survivorId": "c4-N0214",
      "displayName": "N0214 · 82M · prostate",
      "status": "ok",
-     "headline": "96% time in range, steady",
+     "headline": "Steady: 96% in range",
+     "tags": [
+      {
+       "label": "Late dinners 64%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Fast 13.6 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-11-10T23:45:00"
     },
     {
      "survivorId": "c4-N0254",
      "displayName": "N0254 · 81M · prostate",
      "status": "ok",
-     "headline": "99% time in range, steady",
+     "headline": "Steady: 99% in range",
+     "tags": [
+      {
+       "label": "Late dinners 75%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Fast 11.7 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-08-18T23:45:00"
     },
     {
      "survivorId": "c4-N0358",
      "displayName": "N0358 · 72M · prostate",
      "status": "ok",
-     "headline": "97% time in range, steady",
+     "headline": "Steady: 97% in range",
+     "tags": [
+      {
+       "label": "Late dinners 71%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 1/29 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      }
+     ],
      "updatedAt": "2024-02-04T23:45:00"
     },
     {
      "survivorId": "c4-N0383",
      "displayName": "N0383 · 65M · prostate",
      "status": "ok",
-     "headline": "98% time in range, steady",
+     "headline": "Steady: 98% in range",
+     "tags": [
+      {
+       "label": "Late dinners 100%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 2/34 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 13.0 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-08-24T23:45:00"
     },
     {
      "survivorId": "c4-N0579",
      "displayName": "N0579 · 71F · breast",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Walks work: -10.9 mg/dL",
+       "tone": "good",
+       "evidenceId": "walk_effect_blend"
+      }
+     ],
      "updatedAt": "2025-10-17T17:45:00"
     },
     {
      "survivorId": "c4-N0731",
      "displayName": "N0731 · 44F · colorectal",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Night shift",
+       "tone": "info",
+       "evidenceId": "status_rule"
+      },
+      {
+       "label": "Walks work: -16.8 mg/dL",
+       "tone": "good",
+       "evidenceId": "walk_effect_blend"
+      }
+     ],
      "updatedAt": "2025-01-19T23:45:00"
     },
     {
      "survivorId": "c4-N0758",
      "displayName": "N0758 · 73F · breast",
      "status": "ok",
-     "headline": "98% time in range, steady",
+     "headline": "Steady: 98% in range",
+     "tags": [
+      {
+       "label": "Late dinners 100%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Fast 13.2 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-09-01T23:45:00"
     },
     {
      "survivorId": "c4-N0766",
      "displayName": "N0766 · 52F · endometrial",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Walks after 0/39 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 12.9 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-08-04T23:45:00"
     },
     {
      "survivorId": "c4-N0833",
      "displayName": "N0833 · 51F · breast",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [],
      "updatedAt": "2024-09-15T23:45:00"
     },
     {
      "survivorId": "c4-N0850",
      "displayName": "N0850 · 81M · prostate",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [],
      "updatedAt": "2025-04-27T23:45:00"
     },
     {
      "survivorId": "c4-N0893",
      "displayName": "N0893 · 72F · ovarian",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Walks after 1/59 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      }
+     ],
      "updatedAt": "2025-01-19T23:45:00"
     },
     {
      "survivorId": "c4-N0906",
      "displayName": "N0906 · 53F · melanoma",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Late dinners 64%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Fast 9.4 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-09-21T23:45:00"
     },
     {
      "survivorId": "c4-N0920",
      "displayName": "N0920 · 64F · breast",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Walks work: -21.1 mg/dL",
+       "tone": "good",
+       "evidenceId": "walk_effect_blend"
+      }
+     ],
      "updatedAt": "2024-05-19T23:45:00"
     },
     {
      "survivorId": "c4-N1160",
      "displayName": "N1160 · 47F · lymphoma",
      "status": "ok",
-     "headline": "97% time in range, steady",
+     "headline": "Steady: 97% in range",
+     "tags": [
+      {
+       "label": "Late dinners 100%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Fast 14.1 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-12-01T23:45:00"
     },
     {
      "survivorId": "c4-N1277",
      "displayName": "N1277 · 79M · colorectal",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Walks after 2/37 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 15.9 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-11-24T23:45:00"
     },
     {
      "survivorId": "c4-N1286",
      "displayName": "N1286 · 80F · breast",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Walks work: -13.7 mg/dL",
+       "tone": "good",
+       "evidenceId": "walk_effect_blend"
+      },
+      {
+       "label": "Fast 12.8 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-12-08T23:45:00"
     },
     {
      "survivorId": "c4-N1313",
      "displayName": "N1313 · 35M · colorectal",
      "status": "ok",
-     "headline": "99% time in range, steady",
+     "headline": "Steady: 99% in range",
+     "tags": [
+      {
+       "label": "Late dinners 60%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 2/35 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 14.7 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-05-26T23:45:00"
     },
     {
      "survivorId": "c4-N1350",
      "displayName": "N1350 · 64M · prostate",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Late dinners 67%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 3/38 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      }
+     ],
      "updatedAt": "2024-09-07T11:15:00"
     },
     {
      "survivorId": "c4-N1434",
      "displayName": "N1434 · 78M · prostate",
      "status": "ok",
-     "headline": "98% time in range, steady",
+     "headline": "Steady: 98% in range",
+     "tags": [
+      {
+       "label": "Walks work: -25.2 mg/dL",
+       "tone": "good",
+       "evidenceId": "walk_effect_blend"
+      },
+      {
+       "label": "Fast 12.9 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-12-14T23:45:00"
     },
     {
      "survivorId": "c4-N1569",
      "displayName": "N1569 · 52M · head and neck",
      "status": "ok",
-     "headline": "98% time in range, steady",
+     "headline": "Steady: 98% in range",
+     "tags": [
+      {
+       "label": "Late dinners 77%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks work: -17.1 mg/dL",
+       "tone": "good",
+       "evidenceId": "walk_effect_blend"
+      },
+      {
+       "label": "Fast 8.8 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-11-02T23:45:00"
     },
     {
      "survivorId": "c4-N1590",
      "displayName": "N1590 · 75F · melanoma",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Late dinners 80%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 3/68 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 10.3 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-05-05T23:45:00"
     },
     {
      "survivorId": "c4-N1706",
      "displayName": "N1706 · 59F · colorectal",
      "status": "ok",
-     "headline": "100% time in range, steady",
+     "headline": "Steady: 100% in range",
+     "tags": [
+      {
+       "label": "Walks after 1/27 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 12.8 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-03-23T23:45:00"
     },
     {
      "survivorId": "c4-N1786",
      "displayName": "N1786 · 37F · cervical",
      "status": "ok",
-     "headline": "97% time in range, steady",
+     "headline": "Steady: 97% in range",
+     "tags": [
+      {
+       "label": "Walks after 2/52 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 10.1 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-05-18T23:45:00"
     },
     {
      "survivorId": "c4-N1822",
      "displayName": "N1822 · 80M · lung",
      "status": "ok",
-     "headline": "99% time in range, steady",
+     "headline": "Steady: 99% in range",
+     "tags": [
+      {
+       "label": "Fast 13.1 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-11-24T23:45:00"
     },
     {
      "survivorId": "c4-N1861",
      "displayName": "N1861 · 81F · breast",
      "status": "ok",
-     "headline": "98% time in range, steady",
+     "headline": "Steady: 98% in range",
+     "tags": [
+      {
+       "label": "Late dinners 100%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 0/43 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 10.0 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-09-28T23:45:00"
     },
     {
      "survivorId": "c4-N1902",
      "displayName": "N1902 · 75M · colorectal",
      "status": "ok",
-     "headline": "97% time in range, steady",
+     "headline": "Steady: 97% in range",
+     "tags": [
+      {
+       "label": "Fast 14.0 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-09-01T23:45:00"
     },
     {
      "survivorId": "c4-N1912",
      "displayName": "N1912 · 68M · colorectal",
      "status": "ok",
-     "headline": "99% time in range, steady",
+     "headline": "Steady: 99% in range",
+     "tags": [
+      {
+       "label": "Late dinners 100%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks work: -20.8 mg/dL",
+       "tone": "good",
+       "evidenceId": "walk_effect_blend"
+      },
+      {
+       "label": "Fast 14.5 h",
+       "tone": "good",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2025-06-15T23:45:00"
     },
     {
      "survivorId": "c4-N1944",
      "displayName": "N1944 · 58F · endometrial",
      "status": "ok",
-     "headline": "98% time in range, steady",
+     "headline": "Steady: 98% in range",
+     "tags": [
+      {
+       "label": "Late dinners 40%",
+       "tone": "warn",
+       "evidenceId": "late_share"
+      },
+      {
+       "label": "Walks after 0/20 meals",
+       "tone": "warn",
+       "evidenceId": "walk_meals"
+      },
+      {
+       "label": "Fast 6.6 h",
+       "tone": "warn",
+       "evidenceId": "fast_avg"
+      }
+     ],
      "updatedAt": "2024-12-08T23:45:00"
     }
    ]
@@ -368,7 +1076,7 @@
   "/api/c4/survivors/c4-N0072": {
    "path": "/api/c4/survivors/c4-N0072",
    "status": 200,
-   "ms": 222,
+   "ms": 60,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -379,7 +1087,24 @@
      "time in range below 70%",
      "more than 5% of readings above 250"
     ],
-    "headline": "63% time in range (weeks 1-2); time in range below 70%",
+    "headline": "High most of the day: 63% in range, average 178 mg/dL",
+    "tags": [
+     {
+      "label": "In range 63%",
+      "tone": "risk",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Night shift",
+      "tone": "info",
+      "evidenceId": "status_rule"
+     },
+     {
+      "label": "Walks after 0/23 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     }
+    ],
     "summary": "61-year-old female, ovarian cancer, 1.7 years after treatment; type 2 diabetes at start; group: coaching; night shift. Average sugar 178 mg/dL in weeks 1-2, 63% of readings in range. Median rise after dinner 108 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-08-01T19:15:00",
     "profile": {
@@ -1076,7 +1801,7 @@
   "/api/c4/survivors/c4-N0085": {
    "path": "/api/c4/survivors/c4-N0085",
    "status": 200,
-   "ms": 308,
+   "ms": 88,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -1087,7 +1812,24 @@
      "time in range below 70%",
      "more than 5% of readings above 250"
     ],
-    "headline": "64% time in range (weeks 11-12); time in range below 70%",
+    "headline": "High most of the day: 64% in range, average 177 mg/dL",
+    "tags": [
+     {
+      "label": "In range 64%",
+      "tone": "risk",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Walks after 1/29 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 14.5 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "67-year-old male, melanoma cancer, 7.4 years after treatment; type 2 diabetes at start; group: tips by email; day job. Average sugar 177 mg/dL in weeks 11-12, 64% of readings in range. Median rise after dinner 82 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-05-11T23:45:00",
     "profile": {
@@ -1844,7 +2586,7 @@
   "/api/c4/survivors/c4-N0632": {
    "path": "/api/c4/survivors/c4-N0632",
    "status": 200,
-   "ms": 162,
+   "ms": 126,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -1854,7 +2596,29 @@
     "statusReasons": [
      "more than 4% of readings below 70"
     ],
-    "headline": "95% time in range (weeks 11-12); more than 4% of readings below 70",
+    "headline": "Frequent lows: 5.3% of readings below 70",
+    "tags": [
+     {
+      "label": "Lows 5.3%",
+      "tone": "risk",
+      "evidenceId": "tbr70"
+     },
+     {
+      "label": "Late dinners 57%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks work: -18.2 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+     },
+     {
+      "label": "Fast 9.9 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "76-year-old female, colorectal cancer, 1.3 years after treatment; normal at start; group: coaching; day job. Average sugar 85 mg/dL in weeks 11-12, 95% of readings in range. Median rise after dinner 46 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-06-23T23:45:00",
     "profile": {
@@ -2686,7 +3450,7 @@
   "/api/c4/survivors/c4-N0767": {
    "path": "/api/c4/survivors/c4-N0767",
    "status": 200,
-   "ms": 53,
+   "ms": 187,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -2696,7 +3460,24 @@
     "statusReasons": [
      "more than 4% of readings below 70"
     ],
-    "headline": "94% time in range (weeks 11-12); more than 4% of readings below 70",
+    "headline": "Frequent lows: 5.5% of readings below 70",
+    "tags": [
+     {
+      "label": "Lows 5.5%",
+      "tone": "risk",
+      "evidenceId": "tbr70"
+     },
+     {
+      "label": "Late dinners 75%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks work: -20.1 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+     }
+    ],
     "summary": "71-year-old male, bladder cancer, 3.5 years after treatment; normal at start; group: coaching + overnight fast; retired. Average sugar 84 mg/dL in weeks 11-12, 94% of readings in range. Median rise after dinner 37 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-03-28T19:15:00",
     "profile": {
@@ -3524,7 +4305,7 @@
   "/api/c4/survivors/c4-N0872": {
    "path": "/api/c4/survivors/c4-N0872",
    "status": 200,
-   "ms": 44,
+   "ms": 116,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -3535,7 +4316,24 @@
      "time in range below 70%",
      "more than 5% of readings above 250"
     ],
-    "headline": "0% time in range (weeks 11-12); time in range below 70%",
+    "headline": "High most of the day: 0% in range, average 306 mg/dL",
+    "tags": [
+     {
+      "label": "In range 0%",
+      "tone": "risk",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Walks after 3/46 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 14.4 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "47-year-old female, lung cancer, 2.3 years after treatment; type 2 diabetes at start; group: coaching; day job. Average sugar 306 mg/dL in weeks 11-12, 0% of readings in range. Median rise after dinner 87 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-11-10T23:45:00",
     "profile": {
@@ -4378,7 +5176,7 @@
   "/api/c4/survivors/c4-N0950": {
    "path": "/api/c4/survivors/c4-N0950",
    "status": 200,
-   "ms": 236,
+   "ms": 173,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -4389,7 +5187,29 @@
      "time in range below 70%",
      "more than 5% of readings above 250"
     ],
-    "headline": "69% time in range (weeks 11-12); time in range below 70%",
+    "headline": "High most of the day: 69% in range, average 172 mg/dL",
+    "tags": [
+     {
+      "label": "In range 69%",
+      "tone": "risk",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Late dinners 50%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 0/19 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 11.9 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "60-year-old male, prostate cancer, 9.7 years after treatment; type 2 diabetes at start; group: coaching + overnight fast; day job. Average sugar 172 mg/dL in weeks 11-12, 69% of readings in range. Median rise after dinner 88 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-12-29T23:45:00",
     "profile": {
@@ -5138,7 +5958,7 @@
   "/api/c4/survivors/c4-N1097": {
    "path": "/api/c4/survivors/c4-N1097",
    "status": 200,
-   "ms": 234,
+   "ms": 65,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -5149,7 +5969,24 @@
      "time in range below 70%",
      "more than 5% of readings above 250"
     ],
-    "headline": "15% time in range (weeks 11-12); time in range below 70%",
+    "headline": "High most of the day: 15% in range, average 212 mg/dL",
+    "tags": [
+     {
+      "label": "In range 15%",
+      "tone": "risk",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Walks after 1/24 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 8.2 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "79-year-old male, prostate cancer, 1.1 years after treatment; type 2 diabetes at start; group: tips by email; retired. Average sugar 212 mg/dL in weeks 11-12, 15% of readings in range. Median rise after dinner 78 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-04-07T23:45:00",
     "profile": {
@@ -5914,7 +6751,7 @@
   "/api/c4/survivors/c4-N1303": {
    "path": "/api/c4/survivors/c4-N1303",
    "status": 200,
-   "ms": 65,
+   "ms": 230,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -5925,7 +6762,29 @@
      "time in range below 70%",
      "more than 5% of readings above 250"
     ],
-    "headline": "1% time in range (weeks 11-12); time in range below 70%",
+    "headline": "High most of the day: 1% in range, average 235 mg/dL",
+    "tags": [
+     {
+      "label": "In range 1%",
+      "tone": "risk",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Late dinners 100%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 2/47 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 9.8 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "63-year-old male, prostate cancer, 0.3 years after treatment; type 2 diabetes at start; group: coaching; works from home. Average sugar 235 mg/dL in weeks 11-12, 1% of readings in range. Median rise after dinner 164 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-07-28T23:45:00",
     "profile": {
@@ -6686,7 +7545,7 @@
   "/api/c4/survivors/c4-N1530": {
    "path": "/api/c4/survivors/c4-N1530",
    "status": 200,
-   "ms": 214,
+   "ms": 73,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -6696,7 +7555,29 @@
     "statusReasons": [
      "more than 4% of readings below 70"
     ],
-    "headline": "90% time in range (weeks 11-12); more than 4% of readings below 70",
+    "headline": "Frequent lows: 10.3% of readings below 70",
+    "tags": [
+     {
+      "label": "Lows 10.3%",
+      "tone": "risk",
+      "evidenceId": "tbr70"
+     },
+     {
+      "label": "In range 90%",
+      "tone": "warn",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Late dinners 67%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks work: -11.4 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+     }
+    ],
     "summary": "65-year-old female, colorectal cancer, 1.8 years after treatment; normal at start; group: coaching + overnight fast; retired. Average sugar 83 mg/dL in weeks 11-12, 90% of readings in range. Median rise after dinner 37 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-07-07T23:45:00",
     "profile": {
@@ -7534,7 +8415,7 @@
   "/api/c4/survivors/c4-N1774": {
    "path": "/api/c4/survivors/c4-N1774",
    "status": 200,
-   "ms": 117,
+   "ms": 43,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -7545,7 +8426,29 @@
      "time in range below 70%",
      "more than 5% of readings above 250"
     ],
-    "headline": "40% time in range (weeks 11-12); time in range below 70%",
+    "headline": "High most of the day: 40% in range, average 198 mg/dL",
+    "tags": [
+     {
+      "label": "In range 40%",
+      "tone": "risk",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Late dinners 33%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 0/24 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 11.2 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "76-year-old male, prostate cancer, 2.3 years after treatment; type 2 diabetes at start; group: coaching; retired. Average sugar 198 mg/dL in weeks 11-12, 40% of readings in range. Median rise after dinner 99 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-10-05T23:45:00",
     "profile": {
@@ -8294,7 +9197,7 @@
   "/api/c4/survivors/c4-N1938": {
    "path": "/api/c4/survivors/c4-N1938",
    "status": 200,
-   "ms": 49,
+   "ms": 74,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -8304,7 +9207,24 @@
     "statusReasons": [
      "time in range below 70%"
     ],
-    "headline": "59% time in range (weeks 11-12); time in range below 70%",
+    "headline": "High most of the day: 59% in range, average 182 mg/dL",
+    "tags": [
+     {
+      "label": "In range 59%",
+      "tone": "risk",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Late dinners 58%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 1/37 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     }
+    ],
     "summary": "79-year-old male, melanoma cancer, 2.2 years after treatment; type 2 diabetes at start; group: coaching + overnight fast; retired. Average sugar 182 mg/dL in weeks 11-12, 59% of readings in range. Median rise after dinner 40 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-07-13T23:45:00",
     "profile": {
@@ -9101,7 +10021,7 @@
   "/api/c4/survivors/c4-N0097": {
    "path": "/api/c4/survivors/c4-N0097",
    "status": 200,
-   "ms": 144,
+   "ms": 146,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -9111,7 +10031,19 @@
     "statusReasons": [
      "time in range below 90%"
     ],
-    "headline": "85% time in range; time in range below 90%",
+    "headline": "Often above range: 85% in range",
+    "tags": [
+     {
+      "label": "In range 85%",
+      "tone": "warn",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Walks after 0/9 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     }
+    ],
     "summary": "48-year-old female, lymphoma cancer, 2.0 years after treatment; prediabetes at start; group: coaching; day job. Average sugar 151 mg/dL in weeks 1-2, 85% of readings in range. Median rise after dinner 52 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-06-15T23:45:00",
     "profile": {
@@ -9786,7 +10718,7 @@
   "/api/c4/survivors/c4-N0434": {
    "path": "/api/c4/survivors/c4-N0434",
    "status": 200,
-   "ms": 219,
+   "ms": 41,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -9796,7 +10728,19 @@
     "statusReasons": [
      "more than 5% of readings above 180"
     ],
-    "headline": "94% time in range; more than 5% of readings above 180",
+    "headline": "Spikes above 180: 6.0% of readings",
+    "tags": [
+     {
+      "label": "Late dinners 67%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 0/12 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     }
+    ],
     "summary": "69-year-old male, prostate cancer, 0.5 years after treatment; prediabetes at start; group: coaching + overnight fast; retired. Average sugar 132 mg/dL in weeks 11-12, 94% of readings in range. Median rise after dinner 93 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-04-06T23:45:00",
     "profile": {
@@ -10496,7 +11440,7 @@
   "/api/c4/survivors/c4-N0587": {
    "path": "/api/c4/survivors/c4-N0587",
    "status": 200,
-   "ms": 120,
+   "ms": 93,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -10506,7 +11450,29 @@
     "statusReasons": [
      "time in range below 90%"
     ],
-    "headline": "80% time in range; time in range below 90%",
+    "headline": "Often above range: 80% in range",
+    "tags": [
+     {
+      "label": "In range 80%",
+      "tone": "warn",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Late dinners 100%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 1/29 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 10.8 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "74-year-old male, prostate cancer, 0.8 years after treatment; prediabetes at start; group: tips by email; works from home. Average sugar 150 mg/dL in weeks 1-2, 80% of readings in range. Median rise after dinner 124 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-09-29T23:45:00",
     "profile": {
@@ -11241,7 +12207,7 @@
   "/api/c4/survivors/c4-N0828": {
    "path": "/api/c4/survivors/c4-N0828",
    "status": 200,
-   "ms": 66,
+   "ms": 31,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -11251,7 +12217,24 @@
     "statusReasons": [
      "time in range below 90%"
     ],
-    "headline": "84% time in range; time in range below 90%",
+    "headline": "Often above range: 84% in range",
+    "tags": [
+     {
+      "label": "In range 84%",
+      "tone": "warn",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Walks after 1/19 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 15.5 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "69-year-old male, prostate cancer, 0.3 years after treatment; type 2 diabetes at start; group: tips by email; retired. Average sugar 151 mg/dL in weeks 11-12, 84% of readings in range. Median rise after dinner 52 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-06-16T23:45:00",
     "profile": {
@@ -11993,7 +12976,7 @@
   "/api/c4/survivors/c4-N0964": {
    "path": "/api/c4/survivors/c4-N0964",
    "status": 200,
-   "ms": 133,
+   "ms": 71,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -12003,7 +12986,29 @@
     "statusReasons": [
      "time in range below 90%"
     ],
-    "headline": "78% time in range; time in range below 90%",
+    "headline": "Often above range: 78% in range",
+    "tags": [
+     {
+      "label": "In range 78%",
+      "tone": "warn",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Late dinners 88%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 1/32 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 12.9 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "44-year-old female, thyroid cancer, 6.5 years after treatment; type 2 diabetes at start; group: tips by email; day job. Average sugar 164 mg/dL in weeks 11-12, 78% of readings in range. Median rise after dinner 116 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-09-10T17:00:00",
     "profile": {
@@ -12765,7 +13770,7 @@
   "/api/c4/survivors/c4-N1337": {
    "path": "/api/c4/survivors/c4-N1337",
    "status": 200,
-   "ms": 203,
+   "ms": 126,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -12775,7 +13780,24 @@
     "statusReasons": [
      "time in range below 90%"
     ],
-    "headline": "75% time in range; time in range below 90%",
+    "headline": "Often above range: 75% in range",
+    "tags": [
+     {
+      "label": "In range 75%",
+      "tone": "warn",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Late dinners 44%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 3/37 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     }
+    ],
     "summary": "78-year-old male, prostate cancer, 2.2 years after treatment; type 2 diabetes at start; group: coaching + overnight fast; day job. Average sugar 158 mg/dL in weeks 11-12, 75% of readings in range. Median rise after dinner 103 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-12-07T23:45:00",
     "profile": {
@@ -13591,7 +14613,7 @@
   "/api/c4/survivors/c4-N1447": {
    "path": "/api/c4/survivors/c4-N1447",
    "status": 200,
-   "ms": 205,
+   "ms": 41,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -13601,7 +14623,19 @@
     "statusReasons": [
      "more than 5% of readings above 180"
     ],
-    "headline": "91% time in range; more than 5% of readings above 180",
+    "headline": "Spikes above 180: 8.7% of readings",
+    "tags": [
+     {
+      "label": "Late dinners 33%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 2/26 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     }
+    ],
     "summary": "58-year-old male, prostate cancer, 3.4 years after treatment; type 2 diabetes at start; group: coaching + overnight fast; day job. Average sugar 123 mg/dL in weeks 1-2, 91% of readings in range. Median rise after dinner 124 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-07-27T23:45:00",
     "profile": {
@@ -14346,7 +15380,7 @@
   "/api/c4/survivors/c4-N1557": {
    "path": "/api/c4/survivors/c4-N1557",
    "status": 200,
-   "ms": 39,
+   "ms": 42,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -14356,7 +15390,19 @@
     "statusReasons": [
      "more than 5% of readings above 180"
     ],
-    "headline": "91% time in range; more than 5% of readings above 180",
+    "headline": "Spikes above 180: 8.7% of readings",
+    "tags": [
+     {
+      "label": "Late dinners 100%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 2/48 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     }
+    ],
     "summary": "64-year-old male, bladder cancer, 0.3 years after treatment; prediabetes at start; group: tips by email; retired. Average sugar 129 mg/dL in weeks 11-12, 91% of readings in range. Median rise after dinner 91 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-10-27T23:45:00",
     "profile": {
@@ -15122,7 +16168,7 @@
   "/api/c4/survivors/c4-N1797": {
    "path": "/api/c4/survivors/c4-N1797",
    "status": 200,
-   "ms": 35,
+   "ms": 38,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -15132,7 +16178,24 @@
     "statusReasons": [
      "more than 5% of readings above 180"
     ],
-    "headline": "92% time in range; more than 5% of readings above 180",
+    "headline": "Spikes above 180: 7.6% of readings",
+    "tags": [
+     {
+      "label": "Late dinners 82%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 1/27 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 13.8 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "79-year-old male, melanoma cancer, 3.1 years after treatment; type 2 diabetes at start; group: coaching; retired. Average sugar 123 mg/dL in weeks 11-12, 92% of readings in range. Median rise after dinner 99 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-10-12T23:45:00",
     "profile": {
@@ -15896,7 +16959,7 @@
   "/api/c4/survivors/c4-N1877": {
    "path": "/api/c4/survivors/c4-N1877",
    "status": 200,
-   "ms": 250,
+   "ms": 34,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -15906,7 +16969,24 @@
     "statusReasons": [
      "time in range below 90%"
     ],
-    "headline": "75% time in range; time in range below 90%",
+    "headline": "Often above range: 75% in range",
+    "tags": [
+     {
+      "label": "In range 75%",
+      "tone": "warn",
+      "evidenceId": "tir"
+     },
+     {
+      "label": "Late dinners 100%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Fast 11.8 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "66-year-old male, kidney cancer, 3.0 years after treatment; type 2 diabetes at start; group: coaching; day job. Average sugar 164 mg/dL in weeks 11-12, 75% of readings in range. Median rise after dinner 108 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-08-14T12:30:00",
     "profile": {
@@ -16690,7 +17770,7 @@
   "/api/c4/survivors/c4-N0013": {
    "path": "/api/c4/survivors/c4-N0013",
    "status": 200,
-   "ms": 40,
+   "ms": 63,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -16698,7 +17778,19 @@
     "displayName": "N0013 · 79M · prostate",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Walks after 2/59 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 14.0 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "79-year-old male, prostate cancer, 4.4 years after treatment; normal at start; group: tips by email; day job. Average sugar 104 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 50 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-03-02T23:45:00",
     "profile": {
@@ -17462,7 +18554,7 @@
   "/api/c4/survivors/c4-N0214": {
    "path": "/api/c4/survivors/c4-N0214",
    "status": 200,
-   "ms": 81,
+   "ms": 47,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -17470,7 +18562,19 @@
     "displayName": "N0214 · 82M · prostate",
     "status": "ok",
     "statusReasons": [],
-    "headline": "96% time in range, steady",
+    "headline": "Steady: 96% in range",
+    "tags": [
+     {
+      "label": "Late dinners 64%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Fast 13.6 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "82-year-old male, prostate cancer, 2.6 years after treatment; prediabetes at start; group: coaching + overnight fast; not working. Average sugar 129 mg/dL in weeks 11-12, 96% of readings in range. Median rise after dinner 73 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-11-10T23:45:00",
     "profile": {
@@ -18288,7 +19392,7 @@
   "/api/c4/survivors/c4-N0254": {
    "path": "/api/c4/survivors/c4-N0254",
    "status": 200,
-   "ms": 229,
+   "ms": 139,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -18296,7 +19400,19 @@
     "displayName": "N0254 · 81M · prostate",
     "status": "ok",
     "statusReasons": [],
-    "headline": "99% time in range, steady",
+    "headline": "Steady: 99% in range",
+    "tags": [
+     {
+      "label": "Late dinners 75%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Fast 11.7 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "81-year-old male, prostate cancer, 2.0 years after treatment; prediabetes at start; group: coaching; day job. Average sugar 115 mg/dL in weeks 11-12, 99% of readings in range. Median rise after dinner 40 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-08-18T23:45:00",
     "profile": {
@@ -19052,7 +20168,7 @@
   "/api/c4/survivors/c4-N0358": {
    "path": "/api/c4/survivors/c4-N0358",
    "status": 200,
-   "ms": 189,
+   "ms": 60,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -19060,7 +20176,19 @@
     "displayName": "N0358 · 72M · prostate",
     "status": "ok",
     "statusReasons": [],
-    "headline": "97% time in range, steady",
+    "headline": "Steady: 97% in range",
+    "tags": [
+     {
+      "label": "Late dinners 71%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 1/29 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     }
+    ],
     "summary": "72-year-old male, prostate cancer, 4.9 years after treatment; normal at start; group: coaching + overnight fast; day job. Average sugar 90 mg/dL in weeks 1-2, 97% of readings in range. Median rise after dinner 53 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-02-04T23:45:00",
     "profile": {
@@ -19813,7 +20941,7 @@
   "/api/c4/survivors/c4-N0383": {
    "path": "/api/c4/survivors/c4-N0383",
    "status": 200,
-   "ms": 259,
+   "ms": 47,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -19821,7 +20949,24 @@
     "displayName": "N0383 · 65M · prostate",
     "status": "ok",
     "statusReasons": [],
-    "headline": "98% time in range, steady",
+    "headline": "Steady: 98% in range",
+    "tags": [
+     {
+      "label": "Late dinners 100%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 2/34 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 13.0 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "65-year-old male, prostate cancer, 0.3 years after treatment; prediabetes at start; group: tips by email; retired. Average sugar 112 mg/dL in weeks 11-12, 98% of readings in range. Median rise after dinner 77 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-08-24T23:45:00",
     "profile": {
@@ -20569,7 +21714,7 @@
   "/api/c4/survivors/c4-N0579": {
    "path": "/api/c4/survivors/c4-N0579",
    "status": 200,
-   "ms": 241,
+   "ms": 40,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -20577,7 +21722,14 @@
     "displayName": "N0579 · 71F · breast",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Walks work: -10.9 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+     }
+    ],
     "summary": "71-year-old female, breast cancer, 0.9 years after treatment; prediabetes at start; group: coaching + overnight fast; day job. Average sugar 118 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 42 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-10-17T17:45:00",
     "profile": {
@@ -21354,7 +22506,7 @@
   "/api/c4/survivors/c4-N0731": {
    "path": "/api/c4/survivors/c4-N0731",
    "status": 200,
-   "ms": 148,
+   "ms": 42,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -21362,7 +22514,19 @@
     "displayName": "N0731 · 44F · colorectal",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Night shift",
+      "tone": "info",
+      "evidenceId": "status_rule"
+     },
+     {
+      "label": "Walks work: -16.8 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+     }
+    ],
     "summary": "44-year-old female, colorectal cancer, 1.2 years after treatment; normal at start; group: tips by email; night shift. Average sugar 108 mg/dL in weeks 1-2, 100% of readings in range. Median rise after dinner 27 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-01-19T23:45:00",
     "profile": {
@@ -22089,7 +23253,7 @@
   "/api/c4/survivors/c4-N0758": {
    "path": "/api/c4/survivors/c4-N0758",
    "status": 200,
-   "ms": 89,
+   "ms": 28,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -22097,7 +23261,19 @@
     "displayName": "N0758 · 73F · breast",
     "status": "ok",
     "statusReasons": [],
-    "headline": "98% time in range, steady",
+    "headline": "Steady: 98% in range",
+    "tags": [
+     {
+      "label": "Late dinners 100%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Fast 13.2 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "73-year-old female, breast cancer, 3.1 years after treatment; prediabetes at start; group: coaching + overnight fast; day job. Average sugar 123 mg/dL in weeks 11-12, 98% of readings in range. Median rise after dinner 48 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-09-01T23:45:00",
     "profile": {
@@ -22873,7 +24049,7 @@
   "/api/c4/survivors/c4-N0766": {
    "path": "/api/c4/survivors/c4-N0766",
    "status": 200,
-   "ms": 70,
+   "ms": 31,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -22881,7 +24057,19 @@
     "displayName": "N0766 · 52F · endometrial",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Walks after 0/39 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 12.9 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "52-year-old female, endometrial cancer, 3.3 years after treatment; normal at start; group: tips by email; day job. Average sugar 95 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 44 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-08-04T23:45:00",
     "profile": {
@@ -23625,7 +24813,7 @@
   "/api/c4/survivors/c4-N0833": {
    "path": "/api/c4/survivors/c4-N0833",
    "status": 200,
-   "ms": 276,
+   "ms": 49,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -23633,7 +24821,8 @@
     "displayName": "N0833 · 51F · breast",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [],
     "summary": "51-year-old female, breast cancer, 1.2 years after treatment; prediabetes at start; group: coaching + overnight fast; day job. Average sugar 123 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 42 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-09-15T23:45:00",
     "profile": {
@@ -24333,7 +25522,7 @@
   "/api/c4/survivors/c4-N0850": {
    "path": "/api/c4/survivors/c4-N0850",
    "status": 200,
-   "ms": 176,
+   "ms": 44,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -24341,7 +25530,8 @@
     "displayName": "N0850 · 81M · prostate",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [],
     "summary": "81-year-old male, prostate cancer, 1.4 years after treatment; type 2 diabetes at start; group: coaching + overnight fast; works from home. Average sugar 135 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 43 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-04-27T23:45:00",
     "profile": {
@@ -25131,7 +26321,7 @@
   "/api/c4/survivors/c4-N0893": {
    "path": "/api/c4/survivors/c4-N0893",
    "status": 200,
-   "ms": 292,
+   "ms": 89,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -25139,7 +26329,14 @@
     "displayName": "N0893 · 72F · ovarian",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Walks after 1/59 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     }
+    ],
     "summary": "72-year-old female, ovarian cancer, 2.3 years after treatment; normal at start; group: coaching; not working. Average sugar 102 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 29 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-01-19T23:45:00",
     "profile": {
@@ -25905,7 +27102,7 @@
   "/api/c4/survivors/c4-N0906": {
    "path": "/api/c4/survivors/c4-N0906",
    "status": 200,
-   "ms": 73,
+   "ms": 37,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -25913,7 +27110,19 @@
     "displayName": "N0906 · 53F · melanoma",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Late dinners 64%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Fast 9.4 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "53-year-old female, melanoma cancer, 1.6 years after treatment; prediabetes at start; group: coaching + overnight fast; day job. Average sugar 109 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 48 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-09-21T23:45:00",
     "profile": {
@@ -26737,7 +27946,7 @@
   "/api/c4/survivors/c4-N0920": {
    "path": "/api/c4/survivors/c4-N0920",
    "status": 200,
-   "ms": 77,
+   "ms": 49,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -26745,7 +27954,14 @@
     "displayName": "N0920 · 64F · breast",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Walks work: -21.1 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+     }
+    ],
     "summary": "64-year-old female, breast cancer, 4.6 years after treatment; normal at start; group: coaching; not working. Average sugar 109 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 64 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-05-19T23:45:00",
     "profile": {
@@ -27536,7 +28752,7 @@
   "/api/c4/survivors/c4-N1160": {
    "path": "/api/c4/survivors/c4-N1160",
    "status": 200,
-   "ms": 419,
+   "ms": 158,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -27544,7 +28760,19 @@
     "displayName": "N1160 · 47F · lymphoma",
     "status": "ok",
     "statusReasons": [],
-    "headline": "97% time in range, steady",
+    "headline": "Steady: 97% in range",
+    "tags": [
+     {
+      "label": "Late dinners 100%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Fast 14.1 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "47-year-old female, lymphoma cancer, 2.5 years after treatment; normal at start; group: coaching; day job. Average sugar 87 mg/dL in weeks 11-12, 97% of readings in range. Median rise after dinner 35 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-12-01T23:45:00",
     "profile": {
@@ -28312,7 +29540,7 @@
   "/api/c4/survivors/c4-N1277": {
    "path": "/api/c4/survivors/c4-N1277",
    "status": 200,
-   "ms": 65,
+   "ms": 43,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -28320,7 +29548,19 @@
     "displayName": "N1277 · 79M · colorectal",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Walks after 2/37 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 15.9 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "79-year-old male, colorectal cancer, 5.2 years after treatment; normal at start; group: coaching; day job. Average sugar 107 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 26 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-11-24T23:45:00",
     "profile": {
@@ -29068,7 +30308,7 @@
   "/api/c4/survivors/c4-N1286": {
    "path": "/api/c4/survivors/c4-N1286",
    "status": 200,
-   "ms": 61,
+   "ms": 35,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -29076,7 +30316,19 @@
     "displayName": "N1286 · 80F · breast",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Walks work: -13.7 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+     },
+     {
+      "label": "Fast 12.8 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "80-year-old female, breast cancer, 1.4 years after treatment; normal at start; group: coaching; retired. Average sugar 102 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 41 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-12-08T23:45:00",
     "profile": {
@@ -29883,7 +31135,7 @@
   "/api/c4/survivors/c4-N1313": {
    "path": "/api/c4/survivors/c4-N1313",
    "status": 200,
-   "ms": 146,
+   "ms": 27,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -29891,7 +31143,24 @@
     "displayName": "N1313 · 35M · colorectal",
     "status": "ok",
     "statusReasons": [],
-    "headline": "99% time in range, steady",
+    "headline": "Steady: 99% in range",
+    "tags": [
+     {
+      "label": "Late dinners 60%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 2/35 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 14.7 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "35-year-old male, colorectal cancer, 4.2 years after treatment; normal at start; group: coaching + overnight fast; works from home. Average sugar 103 mg/dL in weeks 11-12, 99% of readings in range. Median rise after dinner 74 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-05-26T23:45:00",
     "profile": {
@@ -30689,7 +31958,7 @@
   "/api/c4/survivors/c4-N1350": {
    "path": "/api/c4/survivors/c4-N1350",
    "status": 200,
-   "ms": 99,
+   "ms": 34,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -30697,7 +31966,19 @@
     "displayName": "N1350 · 64M · prostate",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Late dinners 67%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 3/38 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     }
+    ],
     "summary": "64-year-old male, prostate cancer, 5.4 years after treatment; normal at start; group: tips by email; day job. Average sugar 90 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 44 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-09-07T11:15:00",
     "profile": {
@@ -31519,7 +32800,7 @@
   "/api/c4/survivors/c4-N1434": {
    "path": "/api/c4/survivors/c4-N1434",
    "status": 200,
-   "ms": 63,
+   "ms": 43,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -31527,7 +32808,19 @@
     "displayName": "N1434 · 78M · prostate",
     "status": "ok",
     "statusReasons": [],
-    "headline": "98% time in range, steady",
+    "headline": "Steady: 98% in range",
+    "tags": [
+     {
+      "label": "Walks work: -25.2 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+     },
+     {
+      "label": "Fast 12.9 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "78-year-old male, prostate cancer, 0.9 years after treatment; prediabetes at start; group: coaching + overnight fast; retired. Average sugar 108 mg/dL in weeks 11-12, 98% of readings in range. Median rise after dinner 72 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-12-14T23:45:00",
     "profile": {
@@ -32316,7 +33609,7 @@
   "/api/c4/survivors/c4-N1569": {
    "path": "/api/c4/survivors/c4-N1569",
    "status": 200,
-   "ms": 45,
+   "ms": 43,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -32324,7 +33617,24 @@
     "displayName": "N1569 · 52M · head and neck",
     "status": "ok",
     "statusReasons": [],
-    "headline": "98% time in range, steady",
+    "headline": "Steady: 98% in range",
+    "tags": [
+     {
+      "label": "Late dinners 77%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks work: -17.1 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+     },
+     {
+      "label": "Fast 8.8 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "52-year-old male, head and neck cancer, 0.9 years after treatment; prediabetes at start; group: coaching; works from home. Average sugar 96 mg/dL in weeks 11-12, 98% of readings in range. Median rise after dinner 58 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-11-02T23:45:00",
     "profile": {
@@ -33141,7 +34451,7 @@
   "/api/c4/survivors/c4-N1590": {
    "path": "/api/c4/survivors/c4-N1590",
    "status": 200,
-   "ms": 148,
+   "ms": 39,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -33149,7 +34459,24 @@
     "displayName": "N1590 · 75F · melanoma",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Late dinners 80%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 3/68 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 10.3 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "75-year-old female, melanoma cancer, 5.1 years after treatment; normal at start; group: coaching; not working. Average sugar 100 mg/dL in weeks 11-12, 100% of readings in range. Median rise after dinner 47 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-05-05T23:45:00",
     "profile": {
@@ -33973,7 +35300,7 @@
   "/api/c4/survivors/c4-N1706": {
    "path": "/api/c4/survivors/c4-N1706",
    "status": 200,
-   "ms": 105,
+   "ms": 87,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -33981,7 +35308,19 @@
     "displayName": "N1706 · 59F · colorectal",
     "status": "ok",
     "statusReasons": [],
-    "headline": "100% time in range, steady",
+    "headline": "Steady: 100% in range",
+    "tags": [
+     {
+      "label": "Walks after 1/27 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 12.8 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "59-year-old female, colorectal cancer, 1.0 years after treatment; normal at start; group: tips by email; day job. Average sugar 97 mg/dL in weeks 1-2, 100% of readings in range. Median rise after dinner 32 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-03-23T23:45:00",
     "profile": {
@@ -34712,7 +36051,7 @@
   "/api/c4/survivors/c4-N1786": {
    "path": "/api/c4/survivors/c4-N1786",
    "status": 200,
-   "ms": 52,
+   "ms": 37,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -34720,7 +36059,19 @@
     "displayName": "N1786 · 37F · cervical",
     "status": "ok",
     "statusReasons": [],
-    "headline": "97% time in range, steady",
+    "headline": "Steady: 97% in range",
+    "tags": [
+     {
+      "label": "Walks after 2/52 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 10.1 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "37-year-old female, cervical cancer, 1.1 years after treatment; normal at start; group: coaching; not working. Average sugar 85 mg/dL in weeks 11-12, 97% of readings in range. Median rise after dinner 34 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-05-18T23:45:00",
     "profile": {
@@ -35490,7 +36841,7 @@
   "/api/c4/survivors/c4-N1822": {
    "path": "/api/c4/survivors/c4-N1822",
    "status": 200,
-   "ms": 62,
+   "ms": 75,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -35498,7 +36849,14 @@
     "displayName": "N1822 · 80M · lung",
     "status": "ok",
     "statusReasons": [],
-    "headline": "99% time in range, steady",
+    "headline": "Steady: 99% in range",
+    "tags": [
+     {
+      "label": "Fast 13.1 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "80-year-old male, lung cancer, 1.8 years after treatment; prediabetes at start; group: coaching; day job. Average sugar 113 mg/dL in weeks 11-12, 99% of readings in range. Median rise after dinner 30 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-11-24T23:45:00",
     "profile": {
@@ -36264,7 +37622,7 @@
   "/api/c4/survivors/c4-N1861": {
    "path": "/api/c4/survivors/c4-N1861",
    "status": 200,
-   "ms": 143,
+   "ms": 28,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -36272,7 +37630,24 @@
     "displayName": "N1861 · 81F · breast",
     "status": "ok",
     "statusReasons": [],
-    "headline": "98% time in range, steady",
+    "headline": "Steady: 98% in range",
+    "tags": [
+     {
+      "label": "Late dinners 100%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 0/43 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 10.0 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "81-year-old female, breast cancer, 2.7 years after treatment; prediabetes at start; group: tips by email; day job. Average sugar 123 mg/dL in weeks 11-12, 98% of readings in range. Median rise after dinner 71 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-09-28T23:45:00",
     "profile": {
@@ -37008,7 +38383,7 @@
   "/api/c4/survivors/c4-N1902": {
    "path": "/api/c4/survivors/c4-N1902",
    "status": 200,
-   "ms": 140,
+   "ms": 57,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -37016,7 +38391,14 @@
     "displayName": "N1902 · 75M · colorectal",
     "status": "ok",
     "statusReasons": [],
-    "headline": "97% time in range, steady",
+    "headline": "Steady: 97% in range",
+    "tags": [
+     {
+      "label": "Fast 14.0 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "75-year-old male, colorectal cancer, 2.1 years after treatment; type 2 diabetes at start; group: coaching + overnight fast; not working. Average sugar 139 mg/dL in weeks 11-12, 97% of readings in range. Median rise after dinner 39 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-09-01T23:45:00",
     "profile": {
@@ -37798,7 +39180,7 @@
   "/api/c4/survivors/c4-N1912": {
    "path": "/api/c4/survivors/c4-N1912",
    "status": 200,
-   "ms": 119,
+   "ms": 42,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -37806,7 +39188,24 @@
     "displayName": "N1912 · 68M · colorectal",
     "status": "ok",
     "statusReasons": [],
-    "headline": "99% time in range, steady",
+    "headline": "Steady: 99% in range",
+    "tags": [
+     {
+      "label": "Late dinners 100%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks work: -20.8 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+     },
+     {
+      "label": "Fast 14.5 h",
+      "tone": "good",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "68-year-old male, colorectal cancer, 5.8 years after treatment; normal at start; group: coaching; works from home. Average sugar 91 mg/dL in weeks 11-12, 99% of readings in range. Median rise after dinner 61 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2025-06-15T23:45:00",
     "profile": {
@@ -38583,7 +39982,7 @@
   "/api/c4/survivors/c4-N1944": {
    "path": "/api/c4/survivors/c4-N1944",
    "status": 200,
-   "ms": 171,
+   "ms": 52,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -38591,7 +39990,24 @@
     "displayName": "N1944 · 58F · endometrial",
     "status": "ok",
     "statusReasons": [],
-    "headline": "98% time in range, steady",
+    "headline": "Steady: 98% in range",
+    "tags": [
+     {
+      "label": "Late dinners 40%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+     },
+     {
+      "label": "Walks after 0/20 meals",
+      "tone": "warn",
+      "evidenceId": "walk_meals"
+     },
+     {
+      "label": "Fast 6.6 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+     }
+    ],
     "summary": "58-year-old female, endometrial cancer, 0.3 years after treatment; type 2 diabetes at start; group: coaching + overnight fast; works from home. Average sugar 125 mg/dL in weeks 11-12, 98% of readings in range. Median rise after dinner 64 mg/dL. Synthetic participant (made-up data).",
     "updatedAt": "2024-12-08T23:45:00",
     "profile": {
@@ -39329,7 +40745,7 @@
   "/api/c4/cohort": {
    "path": "/api/c4/cohort",
    "status": 200,
-   "ms": 73,
+   "ms": 34,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
@@ -39972,15 +41388,15 @@
   "/api/c4/survivors/c4-N0072/advice": {
    "path": "/api/c4/survivors/c4-N0072/advice",
    "status": 200,
-   "ms": 3445,
+   "ms": 4293,
    "contentType": "application/json; charset=utf-8",
    "cors": "*",
    "body": {
     "survivorId": "c4-N0072",
     "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-    "ms": 3395,
+    "ms": 4148,
     "error": null,
-    "rawPreview": "{\"id\":\"chatcmpl-00b10dba-611f-493d-bd42-6e2ec6661084\",\"object\":\"chat.completion\",\"created\":1792246733,\"model\":\"@cf/meta/llama-3.3-70b-instruct-sd\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"{\\\"items\\\":[{\\\"id\\\":\\\"talk_to_team\\\",\\\"text\\\":\\\"You had 62.7% of your readings in the 70-180 range, which is less than the target of more than 70%. Your average reading was 178.3 mg/dL, so be sure to discuss this at your next visit.\\\"},{\\\"id\\\":\\\"walk\\\",\\\"text\\\":\\\"Walking after meals, especially dinner, went with a smaller rise in readings, about 18.7 mg/dL smaller. Walking for 10 to 19 m",
+    "rawPreview": null,
     "items": [
      {
       "id": "talk_to_team",
@@ -39992,13 +41408,19 @@
        "mean_glucose",
        "status_rule"
       ],
-      "rejected": null
+      "rejected": {
+       "text": "You had 62.7% of your readings in the 70-180 range, which is a bit lower than the target of more than 70%. Your average reading was 178.3 mg/dL, so be sure to discuss this at your next visit.",
+       "untracedNumbers": [],
+       "addedCausalWords": [
+        "lower"
+       ]
+      }
      },
      {
       "id": "walk",
       "title": "Try a 10 to 20 minute walk after dinner",
-      "text": "You walked after 0 of your scored meals, too few to measure your own effect yet. Across the program, a walk after dinner went with a rise about 18.7 mg/dL smaller in the same person, more than after other meals (13.5 mg/dL). 10 to 19 minutes got most of the gain: 17.1 mg/dL less, against 20.1 for 20-29 minutes and 16.8 for 30+ minutes.",
-      "source": "template",
+      "text": "Walking after meals, especially dinner, went with a rise about 18.7 mg/dL smaller in sugar in the same person. Walking for 10 to 19 minutes got most of the gain, with a rise 17.1 mg/dL smaller in sugar.",
+      "source": "ai",
       "evidenceIds": [
        "walk_meals",
        "cohort_walk_dinner",
@@ -40018,7 +41440,13 @@
       "evidenceIds": [
        "cohort_late"
       ],
-      "rejected": null
+      "rejected": {
+       "text": "Since you work nights, it's best to keep your main meal at the same point in your waking day, rather than worrying about the clock time. This will help you establish a consistent routine that works for your schedule.",
+       "untracedNumbers": [],
+       "addedCausalWords": [
+        "help"
+       ]
+      }
      }
     ]
    }
@@ -40044,10 +41472,10 @@
   "aiAdvice": {
    "survivorId": "c4-N0072",
    "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "ms": 3395,
-   "itemsRephrasedByAi": 0,
+   "ms": 4148,
+   "itemsRephrasedByAi": 1,
    "items": 3
   },
-  "finishedAt": "2026-10-17T14:18:57.112Z"
+  "finishedAt": "2026-10-17T14:25:42.601Z"
  }
 }

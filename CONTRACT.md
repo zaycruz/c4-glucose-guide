@@ -15,7 +15,7 @@ The survivors are synthetic (Crane Lab hackathon set). Nobody in them is real.
 
 ## `GET /api/c4/survivors`
 
-Roster tiles: 50 survivors, the sensor wearers in the dataset's 100-person app sample.
+Roster tiles: 50 survivors, sorted alert → watch → ok. Each tile also carries `tags[]` (see the detail fields below) so a coach can scan the signal without opening the panel. These are the sensor wearers in the dataset's 100-person app sample.
 
 ```json
 [
@@ -23,14 +23,48 @@ Roster tiles: 50 survivors, the sensor wearers in the dataset's 100-person app s
     "survivorId": "c4-N0072",
     "displayName": "N0072 · 61F · ovarian",
     "status": "alert",
-    "headline": "63% time in range (weeks 1-2); time in range below 70%",
+    "headline": "High most of the day: 63% in range, average 178 mg/dL",
+    "tags": [
+      {
+        "label": "In range 63%",
+        "tone": "risk",
+        "evidenceId": "tir"
+      },
+      {
+        "label": "Night shift",
+        "tone": "info",
+        "evidenceId": "status_rule"
+      },
+      {
+        "label": "Walks after 0/23 meals",
+        "tone": "warn",
+        "evidenceId": "walk_meals"
+      }
+    ],
     "updatedAt": "2024-08-01T19:15:00"
   },
   {
     "survivorId": "c4-N0085",
     "displayName": "N0085 · 67M · melanoma",
     "status": "alert",
-    "headline": "64% time in range (weeks 11-12); time in range below 70%",
+    "headline": "High most of the day: 64% in range, average 177 mg/dL",
+    "tags": [
+      {
+        "label": "In range 64%",
+        "tone": "risk",
+        "evidenceId": "tir"
+      },
+      {
+        "label": "Walks after 1/29 meals",
+        "tone": "warn",
+        "evidenceId": "walk_meals"
+      },
+      {
+        "label": "Fast 14.5 h",
+        "tone": "good",
+        "evidenceId": "fast_avg"
+      }
+    ],
     "updatedAt": "2025-05-11T23:45:00"
   }
 ]
@@ -42,6 +76,7 @@ Roster tiles: 50 survivors, the sensor wearers in the dataset's 100-person app s
 |---|---|---|
 | `survivorId`, `displayName`, `status`, `headline`, `summary`, `updatedAt` | string | `updatedAt` is the time of the last sensor reading |
 | `statusReasons` | string[] | why the status was set |
+| `tags[]` | `{label, tone, evidenceId}` | up to 4 short signals, same as on the roster tile. `tone`: `risk`, `warn`, `good`, `info`. Each number in `label` is the value or n of the evidence item `evidenceId` (checked by `scripts/e2e.mjs`). |
 | `profile` | object | age, sex, cancerType, yearsSinceTreatment, bloodSugarGroup, group (trial arm), workSchedule |
 | `evidence[]` | `{id, label, value, unit, ci: [lo, hi] \| null, n, scope, method, caveat}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (CGMacros real-data check), `rule` (thresholds) |
 | `recommendations[]` | `{id, title, text, basis, evidenceIds[]}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
@@ -66,7 +101,29 @@ Example (`c4-N0632`, trimmed):
   "statusReasons": [
     "more than 4% of readings below 70"
   ],
-  "headline": "95% time in range (weeks 11-12); more than 4% of readings below 70",
+  "headline": "Frequent lows: 5.3% of readings below 70",
+  "tags": [
+    {
+      "label": "Lows 5.3%",
+      "tone": "risk",
+      "evidenceId": "tbr70"
+    },
+    {
+      "label": "Late dinners 57%",
+      "tone": "warn",
+      "evidenceId": "late_share"
+    },
+    {
+      "label": "Walks work: -18.2 mg/dL",
+      "tone": "good",
+      "evidenceId": "walk_effect_blend"
+    },
+    {
+      "label": "Fast 9.9 h",
+      "tone": "warn",
+      "evidenceId": "fast_avg"
+    }
+  ],
   "summary": "76-year-old female, colorectal cancer, 1.3 years after treatment; normal at start; group: coaching; day job. Average sugar 85 mg/dL in weeks 11-12, 95% of readings in range. Median rise after dinner 46 mg/dL. Synthetic participant (made-up data).",
   "updatedAt": "2024-06-23T23:45:00",
   "profile": {
@@ -398,7 +455,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
 {
   "survivorId": "c4-N0632",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-  "ms": 2562,
+  "ms": 4070,
   "error": null,
   "rawPreview": null,
   "items": [
@@ -436,7 +493,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "You had dinner at 8 pm or later 57.1% of the time, which is linked to sugar rising about 9.1 mg/dL more. Try to have dinner before 8 pm.",
+      "text": "Most of your dinners, 57.1%, started at 8 pm or later, which is linked to sugar rising about 9.1 mg/dL more. Try to eat dinner before 8 pm.",
       "source": "ai",
       "evidenceIds": [
         "late_share",

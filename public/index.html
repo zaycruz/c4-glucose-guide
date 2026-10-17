@@ -33,12 +33,34 @@ svg text{fill:var(--mute);font-size:11px}.legend{font-size:12px;color:var(--mute
 table{border-collapse:collapse;width:100%;font-size:13px}td,th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}
 .note{color:var(--mute);font-size:12px}
 #aiBtn{margin-left:8px;font-size:12px;padding:3px 8px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;cursor:pointer}
+
+#roster{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 90px);overflow:auto;padding:8px}
+#filters{display:flex;gap:6px;flex-wrap:wrap;padding:4px 4px 10px;position:sticky;top:-8px;background:var(--card);z-index:1}
+#filters button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:3px 10px;font-size:12px;cursor:pointer}
+#filters button span{color:var(--mute)}#filters button.on{background:var(--ink);color:var(--card)}#filters button.on span{color:var(--card)}
+.tile{display:block;padding:9px 10px;border-radius:8px;border:1px solid transparent}.tile.sel{border-color:var(--accent)}
+.row1{display:flex;gap:8px;align-items:center}.row1 .dot{margin:0}.tile .hl{font-size:13px;margin:2px 0 4px 18px}
+.tags{display:flex;flex-wrap:wrap;gap:4px}.tile .tags{margin-left:18px}
+.tag{font-size:11.5px;padding:1px 7px;border-radius:99px;border:1px solid;white-space:nowrap}
+.tag.risk{color:var(--alert);border-color:var(--alert)}.tag.warn{color:#9a6b00;border-color:var(--watch)}.tag.good{color:var(--ok);border-color:var(--ok)}.tag.info{color:var(--mute);border-color:var(--line)}
+@media (prefers-color-scheme:dark){.tag.warn{color:var(--watch)}}
+.head h2{display:inline;font-size:20px}.big{font-size:19px;font-weight:600;margin:8px 0 2px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;border-top:4px solid var(--line)}
+.kpi.k-ok{border-top-color:var(--ok)}.kpi.k-bad{border-top-color:var(--alert)}.kl{font-size:12px;color:var(--mute)}.kv{font-size:24px;font-weight:700}.ks{font-size:11px;color:var(--mute)}
+.sec{display:flex;align-items:center;gap:10px;margin:18px 0 8px;flex-wrap:wrap}.sec h3{margin:0;font-size:17px}
+.advice{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;margin-bottom:12px}
+@media (max-width:1000px){.advice{grid-template-columns:1fr}}
+.advice h3{font-size:16px;margin:2px 0 6px}.advice .txt{margin:0 0 8px}
+.basis{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}.b-personal{color:var(--ok)}.b-cohort{color:var(--accent)}.b-trial{color:#7048e8}.b-rule{color:var(--alert)}
+details summary{cursor:pointer;color:var(--accent);font-size:13px}h4{margin:0 0 4px;font-size:13px;color:var(--mute);font-weight:600}
+#panel{min-width:0}
 </style>
 </head>
 <body>
 <header><h1>Glucose Guide</h1><span>Meals, meal timing and movement vs blood sugar · Coach Console module C4 · synthetic data, nobody is real</span>
 <nav><button id="tabP" class="on">Survivors</button> <button id="tabC">Cohort findings</button></nav></header>
-<main id="vP"><div class="card" id="roster"></div><div id="panel"></div></main>
+<main id="vP"><aside class="card" id="roster"><div id="filters"></div><div id="rosterList"></div></aside><div id="panel"></div></main>
 <main id="vC" style="display:none;grid-template-columns:1fr"><div id="cohort"></div></main>
 <script>
 const $=s=>document.querySelector(s), el=(t,a={},h='')=>{const e=document.createElement(t);Object.assign(e,a);e.innerHTML=h;return e};
@@ -54,8 +76,8 @@ function axes(W,H,P,xs,ymin,ymax,xl,yl){
   g+=`<text x="${W/2}" y="${H-2}" text-anchor="middle">${xl}</text><text x="10" y="${P-8}">${yl}</text>`;
   return {g,X,Y};
 }
-function lineChart(xs,series,{xl='',yl='',band=null,zero=false}={}){
-  const W=420,H=230,P=38;const all=series.flatMap(s=>s.v||[]).filter(v=>v!=null);if(!all.length)return '<p class="note">Not enough data.</p>';
+function lineChart(xs,series,{xl='',yl='',band=null,zero=false,W=420,H=230}={}){
+  const P=38;const all=series.flatMap(s=>s.v||[]).filter(v=>v!=null);if(!all.length)return '<p class="note">Not enough data.</p>';
   let lo=Math.min(...all,zero?0:Infinity),hi=Math.max(...all);if(band){lo=Math.min(lo,band[0]-10);hi=Math.max(hi,band[1]+10)}
   const pad=(hi-lo)*.08||5;const {g,X,Y}=axes(W,H,P,xs,Math.floor(lo-pad),Math.ceil(hi+pad),xl,yl);
   let b=band?`<rect x="${P}" width="${W-2*P}" y="${Y(band[1])}" height="${Y(band[0])-Y(band[1])}" fill="${css('--band')}"/>`:'';
@@ -81,35 +103,55 @@ function scatter(xs,ys){
   return `<svg viewBox="0 0 ${W} ${H}" width="100%">${g}${pts}<text x="${W/2}" y="${H-2}" text-anchor="middle">overnight fast (hours)</text><text x="10" y="${P-8}">pre-breakfast mg/dL</text></svg>`;
 }
 
-let roster=[],cur=null;
+let roster=[],cur=null,filter='all';
+const TONE={risk:'var(--alert)',warn:'var(--watch)',good:'var(--ok)',info:'var(--mute)'};
+const tagHtml=t=>`<span class="tag ${t.tone}">${t.label}</span>`;
+function renderRoster(){
+  const r=$('#rosterList');r.innerHTML='';
+  for(const s of roster.filter(x=>filter==='all'||x.status===filter)){
+    const t=el('div',{className:'tile'+(cur&&cur.survivorId===s.survivorId?' sel':'')},`<div class="row1"><span class="dot ${s.status}"></span><b>${s.displayName}</b></div><div class="hl">${s.headline}</div><div class="tags">${s.tags.map(tagHtml).join('')}</div>`);
+    t.onclick=()=>show(s.survivorId);r.append(t)}
+}
 async function load(){
   roster=await (await fetch('/api/c4/survivors')).json();
-  const r=$('#roster');r.innerHTML=`<div class="note" style="padding:6px 10px">${roster.length} survivors with a glucose sensor · sorted alert → watch → ok</div>`;
-  for(const s of roster){const t=el('div',{className:'tile'},`<span class="dot ${s.status}"></span><div><b>${s.displayName}</b><small>${s.headline}</small></div>`);t.onclick=()=>show(s.survivorId,t);r.append(t)}
-  const first=r.querySelector('.tile');show(roster[0].survivorId,first);
+  const n=k=>roster.filter(x=>k==='all'||x.status===k).length;
+  $('#filters').innerHTML=['all','alert','watch','ok'].map(k=>`<button data-f="${k}" class="${k===filter?'on':''}">${k==='all'?'All':k[0].toUpperCase()+k.slice(1)} <span>${n(k)}</span></button>`).join('');
+  document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{filter=b.dataset.f;document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('on',x===b));renderRoster()});
+  renderRoster();show((roster.find(x=>x.survivorId==='c4-N0632')||roster[0]).survivorId);
 }
-async function show(id,tile){
-  document.querySelectorAll('.tile').forEach(t=>t.classList.remove('sel'));tile&&tile.classList.add('sel');
-  const d=await (await fetch('/api/c4/survivors/'+id)).json();cur=d;const C=d.charts;
+async function show(id){
+  const d=await (await fetch('/api/c4/survivors/'+id)).json();cur=d;renderRoster();const C=d.charts;
   const ev=Object.fromEntries(d.evidence.map(e=>[e.id,e]));
-  const recs=d.recommendations.map(r=>`<div class="rec" data-id="${r.id}"><div class="basis">${r.basis==='personal'?'from your own data':r.basis==='trial'?'from the randomized program':r.basis==='cohort'?'from the program cohort':'rule'}</div><b>${r.title}</b><div class="txt">${r.text}</div>${r.evidenceIds.map(i=>`<span class="chip" data-ev="${i}">${ev[i]?.label||i}</span>`).join('')}</div>`).join('');
-  const evs=d.evidence.map(e=>`<div class="ev" id="ev-${e.id}"><span class="v">${fmt(e.value,e.unit)}</span>${e.ci?` <span class="note">95% CI ${e.ci[0]} to ${e.ci[1]}</span>`:''} · ${e.label}${e.n!=null?` <span class="note">(n=${e.n})</span>`:''}<small>${e.method}${e.caveat?' '+e.caveat:''}</small></div>`).join('');
-  const dr=C.dinnerResponse,wr=C.walkResponse,acc=css('--accent'),late=css('--late'),mute=css('--mute');
-  $('#panel').innerHTML=`<div class="card"><span class="pill ${d.status}">${d.status}</span> <h2 style="display:inline">${d.displayName}</h2><p><b>${d.headline}</b></p><p class="note">${d.summary}</p></div>
-  <div class="grid"><div class="card"><h3>What to try <button id="aiBtn">Rephrase with Workers AI</button></h3>${recs}<p class="note" id="aiNote"></p></div>
-  <div class="card"><h3>Evidence (every number above comes from here)</h3><div style="max-height:420px;overflow:auto">${evs}</div></div></div>
-  <div class="grid">
-   <div class="card"><h3>A typical day</h3>${lineChart(C.dailyProfile.hours,C.dailyProfile.series.map((s,i)=>({l:s.label,v:s.values,c:i?acc:mute})),{xl:'hour of day',yl:'mg/dL',band:C.dailyProfile.targetRange})}<p class="note">Green band = 70-180 mg/dL target range.</p></div>
-   <div class="card"><h3>Early vs late dinner (8 pm or later)</h3>${lineChart(dr.minutes,[{l:`you, early (${dr.you.nEarly})`,v:dr.you.early,c:acc},{l:`you, late (${dr.you.nLate})`,v:dr.you.late,c:late},{l:'cohort early',v:dr.cohort.early,c:acc,dash:1,w:1.5},{l:'cohort late',v:dr.cohort.late,c:late,dash:1,w:1.5}],{xl:'minutes after dinner',yl:'mg/dL above pre-meal',zero:true})}</div>
-   <div class="card"><h3>Walk after a meal vs not</h3>${lineChart(wr.minutes,[{l:`you, no walk (${wr.you.nNoWalk})`,v:wr.you.noWalk,c:late},{l:`you, walked (${wr.you.nWalk})`,v:wr.you.walk,c:css('--ok')},{l:'cohort no walk',v:wr.cohort.noWalk,c:late,dash:1,w:1.5},{l:'cohort walked',v:wr.cohort.walk,c:css('--ok'),dash:1,w:1.5}],{xl:'minutes after meal',yl:'mg/dL above pre-meal',zero:true})}</div>
-   <div class="card"><h3>Overnight fast vs next-morning sugar</h3>${scatter(C.overnightFast.hours,C.overnightFast.morningGlucose)}</div>
-   <div class="card"><h3>Check-ups</h3><table><tr><th></th><th>week 0</th><th>week 12</th></tr>${C.checkups.metrics.map((m,i)=>`<tr><td>${m}</td><td>${fmt(C.checkups.week0[i])}</td><td>${fmt(C.checkups.week12[i])}</td></tr>`).join('')}</table></div>
-  </div>`;
-  document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const t=$('#ev-'+c.dataset.ev);if(!t)return;document.querySelectorAll('.ev').forEach(x=>x.classList.remove('hl'));t.classList.add('hl');t.scrollIntoView({block:'nearest',behavior:'smooth'})});
+  const acc=css('--accent'),late=css('--late'),mute=css('--mute'),okc=css('--ok');
+  const kpi=(id,label,good,sub)=>{const e=ev[id];if(!e)return'';return `<div class="kpi ${good==null?'':good?'k-ok':'k-bad'}"><div class="kl">${label}</div><div class="kv">${fmt(e.value,e.unit)}</div><div class="ks">${sub}</div></div>`};
+  const tir=ev.tir?.value,tbr=ev.tbr70?.value,avg=ev.mean_glucose?.value,dr_=ev.dinner_rise?.value;
+  const kpis=kpi('tir','Time in range',tir>=70&&tir>=90?true:tir<70?false:null,'target over 70%, ideal 90%+')+kpi('tbr70','Lows (below 70)',tbr<=4,'target under 4%')+kpi('mean_glucose','Average sugar',avg<=154,'mg/dL, '+(ev.tir.label.match(/\(([^)]+)\)/)||['',''])[1])+(dr_!=null?kpi('dinner_rise','Rise after dinner',dr_<=50?true:dr_>=80?false:null,'typical, mg/dL above pre-meal'):'');
+  const dr=C.dinnerResponse,wr=C.walkResponse;
+  const charts={
+    walk:`<h4>Walk after a meal vs not</h4>`+lineChart(wr.minutes,[{l:`you, no walk (${wr.you.nNoWalk})`,v:wr.you.noWalk,c:late},{l:`you, walked (${wr.you.nWalk})`,v:wr.you.walk,c:okc},{l:'program, no walk',v:wr.cohort.noWalk,c:late,dash:1,w:1.5},{l:'program, walked',v:wr.cohort.walk,c:okc,dash:1,w:1.5}],{xl:'minutes after meal',yl:'mg/dL above pre-meal',zero:true}),
+    late_dinner:`<h4>Early vs late dinner (8 pm or later)</h4>`+lineChart(dr.minutes,[{l:`you, early (${dr.you.nEarly})`,v:dr.you.early,c:acc},{l:`you, late (${dr.you.nLate})`,v:dr.you.late,c:late},{l:'program, early',v:dr.cohort.early,c:acc,dash:1,w:1.5},{l:'program, late',v:dr.cohort.late,c:late,dash:1,w:1.5}],{xl:'minutes after dinner',yl:'mg/dL above pre-meal',zero:true}),
+    overnight_fast:`<h4>Overnight fast vs next-morning sugar</h4>`+scatter(C.overnightFast.hours,C.overnightFast.morningGlucose),
+    talk_to_team:`<h4>Check-ups</h4><table><tr><th></th><th>week 0</th><th>week 12</th></tr>${C.checkups.metrics.map((m,i)=>`<tr><td>${{hba1c_pct:'HbA1c %',fasting_glucose_mg_dl:'Fasting glucose',weight_kg:'Weight kg'}[m]||m}</td><td>${fmt(C.checkups.week0[i])}</td><td>${fmt(C.checkups.week12[i])}</td></tr>`).join('')}</table>`,
+  };
+  const basis={personal:'From your own data',cohort:'From the program',trial:'From the randomized trial',rule:'Safety rule'};
+  const evRow=e=>`<div class="ev"><span class="v">${fmt(e.value,e.unit)}</span>${e.ci?` <span class="note">95% CI ${e.ci[0]} to ${e.ci[1]}</span>`:''} · ${e.label}${e.n!=null?` <span class="note">(n=${e.n})</span>`:''}<small>${e.method}${e.caveat?' '+e.caveat:''}</small></div>`;
+  const recs=d.recommendations.map((r,i)=>`<div class="card advice"><div class="atext"><div class="basis b-${r.basis}">${i+1} · ${basis[r.basis]||r.basis}</div><h3>${r.title}</h3><p class="txt" data-id="${r.id}">${r.text}</p>
+     <details><summary>Show the numbers (${r.evidenceIds.length})</summary>${r.evidenceIds.map(x=>ev[x]).filter(Boolean).map(evRow).join('')}</details></div>
+     <div class="achart">${charts[r.id]||''}</div></div>`).join('');
+  const p=d.profile;
+  $('#panel').innerHTML=`<div class="card head"><div><span class="pill ${d.status}">${d.status}</span> <h2>${d.displayName}</h2></div><p class="big">${d.headline}</p>
+    <p class="note">${p.age}${p.sex==='female'?'F':'M'} · ${p.cancerType} cancer, ${p.yearsSinceTreatment} y after treatment · ${p.bloodSugarGroup} at start · ${p.group} · ${p.workSchedule}</p>
+    <div class="tags">${d.tags.map(tagHtml).join('')}</div></div>
+  <div class="kpis">${kpis}</div>
+  <div class="card"><h4>A typical day</h4>${lineChart(C.dailyProfile.hours,C.dailyProfile.series.map((s,i)=>({l:s.label,v:s.values,c:i?acc:mute})),{xl:'hour of day',yl:'mg/dL',band:C.dailyProfile.targetRange,W:1000,H:220})}<p class="note">Green band: 70-180 mg/dL target range.</p></div>
+  <div class="sec"><h3>What to try</h3><button id="aiBtn">Rephrase with Workers AI</button><span class="note" id="aiNote"></span></div>
+  ${recs}
+  <p class="note">${d.dataNote}</p>`;
+  $('#panel').scrollTop=0;window.scrollTo({top:0});
   $('#aiBtn').onclick=async()=>{$('#aiNote').textContent='Asking Workers AI…';const a=await (await fetch(`/api/c4/survivors/${d.survivorId}/advice`)).json();
-    for(const it of a.items){const box=document.querySelector(`.rec[data-id="${it.id}"] .txt`);if(box)box.textContent=it.text}
+    for(const it of a.items){const box=document.querySelector(`.txt[data-id="${it.id}"]`);if(box)box.textContent=it.text}
     const ai=a.items.filter(i=>i.source==='ai').length,rej=a.items.filter(i=>i.rejected).length;
-    $('#aiNote').textContent=`${ai} of ${a.items.length} items rephrased by ${a.model} in ${a.ms} ms. ${rej} rewrites rejected because they used a number not in the evidence.${a.error?' AI error: '+a.error:''}`};
+    $('#aiNote').textContent=`${ai} of ${a.items.length} rephrased in ${a.ms} ms · ${rej} rejected (number not in evidence, or causal wording)${a.error?' · AI error: '+a.error:''}`};
 }
 async function cohort(){
   const c=await (await fetch('/api/c4/cohort')).json(),E=c.effects,T=c.trial.contrasts;

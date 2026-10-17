@@ -660,19 +660,53 @@ def main(data_dir, out_dir):
 
         sex = "F" if info.sex == "female" else "M"
         display = f"{pid} · {info.age}{sex} · {info.cancer_type}"
-        if st == "alert":
-            headline = f"{round(m_last["tir"])}% time in range ({latest_label}); " + "; ".join(reasons[:1])
+        rising = "mean_change" in evid and evid["mean_change"]["value"] >= 10
+        if st == "alert" and m_last["tbr70"] > 4:
+            headline = f"Frequent lows: {v('tbr70')}% of readings below 70"
+        elif st == "alert":
+            headline = f"High most of the day: {round(m_last['tir'])}% in range, average {round(m_last['mean'])} mg/dL"
+        elif st == "watch" and rising:
+            headline = f"Sugar rising: average up {v('mean_change')} mg/dL since the start"
+        elif st == "watch" and m_last["tir"] < 90:
+            headline = f"Often above range: {round(m_last['tir'])}% in range"
         elif st == "watch":
-            headline = f"{round(m_last["tir"])}% time in range; " + "; ".join(reasons[:1])
+            headline = f"Spikes above 180: {v('tar180')}% of readings"
         else:
-            headline = f"{round(m_last["tir"])}% time in range, steady"
+            headline = f"Steady: {round(m_last['tir'])}% in range"
+
+        # signal tags for the roster tile: short, evidence-backed, most important first
+        tags = []
+
+        def tag(label, tone, eid):
+            tags.append({"label": label, "tone": tone, "evidenceId": eid})
+
+        if m_last["tbr70"] > 4:
+            tag(f"Lows {v('tbr70')}%", "risk", "tbr70")
+        if m_last["tir"] < 90:
+            tag(f"In range {round(m_last['tir'])}%", "risk" if m_last["tir"] < 70 else "warn", "tir")
+        if rising:
+            tag(f"Avg +{v('mean_change')}", "risk", "mean_change")
+        if night_shift:
+            tag("Night shift", "info", "status_rule")
+        elif "late_share" in evid and v("late_share") >= 30:
+            tag(f"Late dinners {round(v('late_share'))}%", "warn", "late_share")
+        if any(rc["id"] == "walk" and rc["basis"] == "personal" for rc in recs):
+            tag(f"Walks work: {v('walk_effect_blend')} mg/dL", "good", "walk_effect_blend")
+        elif len(sub) and walks / len(sub) < 0.1:
+            tag(f"Walks after {walks}/{len(sub)} meals", "warn", "walk_meals")
+        if "fast_avg" in evid and not night_shift:
+            if v("fast_avg") < 12:
+                tag(f"Fast {v('fast_avg')} h", "warn", "fast_avg")
+            elif v("fast13_share") >= 50:
+                tag(f"Fast {v('fast_avg')} h", "good", "fast_avg")
+        tags = tags[:4]
         updated = str(gp.timestamp.max().isoformat())
         summary = (f"{info.age}-year-old {info.sex}, {info.cancer_type} cancer, {info.years_since_treatment} years after treatment; "
                    f"{info.blood_sugar_group} at start; group: {info.group}; {info.work_schedule}. "
                    f"Average sugar {round(m_last["mean"])} mg/dL in {latest_label}, {round(m_last["tir"])}% of readings in range. "
                    + (f"Median rise after dinner {round(din.rise.median())} mg/dL. " if len(din) else "")
                    + "Synthetic participant (made-up data).")
-        detail = {"survivorId": sid, "displayName": display, "status": st, "statusReasons": reasons, "headline": headline,
+        detail = {"survivorId": sid, "displayName": display, "status": st, "statusReasons": reasons, "headline": headline, "tags": tags,
                   "summary": summary, "updatedAt": updated,
                   "profile": {"age": int(info.age), "sex": info.sex, "cancerType": info.cancer_type,
                               "yearsSinceTreatment": float(info.years_since_treatment), "bloodSugarGroup": info.blood_sugar_group,
@@ -681,7 +715,7 @@ def main(data_dir, out_dir):
                   "dataNote": "Synthetic data from the Crane Lab hackathon set. Nobody in it is real."}
         with open(f"{out_dir}/survivors/{sid}.json", "w") as f:
             json.dump(detail, f, separators=(",", ":"))
-        roster.append({"survivorId": sid, "displayName": display, "status": st, "headline": headline, "updatedAt": updated})
+        roster.append({"survivorId": sid, "displayName": display, "status": st, "headline": headline, "tags": tags, "updatedAt": updated})
 
     rank = {"alert": 0, "watch": 1, "ok": 2}
     roster.sort(key=lambda x: (rank[x["status"]], x["survivorId"]))
