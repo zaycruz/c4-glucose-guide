@@ -1,6 +1,6 @@
 {
  "base": "https://c4-glucose-guide.zay-259.workers.dev",
- "file": "runs/e2e-2026-10-17T17-17-00-004Z.json",
+ "file": "runs/e2e-2026-10-17T17-23-29-571Z.json",
  "pass": true,
  "failures": [],
  "survivors": 50,
@@ -15,17 +15,17 @@
  "aiAdvice": {
   "survivorId": "c4-N0072",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-  "ms": 11,
+  "ms": 5,
   "itemsRephrasedByAi": 3,
   "items": 3
  },
  "careTeamToday": 10,
  "advice": {
   "cached": true,
-  "ms": 340
+  "ms": 62
  },
  "strict": true,
  "publishedVerificationMatchesLive": true,
  "dataHash": "3da4ed7dd923f2a0d8138e9433f487f6abdf92351e9bad0eb30f822a59efc76a",
- "finishedAt": "2026-10-17T17:17:08.791Z"
+ "finishedAt": "2026-10-17T17:23:34.811Z"
 }

@@ -14,21 +14,21 @@
   "aiAdvice": {
    "survivorId": "c4-N0072",
    "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-   "ms": 11,
+   "ms": 5,
    "itemsRephrasedByAi": 3,
    "items": 3
   },
   "careTeamToday": 10,
   "advice": {
    "cached": true,
-   "ms": 340
+   "ms": 62
   },
   "dataHash": "3da4ed7dd923f2a0d8138e9433f487f6abdf92351e9bad0eb30f822a59efc76a",
-  "finishedAt": "2026-10-17T17:17:08.791Z",
-  "artifact": "runs/e2e-2026-10-17T17-17-00-004Z.json"
+  "finishedAt": "2026-10-17T17:23:34.811Z",
+  "artifact": "runs/e2e-2026-10-17T17-23-29-571Z.json"
  },
  "dataHash": "3da4ed7dd923f2a0d8138e9433f487f6abdf92351e9bad0eb30f822a59efc76a",
- "commit": "ef65dc2a1ad1dbf78799f50f76404ef1d0c0fde2",
+ "commit": "ed11424350e0e0276d6292e9dcc0454155fba8fa",
  "repo": "https://github.com/zaycruz/c4-glucose-guide",
  "reproduce": [
   "scripts/reproduce.sh <Challenge4_Dose_and_Timing dir> [out dir]   # data check, ML engine, benchmark, evidence; diffs every README number (REPRODUCE.md)",

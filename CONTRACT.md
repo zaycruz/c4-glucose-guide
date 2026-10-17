@@ -703,7 +703,7 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
   "generatedAt": "2026-10-17T17:06:54.713Z",
   "generationMs": 3886,
   "cached": true,
-  "ms": 3
+  "ms": 7
 }
 ```
 
@@ -897,21 +897,21 @@ The latest E2E result for the deployed data: pass/fail, the count of traced numb
     "aiAdvice": {
       "survivorId": "c4-N0072",
       "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "ms": 8,
+      "ms": 6,
       "itemsRephrasedByAi": 3,
       "items": 3
     },
     "careTeamToday": 10,
     "advice": {
       "cached": true,
-      "ms": 98
+      "ms": 54
     },
     "dataHash": "3da4ed7dd923f2a0d8138e9433f487f6abdf92351e9bad0eb30f822a59efc76a",
-    "finishedAt": "2026-10-17T17:16:15.817Z",
-    "artifact": "runs/e2e-2026-10-17T17-16-06-432Z.json"
+    "finishedAt": "2026-10-17T17:23:22.160Z",
+    "artifact": "runs/e2e-2026-10-17T17-23-17-945Z.json"
   },
   "dataHash": "3da4ed7dd923f2a0d8138e9433f487f6abdf92351e9bad0eb30f822a59efc76a",
-  "commit": "d28d7d21eb81c73ac6db64b32298f67ae9b12b2f",
+  "commit": "ed11424350e0e0276d6292e9dcc0454155fba8fa",
   "repo": "https://github.com/zaycruz/c4-glucose-guide",
   "reproduce": [
     "scripts/reproduce.sh <Challenge4_Dose_and_Timing dir> [out dir]   # data check, ML engine, benchmark, evidence; diffs every README number (REPRODUCE.md)",
@@ -934,4 +934,4 @@ Index: `{module, name, dataType, routes[], contract}`. Also answers at `/api/c4`
 
 ## `GET /`
 
-Standalone demo page (`public/index.html`). It shows the roster, the survivor panel with charts and evidence, and a **Cohort findings** tab (`/#cohort`).
+Landing page in the shared Patient 360 design (`public/index.html`, `public/p360.css`): hero result with baseline and CI, safety routing, the fairness table, endpoints and the reproduce steps. The older interactive demo (roster, survivor panel with charts and evidence, **Cohort findings** tab) is at `/demo.html` (`/demo.html#cohort`).
