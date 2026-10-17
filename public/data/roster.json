@@ -93,7 +93,7 @@
     "evidenceId": "late_share"
    },
    {
-    "label": "Walks work: -20.1 mg/dL",
+    "label": "Walks work: -19.9 mg/dL",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    }
@@ -228,7 +228,7 @@
     "evidenceId": "late_share"
    },
    {
-    "label": "Walks work: -11.4 mg/dL",
+    "label": "Walks work: -11.6 mg/dL",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    }
@@ -625,7 +625,7 @@
   "headline": "Steady: 100% in range",
   "tags": [
    {
-    "label": "Walks work: -10.9 mg/dL",
+    "label": "Walks work: -11.0 mg/dL",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    }
@@ -644,7 +644,7 @@
     "evidenceId": "status_rule"
    },
    {
-    "label": "Walks work: -16.8 mg/dL",
+    "label": "Walks work: -16.9 mg/dL",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    }
@@ -743,13 +743,7 @@
   "displayName": "N0920 \u00b7 64F \u00b7 breast",
   "status": "ok",
   "headline": "Steady: 100% in range",
-  "tags": [
-   {
-    "label": "Walks work: -21.1 mg/dL",
-    "tone": "good",
-    "evidenceId": "walk_effect_blend"
-   }
-  ],
+  "tags": [],
   "updatedAt": "2024-05-19T23:45:00"
  },
  {
@@ -797,7 +791,7 @@
   "headline": "Steady: 100% in range",
   "tags": [
    {
-    "label": "Walks work: -13.7 mg/dL",
+    "label": "Walks work: -14.0 mg/dL",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },
@@ -859,7 +853,7 @@
   "headline": "Steady: 98% in range",
   "tags": [
    {
-    "label": "Walks work: -25.2 mg/dL",
+    "label": "Walks work: -25.4 mg/dL",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },
@@ -883,7 +877,7 @@
     "evidenceId": "late_share"
    },
    {
-    "label": "Walks work: -17.1 mg/dL",
+    "label": "Walks work: -17.2 mg/dL",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },
@@ -1021,7 +1015,7 @@
     "evidenceId": "late_share"
    },
    {
-    "label": "Walks work: -20.8 mg/dL",
+    "label": "Walks work: -20.4 mg/dL",
     "tone": "good",
     "evidenceId": "walk_effect_blend"
    },

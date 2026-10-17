@@ -78,8 +78,9 @@ Roster tiles: 50 survivors, sorted alert → watch → ok. Each tile also carrie
 | `statusReasons` | string[] | why the status was set |
 | `tags[]` | `{label, tone, evidenceId}` | up to 4 short signals, same as on the roster tile. `tone`: `risk`, `warn`, `good`, `info`. Each number in `label` is the value or n of the evidence item `evidenceId` (checked by `scripts/e2e.mjs`). |
 | `profile` | object | age, sex, cancerType, yearsSinceTreatment, bloodSugarGroup, group (trial arm), workSchedule |
-| `evidence[]` | `{id, label, value, unit, ci: [lo, hi] \| null, n, scope, method, caveat}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (CGMacros real-data check), `rule` (thresholds) |
-| `recommendations[]` | `{id, title, text, basis, evidenceIds[]}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
+| `evidence[]` | `{id, label, value, unit, ci: [lo, hi] \| null, n, scope, method, caveat}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (real-data check: CGMacros or survey-weighted NHANES), `rule` (thresholds) |
+| `recommendations[]` | `{id, title, text, basis, evidenceIds[], realDataCheck}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
+| `recommendations[].realDataCheck` | `{label, evidenceId}` | does real data back this advice? `label`: `agrees`, `same direction, not proven`, `no clear signal`, `disagrees`, `not tested` (safety rules). `evidenceId` is the cited `scope: real` evidence item, or `null` when not tested. |
 | `charts` | object of plain arrays | see below |
 | `dataNote` | string | notice that the data is synthetic |
 
@@ -175,8 +176,8 @@ Example (`c4-N0632`, trimmed):
       "value": -18.4,
       "unit": "mg/dL",
       "ci": [
-        -27.4,
-        -10
+        -26.3,
+        -8.5
       ],
       "n": 41,
       "scope": "person",
@@ -231,13 +232,41 @@ Example (`c4-N0632`, trimmed):
       "value": 4.6,
       "unit": "mg/dL",
       "ci": [
-        -1.5,
-        11.4
+        -1.7,
+        11.7
       ],
       "n": 317,
       "scope": "real",
       "method": "Within-person, carbs adjusted; cluster bootstrap 95% CI.",
       "caveat": "Same direction as the program data, but the interval includes zero: not proven in real people yet."
+    },
+    {
+      "id": "real_walk",
+      "label": "Real-data check (CGMacros): rise after meals followed by a walk vs not",
+      "value": -4.4,
+      "unit": "mg/dL",
+      "ci": [
+        -11.4,
+        1.4
+      ],
+      "n": 1330,
+      "scope": "real",
+      "method": "Walk = at least 10 straight minutes at 3+ METs (Fitbit) in the hour after the meal; meals with 50+ minutes of Fitbit data. Within-person, carbs adjusted; cluster bootstrap 95% CI.",
+      "caveat": "Check result: same direction, not proven. About 192 people would be needed to confirm an effect this size."
+    },
+    {
+      "id": "cohort_walk_negctrl",
+      "label": "Check: pre-meal sugar before meals that were later followed by a walk vs not (same person)",
+      "value": -0.4,
+      "unit": "mg/dL",
+      "ci": [
+        -1.4,
+        0.7
+      ],
+      "n": 18214,
+      "scope": "cohort",
+      "method": "Negative control: a walk after the meal cannot change the reading 15 min before it. Same model as the walk effect; cluster bootstrap 95% CI.",
+      "caveat": "Near zero, so walk meals do not start from a different place."
     }
   ],
   "recommendations": [
@@ -249,33 +278,47 @@ Example (`c4-N0632`, trimmed):
       "evidenceIds": [
         "tbr70",
         "status_rule"
-      ]
+      ],
+      "realDataCheck": {
+        "label": "not tested",
+        "evidenceId": null
+      }
     },
     {
       "id": "walk",
       "title": "Take a short walk after meals",
-      "text": "Your sugar rose about 18.2 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.7 mg/dL).",
-      "weightOnYourData": 0.73,
+      "text": "Your sugar rose about 18.2 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.7 mg/dL). A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
+      "weightOnYourData": 0.67,
       "basis": "personal",
       "evidenceIds": [
         "walk_effect_own",
         "walk_effect_blend",
         "cohort_walk_dinner",
         "cohort_walk_10_19",
-        "real_movement"
-      ]
+        "cohort_walk_negctrl",
+        "cohort_walk_evalue",
+        "real_walk"
+      ],
+      "realDataCheck": {
+        "label": "same direction, not proven",
+        "evidenceId": "real_walk"
+      }
     },
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "57.1% of your dinners started at 8 pm or later. Across the program, sugar rose about 9.1 mg/dL more after late dinners than after earlier ones in the same person, and 15.9 mg/dL more after a dinner at 8-9 pm than after one before 6 pm. Try to start dinner before 8 pm.",
+      "text": "57.1% of your dinners started at 8 pm or later. Across the program, sugar rose about 9.1 mg/dL more after late dinners than after earlier ones in the same person, and 15.9 mg/dL more after a dinner at 8-9 pm than after one before 6 pm. Try to start dinner before 8 pm. A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
       "basis": "cohort",
       "evidenceIds": [
         "late_share",
         "cohort_late",
         "cohort_dinner_8_9pm",
         "real_late_dinner"
-      ]
+      ],
+      "realDataCheck": {
+        "label": "same direction, not proven",
+        "evidenceId": "real_late_dinner"
+      }
     },
     {
       "id": "overnight_fast",
@@ -286,7 +329,11 @@ Example (`c4-N0632`, trimmed):
         "tbr70",
         "fast_avg",
         "status_rule"
-      ]
+      ],
+      "realDataCheck": {
+        "label": "not tested",
+        "evidenceId": null
+      }
     }
   ],
   "charts": {
@@ -455,7 +502,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
 {
   "survivorId": "c4-N0632",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-  "ms": 2932,
+  "ms": 2889,
   "error": null,
   "rawPreview": null,
   "items": [
@@ -473,14 +520,16 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "walk",
       "title": "Take a short walk after meals",
-      "text": "Your sugar rose about 18.2 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.7 mg/dL).",
+      "text": "Your sugar rose about 18.2 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.7 mg/dL). A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
       "source": "template",
       "evidenceIds": [
         "walk_effect_own",
         "walk_effect_blend",
         "cohort_walk_dinner",
         "cohort_walk_10_19",
-        "real_movement"
+        "cohort_walk_negctrl",
+        "cohort_walk_evalue",
+        "real_walk"
       ],
       "rejected": {
         "text": "Walking after meals helped your sugar rise 18.2 mg/dL less. Try walking 10 to 20 minutes after dinner.",
@@ -493,7 +542,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "You had dinner at 8 pm or later 57.1% of the time, which is linked to sugar rising 9.1 mg/dL more. Try to start dinner before 8 pm.",
+      "text": "Most of your dinners, 57.1%, started at 8 pm or later, and sugar rose 9.1 mg/dL more after late dinners. Try to eat dinner before 8 pm.",
       "source": "ai",
       "evidenceIds": [
         "late_share",
@@ -555,7 +604,17 @@ Cohort findings for a program-level view. Top-level keys:
     "arms",
     "contrasts",
     "fastVsCoachingBySubgroup",
-    "adherence"
+    "adherence",
+    "heterogeneity",
+    "groupSpecificAdvice"
+  ],
+  "robustness": [
+    "negativeControl",
+    "eValue",
+    "instrument",
+    "instrumentVerdict",
+    "realDataChecks",
+    "power"
   ],
   "statusCounts": [
     "ok",
@@ -565,6 +624,7 @@ Cohort findings for a program-level view. Top-level keys:
   "realWorld": [
     "cgmacros",
     "nhanesSurvivors",
+    "nhanesSurvivorsWeighted",
     "methods"
   ],
   "methods": "str"
@@ -605,7 +665,9 @@ Cohort findings for a program-level view. Top-level keys:
     "est": -0.08,
     "lo": -0.15,
     "hi": -0.01,
-    "n": 279
+    "n": 279,
+    "p": 0.02,
+    "pHolm": 0.13
   },
   "trial.adherence['coaching + overnight fast']": {
     "overnightFastHours": 13.05,
@@ -615,8 +677,8 @@ Cohort findings for a program-level view. Top-level keys:
   },
   "realWorld.cgmacros.lateDinner": {
     "est": 4.62,
-    "lo": -1.517,
-    "hi": 11.37,
+    "lo": -1.699,
+    "hi": 11.739,
     "people": 41,
     "rows": 317
   }

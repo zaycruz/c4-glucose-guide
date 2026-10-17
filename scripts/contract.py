@@ -19,7 +19,7 @@ j = lambda o: json.dumps(o, indent=2, ensure_ascii=False)
 trim = lambda v, k=4: v[:k] + ["…"] if isinstance(v, list) and len(v) > k else v
 
 d2 = dict(det)
-keep = ("walk_effect_own", "cohort_walk_dinner", "cohort_late", "trial_fast_hba1c_group", "real_late_dinner")
+keep = ("walk_effect_own", "cohort_walk_dinner", "cohort_walk_negctrl", "cohort_late", "trial_fast_hba1c_group", "real_late_dinner", "real_walk")
 d2["evidence"] = det["evidence"][:3] + [e for e in det["evidence"] if e["id"] in keep]
 ch = det["charts"]
 d2["charts"] = {
@@ -72,8 +72,9 @@ Roster tiles: {len(roster)} survivors, sorted alert → watch → ok. Each tile 
 | `statusReasons` | string[] | why the status was set |
 | `tags[]` | `{{label, tone, evidenceId}}` | up to 4 short signals, same as on the roster tile. `tone`: `risk`, `warn`, `good`, `info`. Each number in `label` is the value or n of the evidence item `evidenceId` (checked by `scripts/e2e.mjs`). |
 | `profile` | object | age, sex, cancerType, yearsSinceTreatment, bloodSugarGroup, group (trial arm), workSchedule |
-| `evidence[]` | `{{id, label, value, unit, ci: [lo, hi] \\| null, n, scope, method, caveat}}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (CGMacros real-data check), `rule` (thresholds) |
-| `recommendations[]` | `{{id, title, text, basis, evidenceIds[]}}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
+| `evidence[]` | `{{id, label, value, unit, ci: [lo, hi] \\| null, n, scope, method, caveat}}` | `scope`: `person` (their data), `cohort` (program within-person estimate), `trial` (randomized arms), `real` (real-data check: CGMacros or survey-weighted NHANES), `rule` (thresholds) |
+| `recommendations[]` | `{{id, title, text, basis, evidenceIds[], realDataCheck}}` | `basis`: `personal`, `cohort`, `trial`, `rule`. Every measured number in `text` is a value, CI bound or n of a listed evidence item. The rest are fixed wording (8 pm, 13 hours, 70-180, 95% CI, …). `scripts/e2e.mjs` enforces this. |
+| `recommendations[].realDataCheck` | `{{label, evidenceId}}` | does real data back this advice? `label`: `agrees`, `same direction, not proven`, `no clear signal`, `disagrees`, `not tested` (safety rules). `evidenceId` is the cited `scope: real` evidence item, or `null` when not tested. |
 | `charts` | object of plain arrays | see below |
 | `dataNote` | string | notice that the data is synthetic |
 

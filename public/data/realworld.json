@@ -1,34 +1,44 @@
 {
  "cgmacros": {
+  "walk10MealCount": 192,
+  "walk10Meals": 1330,
+  "walk10": {
+   "est": -4.387,
+   "lo": -11.375,
+   "hi": 1.446,
+   "people": 44,
+   "rows": 1330
+  },
+  "walkDefinition": "at least 10 straight minutes at 3+ METs (Fitbit) in the hour after the meal; meals with 50+ minutes of Fitbit data",
   "source": "CGMacros v1.0.0 (PhysioNet 2025): 45 real adults, 10 days, Libre sensor + Fitbit",
   "meals": 1334,
   "people": 45,
-  "activeHourShare": 53.1,
+  "activeHourShare": 53.0,
   "movementPerMet": {
    "est": -1.262,
-   "lo": -5.786,
-   "hi": 2.954,
+   "lo": -6.226,
+   "hi": 2.629,
    "people": 44,
    "rows": 1334
   },
   "activeHourVsNot": {
-   "est": -0.669,
-   "lo": -6.273,
-   "hi": 4.598,
+   "est": -0.668,
+   "lo": -5.904,
+   "hi": 5.044,
    "people": 44,
    "rows": 1334
   },
   "lateDinner": {
    "est": 4.62,
-   "lo": -1.517,
-   "hi": 11.37,
+   "lo": -1.699,
+   "hi": 11.739,
    "people": 41,
    "rows": 317
   },
   "carbsPer10g": {
    "est": 2.058,
-   "lo": 1.137,
-   "hi": 3.546,
+   "lo": 1.171,
+   "hi": 3.588,
    "people": 44,
    "rows": 1334
   },
@@ -77,5 +87,45 @@
    }
   }
  },
- "methods": "Real-data cross-check for C4: do the synthetic patterns hold in real people?\n\nUsage: uv run --with pandas --with numpy python -I scripts/realworld.py <dataset_dir> <out_dir>\nWrites <out_dir>/realworld.json.\n\n- CGMacros (45 real adults, minute-level Libre sensor + Fitbit): within-person effect of\n  movement in the hour after a meal and of a late dinner (>= 20:00) on the post-meal rise.\n  Rise = max Libre glucose 0-120 min after the meal minus the reading at the meal minute.\n  Meals with another logged meal in the next 120 min are dropped. CIs: cluster bootstrap\n  over people.\n- NHANES 2011-2014 cancer survivors (real, one snapshot each): association of overnight\n  fast, last eating hour and daily movement with HbA1c, adjusted for age and sex. Survey\n  weights are NOT applied (demo), so this describes the sample, not all US survivors."
+ "nhanesSurvivorsWeighted": {
+  "source": "NHANES 2011-2014 cancer survivors, survey-weighted (exam weight for HbA1c and movement, 2-day diet weight for eating times); 95% CI from a Rao-Wu bootstrap of PSUs within strata on the full file (domain estimate)",
+  "hba1cPerFastHour": {
+   "est": 0.013,
+   "lo": -0.025,
+   "hi": 0.048,
+   "n": 597,
+   "weight": "survey_weight_diet_2day"
+  },
+  "hba1cPerLaterLastMealHour": {
+   "est": 0.02,
+   "lo": -0.032,
+   "hi": 0.073,
+   "n": 597,
+   "weight": "survey_weight_diet_2day"
+  },
+  "hba1cPer1000Mims": {
+   "est": -0.021,
+   "lo": -0.052,
+   "hi": 0.006,
+   "n": 599,
+   "weight": "survey_weight_exam"
+  },
+  "noDiabetes": {
+   "hba1cPerFastHour": {
+    "est": 0.0,
+    "lo": -0.017,
+    "hi": 0.017,
+    "n": 444,
+    "weight": "survey_weight_diet_2day"
+   },
+   "hba1cPer1000Mims": {
+    "est": -0.001,
+    "lo": -0.01,
+    "hi": 0.008,
+    "n": 439,
+    "weight": "survey_weight_exam"
+   }
+  }
+ },
+ "methods": "Real-data cross-check for C4: do the synthetic patterns hold in real people?\n\nUsage: uv run --with pandas --with numpy python -I scripts/realworld.py <dataset_dir> <out_dir>\nWrites <out_dir>/realworld.json.\n\n- CGMacros (45 real adults, minute-level Libre sensor + Fitbit): within-person effect of\n  movement in the hour after a meal and of a late dinner (>= 20:00) on the post-meal rise.\n  Rise = max Libre glucose 0-120 min after the meal minus the reading at the meal minute.\n  Meals with another logged meal in the next 120 min are dropped. CIs: cluster bootstrap\n  over people.\n- NHANES 2011-2014 cancer survivors (real, one snapshot each): association of overnight\n  fast, last eating hour and daily movement with HbA1c, adjusted for age and sex. Survey\n  weights are NOT applied in nhanesSurvivors (describes the sample). nhanesSurvivorsWeighted applies the\n  survey weights and design (strata, PSUs) and describes US adult cancer survivors 2011-2014."
 }

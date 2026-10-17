@@ -21,6 +21,17 @@ Methods (all numbers in evidence[] come from here):
   link between the overnight fast and next-morning glucose is shown as an association.
 - Cohort CIs: cluster bootstrap that resamples people. Personal CIs: bootstrap of that
   person's meals, then empirical-Bayes shrinkage toward the cohort estimate.
+- Robustness of the walk effect (see ROBUSTNESS.md):
+  negative control = same model with the reading 15 min BEFORE the meal as outcome (a later
+  walk cannot change it); E-value (VanderWeele & Ding 2017) with the within-person residual SD;
+  instrument = randomized arm (coaching vs email tips) as encouragement to walk, Wald ratio at
+  person level. The instrument proved inconclusive (exclusion restriction fails) and is not
+  counted as support.
+- Fast by subgroup: Cochran Q test of arm x blood-sugar-group interaction, Holm adjustment across
+  all subgroup contrasts. Advice uses group-specific fast numbers only if Q p < 0.05.
+- Real-data agreement labels: agrees (same sign, CI excludes 0), same direction not proven,
+  no clear signal, disagrees (opposite sign, CI excludes 0). Power: people needed for 80% power,
+  scaling the real study's SE by sqrt(people).
 """
 
 import json
@@ -41,7 +52,7 @@ WALK_BINS = [(0, 0, "none"), (1, 9, "1-9 min"), (10, 19, "10-19 min"), (20, 29, 
 def r(x, nd=1):
     if x is None or (isinstance(x, float) and not np.isfinite(x)):
         return None
-    return round(float(x), nd)
+    return round(float(x), nd) + 0.0  # + 0.0 turns -0.0 into 0.0
 
 
 # ---------- load ----------
@@ -83,6 +94,7 @@ def meal_responses(meals, glu, parts):
         idx = pd.MultiIndex.from_arrays([m.participant_id, base_ts + pd.Timedelta(minutes=off)])
         curve[off] = g.reindex(idx).to_numpy()
     m["baseline"] = curve[0]
+    m["pre15"] = g.reindex(pd.MultiIndex.from_arrays([m.participant_id, base_ts - pd.Timedelta(minutes=15)])).to_numpy()
     post = np.column_stack([curve[o] for o in CURVE_OFFSETS if 15 <= o <= 120])
     m["n_post"] = np.isfinite(post).sum(axis=1)
     m["peak"] = np.nanmax(np.where(np.isfinite(post), post, -np.inf), axis=1)
@@ -196,6 +208,82 @@ def dl_tau2(effects):
     ests = np.array([e["est"] for e in effects])
     ses2 = np.array([e["se"] ** 2 for e in effects])
     return max(0.0, float(np.var(ests) - np.mean(ses2)))
+
+
+# ---------- robustness ----------
+
+def within_resid_sd(df, xcols, ycol="rise"):
+    """SD of the within-person residual (what a within-person effect is measured against)."""
+    d = df[["participant_id", ycol] + xcols].copy()
+    g = d.groupby("participant_id")
+    for c in [ycol] + xcols:
+        d[c] = d[c] - g[c].transform("mean")
+    X, y = d[xcols].to_numpy(float), d[ycol].to_numpy(float)
+    beta = np.linalg.lstsq(X, y, rcond=None)[0]
+    return float(np.std(y - X @ beta))
+
+
+def e_value(est, bound, sd):
+    """VanderWeele & Ding (2017) E-value for a mean difference: d = est/sd, RR ~ exp(0.91 d)."""
+    def ev(x):
+        rr = np.exp(0.91 * abs(x) / sd)
+        return rr + np.sqrt(rr * (rr - 1))
+    return {"estimate": ev(est), "ciBound": ev(bound) if np.sign(bound) == np.sign(est) else 1.0, "sdUsed": sd}
+
+
+def iv_walk(mr, parts, covars, a="coaching", b="tips by email", B=2000):
+    """Randomized-encouragement check: arm assignment moves how often people walk after meals.
+    Wald ratio = (difference in mean carbs/meal-type-adjusted rise) / (difference in share of meals with a walk),
+    person level, coaching vs email tips (the fast arm is left out because it also moves dinner time)."""
+    X = np.column_stack([np.ones(len(mr)), mr[covars].to_numpy(float)])
+    beta = np.linalg.lstsq(X, mr.rise.to_numpy(float), rcond=None)[0]
+    d = mr.assign(adj=mr.rise.to_numpy(float) - X[:, 1:] @ beta[1:])
+    per = d.groupby("participant_id").agg(share=("walked", "mean"), rise=("adj", "mean"), n=("adj", "size"))
+    per = per[per.n >= 10].join(parts.set_index("participant_id").group)
+    A, Bp = per[per.group == a], per[per.group == b]
+
+    def stats(x, y):
+        fs = x.share.mean() - y.share.mean()
+        rf = x.rise.mean() - y.rise.mean()
+        return fs, rf, rf / fs if fs != 0 else np.nan
+    fs, rf, ratio = stats(A, Bp)
+    boots = np.array([stats(A.iloc[RNG.integers(0, len(A), len(A))], Bp.iloc[RNG.integers(0, len(Bp), len(Bp))]) for _ in range(B)])
+    ci = lambda k: tuple(np.nanpercentile(boots[:, k], [2.5, 97.5]))  # noqa: E731
+    return {"firstStage": {"est": 100 * fs, "lo": 100 * ci(0)[0], "hi": 100 * ci(0)[1], "unit": "percentage points of meals with a walk"},
+            "reducedForm": {"est": rf, "lo": ci(1)[0], "hi": ci(1)[1], "unit": "mg/dL"},
+            "walkEffect": {"est": ratio, "lo": ci(2)[0], "hi": ci(2)[1], "unit": "mg/dL per meal walked"},
+            "people": {a: int(len(A)), b: int(len(Bp))}}
+
+
+def holm(pvals):
+    """Holm step-down adjusted p-values, same order as input."""
+    order = np.argsort(pvals)
+    m = len(pvals)
+    adj = np.empty(m)
+    running = 0.0
+    for rank, i in enumerate(order):
+        running = max(running, min(1.0, (m - rank) * pvals[i]))
+        adj[i] = running
+    return adj
+
+
+def people_needed(eff, target, people):
+    """People needed for 80% power (two-sided 5%) to detect `target`, scaling this study's SE by sqrt(people)."""
+    se = (eff["hi"] - eff["lo"]) / 3.92
+    return int(np.ceil(people * (se / (abs(target) / 2.8016)) ** 2))
+
+
+def agreement(program_est, real):
+    """Label for the real-data check against the program's direction."""
+    if real is None:
+        return "not tested"
+    same = np.sign(real["est"]) == np.sign(program_est)
+    excl0 = real["lo"] > 0 or real["hi"] < 0
+    if same and excl0:
+        return "agrees"
+    if same:
+        return "same direction, not proven"
+    return "disagrees" if excl0 else "no clear signal"
 
 
 # ---------- glucose summaries ----------
@@ -327,6 +415,14 @@ def main(data_dir, out_dir):
     cohort["fastMorningPerHour"] = fe_effect(night, ["overnight_fast_hours"], ycol="morning")
     cohort["fast13Morning"] = fe_effect(night, ["fast13"], ycol="morning")
 
+    # ---------- robustness of the walk finding ----------
+    nc_df = mrw[mrw.pre15.notna()]
+    rob = {
+        "negativeControl": fe_effect(nc_df, ["walked"] + walk_cov, ycol="pre15"),
+        "instrument": iv_walk(mrw, parts, walk_cov),
+    }
+    rob["eValue"] = e_value(cohort["walk"]["est"], cohort["walk"]["hi"], within_resid_sd(mrw, ["walked"] + walk_cov))
+
     # randomized arms: week12 - week0
     c0 = checks[checks.visit == "week 0"].set_index("participant_id")
     c12 = checks[checks.visit == "week 12"].set_index("participant_id")
@@ -350,9 +446,10 @@ def main(data_dir, out_dir):
     def arm_contrast(sub, out, a="coaching + overnight fast", b="coaching"):
         va = sub[sub.group == a][out].dropna().to_numpy()
         vb = sub[sub.group == b][out].dropna().to_numpy()
-        boots = [RNG.choice(va, len(va)).mean() - RNG.choice(vb, len(vb)).mean() for _ in range(2000)]
+        boots = np.array([RNG.choice(va, len(va)).mean() - RNG.choice(vb, len(vb)).mean() for _ in range(2000)])
         lo, hi = np.percentile(boots, [2.5, 97.5])
-        return {"est": va.mean() - vb.mean(), "lo": lo, "hi": hi, "n": int(len(va) + len(vb))}
+        p = max(1 / len(boots), 2 * min((boots >= 0).mean(), (boots <= 0).mean()))
+        return {"est": va.mean() - vb.mean(), "lo": lo, "hi": hi, "n": int(len(va) + len(vb)), "p": p}
 
     trial["fastVsCoachingBySubgroup"] = {}
     for out in ("hba1c_pct", "fasting_glucose_mg_dl"):
@@ -360,6 +457,21 @@ def main(data_dir, out_dir):
         sg["excluding night shift"] = arm_contrast(delta[delta.work_schedule != "night shift"], out)
         sg["night shift only"] = arm_contrast(delta[delta.work_schedule == "night shift"], out)
         trial["fastVsCoachingBySubgroup"][out] = sg
+    # is the fast effect really different by blood sugar group? Cochran Q across the three groups (df = 2),
+    # and Holm adjustment across every subgroup contrast we looked at (2 outcomes x 5 subgroups)
+    het = {}
+    for out, sg in trial["fastVsCoachingBySubgroup"].items():
+        gs = [v_ for k, v_ in sg.items() if k.startswith("blood sugar: ")]
+        e = np.array([x["est"] for x in gs])
+        w = 1 / (np.array([(x["hi"] - x["lo"]) / 3.92 for x in gs]) ** 2)
+        q = float(np.sum(w * (e - np.sum(w * e) / np.sum(w)) ** 2))
+        het[out] = {"Q": q, "df": len(gs) - 1, "p": float(np.exp(-q / 2)) if len(gs) == 3 else None}
+    keys = [(o, k) for o, sg in trial["fastVsCoachingBySubgroup"].items() for k in sg]
+    adj = holm(np.array([trial["fastVsCoachingBySubgroup"][o][k]["p"] for o, k in keys]))
+    for (o, k), pa in zip(keys, adj):
+        trial["fastVsCoachingBySubgroup"][o][k]["pHolm"] = float(pa)
+    trial["heterogeneity"] = het
+    group_specific = het["hba1c_pct"]["p"] < 0.05  # use per-group fast numbers in advice only if groups really differ
     dd_ = daily.merge(parts[["participant_id", "group"]], on="participant_id")
     trial["adherence"] = {
         grp: {"overnightFastHours": float(sub.overnight_fast_hours.mean()),
@@ -376,6 +488,34 @@ def main(data_dir, out_dir):
         "lateDinner": [r(x) for x in dinners[dinners.late == 1][cc].mean()],
         "noWalk": [r(x) for x in mr[mr.walked == 0][cc].mean()],
         "walk": [r(x) for x in mr[mr.walked == 1][cc].mean()],
+    }
+
+    # ---------- real-data agreement and power ----------
+    real_checks, power = {}, {}
+    if realworld:
+        cg, nw = realworld["cgmacros"], realworld.get("nhanesSurvivorsWeighted")
+        real_checks = {
+            "walk": {"program": cohort["walk"]["est"], "real": cg.get("walk10"), "source": "CGMacros, walk = " + cg.get("walkDefinition", "")},
+            "lateDinner": {"program": cohort["lateDinner"]["est"], "real": cg["lateDinner"], "source": "CGMacros"},
+            "overnightFast": {"program": trial["contrasts"]["hba1c_pct"]["coaching + overnight fast vs coaching"]["est"],
+                              "real": nw["hba1cPerFastHour"] if nw else None, "source": "NHANES survivors, survey-weighted, HbA1c per extra fast hour"},
+        }
+        for v_ in real_checks.values():
+            v_["label"] = agreement(v_["program"], v_["real"])
+        ppl = cg["lateDinner"]["people"]
+        power["lateDinner"] = {"realPeople": ppl, "programEffect": cohort["lateDinner"]["est"], "realEffect": cg["lateDinner"]["est"],
+                               "peopleForProgramEffect": people_needed(cg["lateDinner"], cohort["lateDinner"]["est"], ppl),
+                               "peopleForRealEffect": people_needed(cg["lateDinner"], cg["lateDinner"]["est"], ppl)}
+        if cg.get("walk10"):
+            ppl = cg["walk10"]["people"]
+            power["walk"] = {"realPeople": ppl, "programEffect": cohort["walk"]["est"], "realEffect": cg["walk10"]["est"],
+                             "peopleForProgramEffect": people_needed(cg["walk10"], cohort["walk"]["est"], ppl),
+                             "peopleForRealEffect": people_needed(cg["walk10"], cg["walk10"]["est"], ppl)}
+    REAL_SENTENCE = {
+        "agrees": "A check in real adults ({src}) found the same.",
+        "same direction, not proven": "A check in real adults ({src}) pointed the same way, but it is not proven there yet.",
+        "no clear signal": "A check in real people ({src}) showed no clear link yet.",
+        "disagrees": "A check in real people ({src}) pointed the other way.",
     }
 
     # ---------- per-person ----------
@@ -553,6 +693,30 @@ def main(data_dir, out_dir):
                 cg["movementPerMet"]["est"], "mg/dL", "real", "Within-person, carbs adjusted; cluster bootstrap 95% CI.",
                 ci=(cg["movementPerMet"]["lo"], cg["movementPerMet"]["hi"]), n=cg["movementPerMet"]["rows"],
                 caveat="No clear effect in 45 real adults over 10 days; Fitbit METs are a rough measure of walking.")
+            if cg.get("walk10"):
+                add("real_walk", "Real-data check (CGMacros): rise after meals followed by a walk vs not",
+                    cg["walk10"]["est"], "mg/dL", "real", f"Walk = {cg['walkDefinition']}. Within-person, carbs adjusted; cluster bootstrap 95% CI.",
+                    ci=(cg["walk10"]["lo"], cg["walk10"]["hi"]), n=cg["walk10"]["rows"],
+                    caveat=f"Check result: {real_checks['walk']['label']}. About {power['walk']['peopleForRealEffect']} people would be needed to confirm an effect this size.")
+            nw = realworld.get("nhanesSurvivorsWeighted")
+            if nw:
+                add("real_fast", "Real-data check (NHANES survivors, survey-weighted): HbA1c per extra hour of overnight fast",
+                    nw["hba1cPerFastHour"]["est"], "% points", "real",
+                    "Survey-weighted regression adjusted for age and sex; design-based bootstrap 95% CI (PSUs within strata).",
+                    ci=(nw["hba1cPerFastHour"]["lo"], nw["hba1cPerFastHour"]["hi"]), n=nw["hba1cPerFastHour"]["n"], nd=3,
+                    caveat=f"Check result: {real_checks['overnightFast']['label']}. A one-time survey snapshot, not a trial.")
+        nc = rob["negativeControl"]
+        add("cohort_walk_negctrl", "Check: pre-meal sugar before meals that were later followed by a walk vs not (same person)", nc["est"], "mg/dL", "cohort",
+            "Negative control: a walk after the meal cannot change the reading 15 min before it. Same model as the walk effect; cluster bootstrap 95% CI.",
+            ci=(nc["lo"], nc["hi"]), n=nc["rows"], caveat="Near zero, so walk meals do not start from a different place.")
+        add("cohort_walk_evalue", "Check: how strongly a hidden factor would have to link to both walking and the rise to explain the walk effect away (E-value)",
+            rob["eValue"]["estimate"], "x (risk ratio)", "cohort",
+            f"VanderWeele-Ding E-value; mean difference converted with the within-person residual SD ({r(rob['eValue']['sdUsed'])} mg/dL). "
+            f"For the CI bound nearer zero: {r(rob['eValue']['ciBound'])}.")
+        hz = trial["heterogeneity"]["hba1c_pct"]
+        add("trial_fast_heterogeneity", "Randomized: do blood sugar groups differ in the fast effect on HbA1c? (test p-value)", hz["p"], "p", "trial",
+            "Cochran Q across the three starting blood sugar groups (2 degrees of freedom). Under 0.05 would mean the groups really differ.",
+            nd=2, caveat="Groups differ" if group_specific else "The program could not tell the groups apart, so advice uses the overall number.")
         evid = {e["id"]: e for e in ev}
         recs = []
 
@@ -599,6 +763,13 @@ def main(data_dir, out_dir):
                          "text": f"{v('tbr70')}% of your readings were below 70 mg/dL, so check with your care team before stretching your overnight fast. "
                                  f"Right now it averages {v('fast_avg')} hours.",
                          "basis": "rule", "evidenceIds": ["tbr70", "fast_avg", "status_rule"]})
+        elif not night_shift and "fast_avg" in evid and not group_specific:
+            recs.append({"id": "overnight_fast", "title": "Aim for a 13-hour overnight break",
+                         "text": f"Your overnight fast averaged {v('fast_avg')} hours, and {v('fast13_share')}% of nights reached 13 hours. "
+                                 f"In the randomized program, adding the overnight fast to coaching changed HbA1c by {v('trial_fast_hba1c')} points "
+                                 f"(95% CI {evid['trial_fast_hba1c']['ci'][0]} to {evid['trial_fast_hba1c']['ci'][1]}) compared with coaching alone. "
+                                 "It looked larger in some blood sugar groups, but the program could not tell the groups apart, so this is the overall number.",
+                         "basis": "trial", "evidenceIds": ["fast_avg", "fast13_share", "trial_fast_hba1c", "trial_fast_heterogeneity", "trial_fast_hba1c_group"]})
         elif not night_shift and "fast_avg" in evid:
             recs.append({"id": "overnight_fast", "title": "Aim for a 13-hour overnight break",
                          "text": f"Your overnight fast averaged {v('fast_avg')} hours, and {v('fast13_share')}% of nights reached 13 hours. "
@@ -617,12 +788,19 @@ def main(data_dir, out_dir):
                                     f"Your average was {v('mean_glucose')} mg/dL. Bring this to your next visit.",
                             "basis": "rule", "evidenceIds": ["tir", "mean_glucose", "status_rule"]})
 
-        if realworld:
-            for rec in recs:
-                if rec["id"] == "walk":
-                    rec["evidenceIds"].append("real_movement")
-                if rec["id"] == "late_dinner" and rec["basis"] != "rule":
-                    rec["evidenceIds"].append("real_late_dinner")
+        for rec in recs:
+            if rec["id"] == "walk":
+                rec["evidenceIds"] += ["cohort_walk_negctrl", "cohort_walk_evalue"]
+            key, eid = {"walk": ("walk", "real_walk"), "late_dinner": ("lateDinner", "real_late_dinner"),
+                        "overnight_fast": ("overnightFast", "real_fast")}.get(rec["id"], (None, None))
+            if rec["basis"] == "rule" or key is None or key not in real_checks or eid not in evid:
+                rec["realDataCheck"] = {"label": "not tested", "evidenceId": None}
+                continue
+            rc = real_checks[key]
+            rec["realDataCheck"] = {"label": rc["label"], "evidenceId": eid}
+            rec["evidenceIds"].append(eid)
+            src = "NHANES" if key == "overnightFast" else "CGMacros"
+            rec["text"] += " " + REAL_SENTENCE[rc["label"]].format(src=src)
         # charts
         hourly = []
         for lab, part in (("weeks 1-2", gp[gp.window == "weeks 1-2"]), ("weeks 11-12", gp[gp.window == "weeks 11-12"])):
@@ -734,7 +912,18 @@ def main(data_dir, out_dir):
         "curves": curves,
         "trial": {"arms": trial["arms"], "contrasts": {o: {k: eff(v_) for k, v_ in d.items()} for o, d in trial["contrasts"].items()},
                   "fastVsCoachingBySubgroup": {o: {k: eff(v_) for k, v_ in d.items()} for o, d in trial["fastVsCoachingBySubgroup"].items()},
-                  "adherence": {g_: {k: r(v_, 2) for k, v_ in d.items()} for g_, d in trial["adherence"].items()}},
+                  "adherence": {g_: {k: r(v_, 2) for k, v_ in d.items()} for g_, d in trial["adherence"].items()},
+                  "heterogeneity": {o: eff(d) for o, d in trial["heterogeneity"].items()}, "groupSpecificAdvice": bool(group_specific)},
+        "robustness": {
+            "negativeControl": eff(rob["negativeControl"]),
+            "eValue": eff(rob["eValue"]),
+            "instrument": {k: (eff(v_) if isinstance(v_, dict) else v_) for k, v_ in rob["instrument"].items()},
+            "instrumentVerdict": "inconclusive: assignment moved walking only a little, and a dinner-only version gave an impossible effect size, "
+                                 "so coaching changes the rise through more than walking (the exclusion restriction fails). Not counted as support.",
+            "realDataChecks": {k: {"label": v_["label"], "source": v_["source"], "program": r(v_["program"], 2),
+                                   "real": eff(v_["real"]) if v_["real"] else None} for k, v_ in real_checks.items()},
+            "power": {k: {kk: (r(vv, 2) if isinstance(vv, float) else vv) for kk, vv in v_.items()} for k, v_ in power.items()},
+        },
         "statusCounts": status_counts,
         "realWorld": realworld,
         "methods": __doc__.split("Methods (all numbers in evidence[] come from here):")[1].strip(),

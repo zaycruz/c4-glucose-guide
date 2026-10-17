@@ -71,6 +71,11 @@ for (const tile of roster.body) {
     recCount++;
     const refs = r.evidenceIds.map((x) => ev.get(x));
     check(refs.every(Boolean), `${id}/${r.id}: evidenceId does not resolve`);
+    const rdc = r.realDataCheck;
+    if (check(rdc && ["agrees", "same direction, not proven", "no clear signal", "disagrees", "not tested"].includes(rdc.label), `${id}/${r.id}: realDataCheck missing or bad label`)) {
+      if (rdc.label === "not tested") check(rdc.evidenceId === null, `${id}/${r.id}: untested check cites evidence`);
+      else check(r.evidenceIds.includes(rdc.evidenceId) && ev.get(rdc.evidenceId)?.scope === "real", `${id}/${r.id}: realDataCheck evidence not cited or not real-data`);
+    }
     constantsStripped += nums(r.text).length - nums(strip(r.text)).length;
     for (const n of nums(strip(r.text))) {
       numberCount++;

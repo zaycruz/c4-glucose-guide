@@ -314,7 +314,7 @@
     "coaching + overnight fast vs coaching": {
      "est": -0.03,
      "lo": -0.06,
-     "hi": -0.01,
+     "hi": 0.0,
      "n": 1126
     },
     "coaching vs tips by email": {
@@ -345,19 +345,19 @@
     },
     "coaching + overnight fast vs coaching": {
      "est": -1.31,
-     "lo": -2.16,
-     "hi": -0.46,
+     "lo": -2.14,
+     "hi": -0.48,
      "n": 1126
     },
     "coaching vs tips by email": {
      "est": -2.75,
-     "lo": -3.54,
+     "lo": -3.51,
      "hi": -1.98,
      "n": 1134
     },
     "coaching + overnight fast vs tips by email": {
      "est": -4.07,
-     "lo": -4.86,
+     "lo": -4.89,
      "hi": -3.25,
      "n": 1124
     }
@@ -377,8 +377,8 @@
     },
     "coaching + overnight fast vs coaching": {
      "est": -0.41,
-     "lo": -0.65,
-     "hi": -0.17,
+     "lo": -0.63,
+     "hi": -0.18,
      "n": 1126
     },
     "coaching vs tips by email": {
@@ -389,8 +389,8 @@
     },
     "coaching + overnight fast vs tips by email": {
      "est": -1.54,
-     "lo": -1.76,
-     "hi": -1.33,
+     "lo": -1.75,
+     "hi": -1.31,
      "n": 1124
     }
    },
@@ -409,20 +409,20 @@
     },
     "coaching + overnight fast vs coaching": {
      "est": -0.09,
-     "lo": -0.63,
-     "hi": 0.45,
+     "lo": -0.64,
+     "hi": 0.47,
      "n": 1126
     },
     "coaching vs tips by email": {
      "est": 0.8,
-     "lo": 0.28,
-     "hi": 1.29,
+     "lo": 0.29,
+     "hi": 1.35,
      "n": 1134
     },
     "coaching + overnight fast vs tips by email": {
      "est": 0.71,
-     "lo": 0.19,
-     "hi": 1.21,
+     "lo": 0.16,
+     "hi": 1.22,
      "n": 1124
     }
    },
@@ -441,20 +441,20 @@
     },
     "coaching + overnight fast vs coaching": {
      "est": -1.44,
-     "lo": -4.87,
-     "hi": 1.9,
+     "lo": -4.68,
+     "hi": 1.96,
      "n": 1126
     },
     "coaching vs tips by email": {
      "est": 12.02,
-     "lo": 8.74,
-     "hi": 15.3,
+     "lo": 8.79,
+     "hi": 15.17,
      "n": 1134
     },
     "coaching + overnight fast vs tips by email": {
      "est": 10.58,
-     "lo": 7.5,
-     "hi": 13.8,
+     "lo": 7.27,
+     "hi": 13.72,
      "n": 1124
     }
    }
@@ -465,63 +465,83 @@
      "est": -0.02,
      "lo": -0.04,
      "hi": 0.0,
-     "n": 513
+     "n": 513,
+     "p": 0.05,
+     "pHolm": 0.21
     },
     "blood sugar: prediabetes": {
      "est": -0.04,
      "lo": -0.08,
      "hi": -0.01,
-     "n": 334
+     "n": 334,
+     "p": 0.02,
+     "pHolm": 0.13
     },
     "blood sugar: type 2 diabetes": {
      "est": -0.08,
      "lo": -0.15,
      "hi": -0.01,
-     "n": 279
+     "n": 279,
+     "p": 0.02,
+     "pHolm": 0.13
     },
     "excluding night shift": {
      "est": -0.03,
      "lo": -0.06,
      "hi": -0.01,
-     "n": 1098
+     "n": 1098,
+     "p": 0.02,
+     "pHolm": 0.13
     },
     "night shift only": {
      "est": 0.09,
      "lo": -0.04,
-     "hi": 0.22,
-     "n": 28
+     "hi": 0.21,
+     "n": 28,
+     "p": 0.16,
+     "pHolm": 0.49
     }
    },
    "fasting_glucose_mg_dl": {
     "blood sugar: normal": {
      "est": -0.39,
-     "lo": -1.58,
-     "hi": 0.69,
-     "n": 513
+     "lo": -1.54,
+     "hi": 0.73,
+     "n": 513,
+     "p": 0.49,
+     "pHolm": 0.91
     },
     "blood sugar: prediabetes": {
      "est": -1.45,
-     "lo": -2.81,
-     "hi": -0.07,
-     "n": 334
+     "lo": -2.74,
+     "hi": -0.09,
+     "n": 334,
+     "p": 0.04,
+     "pHolm": 0.21
     },
     "blood sugar: type 2 diabetes": {
      "est": -3.41,
-     "lo": -5.27,
-     "hi": -1.5,
-     "n": 279
+     "lo": -5.3,
+     "hi": -1.56,
+     "n": 279,
+     "p": 0.0,
+     "pHolm": 0.01
     },
     "excluding night shift": {
      "est": -1.29,
-     "lo": -2.21,
-     "hi": -0.46,
-     "n": 1098
+     "lo": -2.16,
+     "hi": -0.43,
+     "n": 1098,
+     "p": 0.01,
+     "pHolm": 0.05
     },
     "night shift only": {
      "est": -2.11,
-     "lo": -7.54,
-     "hi": 3.46,
-     "n": 28
+     "lo": -7.68,
+     "hi": 3.33,
+     "n": 28,
+     "p": 0.46,
+     "pHolm": 0.91
     }
    }
   },
@@ -544,6 +564,112 @@
     "eveningCaloriesPct": 22.3,
     "walkAfterDinnerMin": 3.86
    }
+  },
+  "heterogeneity": {
+   "hba1c_pct": {
+    "Q": 3.86,
+    "df": 2,
+    "p": 0.15
+   },
+   "fasting_glucose_mg_dl": {
+    "Q": 7.38,
+    "df": 2,
+    "p": 0.02
+   }
+  },
+  "groupSpecificAdvice": false
+ },
+ "robustness": {
+  "negativeControl": {
+   "est": -0.39,
+   "lo": -1.35,
+   "hi": 0.68,
+   "people": 500,
+   "rows": 18214
+  },
+  "eValue": {
+   "estimate": 3.63,
+   "ciBound": 3.39,
+   "sdUsed": 21.57
+  },
+  "instrument": {
+   "firstStage": {
+    "est": 3.68,
+    "lo": 2.48,
+    "hi": 4.96,
+    "unit": "percentage points of meals with a walk"
+   },
+   "reducedForm": {
+    "est": -1.16,
+    "lo": -4.27,
+    "hi": 2.01,
+    "unit": "mg/dL"
+   },
+   "walkEffect": {
+    "est": -31.43,
+    "lo": -121.89,
+    "hi": 59.46,
+    "unit": "mg/dL per meal walked"
+   },
+   "people": {
+    "coaching": 166,
+    "tips by email": 164
+   }
+  },
+  "instrumentVerdict": "inconclusive: assignment moved walking only a little, and a dinner-only version gave an impossible effect size, so coaching changes the rise through more than walking (the exclusion restriction fails). Not counted as support.",
+  "realDataChecks": {
+   "walk": {
+    "label": "same direction, not proven",
+    "source": "CGMacros, walk = at least 10 straight minutes at 3+ METs (Fitbit) in the hour after the meal; meals with 50+ minutes of Fitbit data",
+    "program": -17.62,
+    "real": {
+     "est": -4.39,
+     "lo": -11.38,
+     "hi": 1.45,
+     "people": 44,
+     "rows": 1330
+    }
+   },
+   "lateDinner": {
+    "label": "same direction, not proven",
+    "source": "CGMacros",
+    "program": 9.08,
+    "real": {
+     "est": 4.62,
+     "lo": -1.7,
+     "hi": 11.74,
+     "people": 41,
+     "rows": 317
+    }
+   },
+   "overnightFast": {
+    "label": "no clear signal",
+    "source": "NHANES survivors, survey-weighted, HbA1c per extra fast hour",
+    "program": -0.03,
+    "real": {
+     "est": 0.01,
+     "lo": -0.03,
+     "hi": 0.05,
+     "n": 597,
+     "weight": "survey_weight_diet_2day"
+    }
+   }
+  },
+  "power": {
+   "lateDinner": {
+    "realPeople": 41,
+    "programEffect": 9.08,
+    "realEffect": 4.62,
+    "peopleForProgramEffect": 46,
+    "peopleForRealEffect": 178
+   },
+   "walk": {
+    "realPeople": 44,
+    "programEffect": -17.62,
+    "realEffect": -4.39,
+    "peopleForProgramEffect": 12,
+    "peopleForRealEffect": 192
+   }
   }
  },
  "statusCounts": {
@@ -553,35 +679,45 @@
  },
  "realWorld": {
   "cgmacros": {
+   "walk10MealCount": 192,
+   "walk10Meals": 1330,
+   "walk10": {
+    "est": -4.387,
+    "lo": -11.375,
+    "hi": 1.446,
+    "people": 44,
+    "rows": 1330
+   },
+   "walkDefinition": "at least 10 straight minutes at 3+ METs (Fitbit) in the hour after the meal; meals with 50+ minutes of Fitbit data",
    "source": "CGMacros v1.0.0 (PhysioNet 2025): 45 real adults, 10 days, Libre sensor + Fitbit",
    "meals": 1334,
    "people": 45,
-   "activeHourShare": 53.1,
+   "activeHourShare": 53.0,
    "movementPerMet": {
     "est": -1.262,
-    "lo": -5.786,
-    "hi": 2.954,
+    "lo": -6.226,
+    "hi": 2.629,
     "people": 44,
     "rows": 1334
    },
    "activeHourVsNot": {
-    "est": -0.669,
-    "lo": -6.273,
-    "hi": 4.598,
+    "est": -0.668,
+    "lo": -5.904,
+    "hi": 5.044,
     "people": 44,
     "rows": 1334
    },
    "lateDinner": {
     "est": 4.62,
-    "lo": -1.517,
-    "hi": 11.37,
+    "lo": -1.699,
+    "hi": 11.739,
     "people": 41,
     "rows": 317
    },
    "carbsPer10g": {
     "est": 2.058,
-    "lo": 1.137,
-    "hi": 3.546,
+    "lo": 1.171,
+    "hi": 3.588,
     "people": 44,
     "rows": 1334
    },
@@ -630,7 +766,47 @@
     }
    }
   },
-  "methods": "Real-data cross-check for C4: do the synthetic patterns hold in real people?\n\nUsage: uv run --with pandas --with numpy python -I scripts/realworld.py <dataset_dir> <out_dir>\nWrites <out_dir>/realworld.json.\n\n- CGMacros (45 real adults, minute-level Libre sensor + Fitbit): within-person effect of\n  movement in the hour after a meal and of a late dinner (>= 20:00) on the post-meal rise.\n  Rise = max Libre glucose 0-120 min after the meal minus the reading at the meal minute.\n  Meals with another logged meal in the next 120 min are dropped. CIs: cluster bootstrap\n  over people.\n- NHANES 2011-2014 cancer survivors (real, one snapshot each): association of overnight\n  fast, last eating hour and daily movement with HbA1c, adjusted for age and sex. Survey\n  weights are NOT applied (demo), so this describes the sample, not all US survivors."
+  "nhanesSurvivorsWeighted": {
+   "source": "NHANES 2011-2014 cancer survivors, survey-weighted (exam weight for HbA1c and movement, 2-day diet weight for eating times); 95% CI from a Rao-Wu bootstrap of PSUs within strata on the full file (domain estimate)",
+   "hba1cPerFastHour": {
+    "est": 0.013,
+    "lo": -0.025,
+    "hi": 0.048,
+    "n": 597,
+    "weight": "survey_weight_diet_2day"
+   },
+   "hba1cPerLaterLastMealHour": {
+    "est": 0.02,
+    "lo": -0.032,
+    "hi": 0.073,
+    "n": 597,
+    "weight": "survey_weight_diet_2day"
+   },
+   "hba1cPer1000Mims": {
+    "est": -0.021,
+    "lo": -0.052,
+    "hi": 0.006,
+    "n": 599,
+    "weight": "survey_weight_exam"
+   },
+   "noDiabetes": {
+    "hba1cPerFastHour": {
+     "est": 0.0,
+     "lo": -0.017,
+     "hi": 0.017,
+     "n": 444,
+     "weight": "survey_weight_diet_2day"
+    },
+    "hba1cPer1000Mims": {
+     "est": -0.001,
+     "lo": -0.01,
+     "hi": 0.008,
+     "n": 439,
+     "weight": "survey_weight_exam"
+    }
+   }
+  },
+  "methods": "Real-data cross-check for C4: do the synthetic patterns hold in real people?\n\nUsage: uv run --with pandas --with numpy python -I scripts/realworld.py <dataset_dir> <out_dir>\nWrites <out_dir>/realworld.json.\n\n- CGMacros (45 real adults, minute-level Libre sensor + Fitbit): within-person effect of\n  movement in the hour after a meal and of a late dinner (>= 20:00) on the post-meal rise.\n  Rise = max Libre glucose 0-120 min after the meal minus the reading at the meal minute.\n  Meals with another logged meal in the next 120 min are dropped. CIs: cluster bootstrap\n  over people.\n- NHANES 2011-2014 cancer survivors (real, one snapshot each): association of overnight\n  fast, last eating hour and daily movement with HbA1c, adjusted for age and sex. Survey\n  weights are NOT applied in nhanesSurvivors (describes the sample). nhanesSurvivorsWeighted applies the\n  survey weights and design (strata, PSUs) and describes US adult cancer survivors 2011-2014."
  },
- "methods": "- Meal response: baseline = last 15-min reading at or before the meal (<= 15 min earlier).\n  Rise = peak of the readings 15..120 min after the meal minus baseline. iAUC = area above\n  baseline over 0..120 min (mg/dL x h). Meals with another item of >= 100 kcal in the next\n  120 min are dropped, so the curve belongs to one meal.\n- Late dinner: dinner starting at or after 20:00. Within-person comparison (person fixed\n  effects), adjusted for carbs. Night-shift workers are left out.\n- Post-meal walk: walked_after_min > 0. Within-person, adjusted for carbs and meal type.\n  Walking was self-chosen, so this is an association, not proof.\n- Overnight fast: the randomized arm comparison (coaching + overnight fast vs coaching) on\n  week 12 minus week 0 change is the fair causal estimate. Within-person night-to-night\n  link between the overnight fast and next-morning glucose is shown as an association.\n- Cohort CIs: cluster bootstrap that resamples people. Personal CIs: bootstrap of that\n  person's meals, then empirical-Bayes shrinkage toward the cohort estimate."
+ "methods": "- Meal response: baseline = last 15-min reading at or before the meal (<= 15 min earlier).\n  Rise = peak of the readings 15..120 min after the meal minus baseline. iAUC = area above\n  baseline over 0..120 min (mg/dL x h). Meals with another item of >= 100 kcal in the next\n  120 min are dropped, so the curve belongs to one meal.\n- Late dinner: dinner starting at or after 20:00. Within-person comparison (person fixed\n  effects), adjusted for carbs. Night-shift workers are left out.\n- Post-meal walk: walked_after_min > 0. Within-person, adjusted for carbs and meal type.\n  Walking was self-chosen, so this is an association, not proof.\n- Overnight fast: the randomized arm comparison (coaching + overnight fast vs coaching) on\n  week 12 minus week 0 change is the fair causal estimate. Within-person night-to-night\n  link between the overnight fast and next-morning glucose is shown as an association.\n- Cohort CIs: cluster bootstrap that resamples people. Personal CIs: bootstrap of that\n  person's meals, then empirical-Bayes shrinkage toward the cohort estimate.\n- Robustness of the walk effect (see ROBUSTNESS.md):\n  negative control = same model with the reading 15 min BEFORE the meal as outcome (a later\n  walk cannot change it); E-value (VanderWeele & Ding 2017) with the within-person residual SD;\n  instrument = randomized arm (coaching vs email tips) as encouragement to walk, Wald ratio at\n  person level. The instrument proved inconclusive (exclusion restriction fails) and is not\n  counted as support.\n- Fast by subgroup: Cochran Q test of arm x blood-sugar-group interaction, Holm adjustment across\n  all subgroup contrasts. Advice uses group-specific fast numbers only if Q p < 0.05.\n- Real-data agreement labels: agrees (same sign, CI excludes 0), same direction not proven,\n  no clear signal, disagrees (opposite sign, CI excludes 0). Power: people needed for 80% power,\n  scaling the real study's SE by sqrt(people)."
 }

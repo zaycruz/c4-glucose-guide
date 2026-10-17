@@ -12,13 +12,13 @@ Synthetic 12-week program: 500 sensor wearers, 18,218 clean meal curves. Within-
 
 | Question | Answer |
 |---|---|
-| Is an evening walk worth it? | Yes. After dinner the rise is **18.7 mg/dL lower** (17.2 to 20.4), more than after other meals (13.5). All meals: 17.6 lower. Stronger in type 2 diabetes (25.0) than normal blood sugar (13.4). This is an association, because walking was self-chosen. |
+| Is an evening walk worth it? | Yes. After dinner the rise is **18.7 mg/dL lower** (17.2 to 20.4), more than after other meals (13.5). All meals: 17.6 lower. Stronger in type 2 diabetes (25.0) than normal blood sugar (13.4). Walking was self-chosen, so this is an association. It passes a negative control (pre-meal sugar −0.4, −1.4 to 0.7), and its E-value is 3.6. |
 | How much is enough? | **10-19 min gets most of it** (17.1 lower); 20-29 min 20.1; 30+ min 16.8. Benefit levels off after 10 minutes. |
 | Does a late dinner matter? | Dinner at 8 pm or later: **+9.1 mg/dL** (7.1 to 11.2). Each hour later adds more: 6-7 pm +6.3 … 10 pm+ +28.8 vs before 6 pm. |
-| Overnight fast? | Randomized: adding the fast to coaching changed HbA1c by -0.03 points overall (-0.06 to -0.01). **The gain is concentrated in type 2 diabetes: -0.08 (-0.15 to -0.01)**, with fasting glucose -3.4 mg/dL; it is near zero for normal blood sugar. The fast arm did fast longer: 13.05 vs 12.07 h, with 62% vs 36% of nights at 13 h or more. Night shift (n=28) points the other way, but the CI is wide. Coaching itself vs email tips: -0.17. |
-| Does it hold in real people? | CGMacros (45 real adults): late dinner +4.6 (-1.5 to 11.4), same direction but not proven; no clear post-meal movement effect. NHANES survivors: more daily movement goes with slightly lower HbA1c (-0.023 per 1,000 MIMS); fasting length shows no link. |
+| Overnight fast? | Randomized: adding the fast to coaching changed HbA1c by -0.03 points overall (-0.06 to 0.00). Type 2 diabetes looked larger (-0.08), but a formal test can't tell the blood sugar groups apart (Q p = 0.15; Holm-adjusted p = 0.13), so the advice uses the overall number. The fast arm did fast longer: 13.05 vs 12.07 h, with 62% vs 36% of nights at 13 h or more. Night shift (n=28) points the other way, but the CI is wide. Coaching itself vs email tips: -0.17. |
+| Does it hold in real people? | CGMacros (45 real adults): late dinner +4.6 (-1.7 to 11.7) and walk after a meal -4.4 (-11.4 to 1.4). Both point the same way but are not proven. The real walk interval excludes the program's -17.6, so expect a much smaller walk effect in real people; the program's late-dinner +9.1 is still inside the real interval. NHANES survivors, survey-weighted: neither fasting length nor daily movement shows a clear link with HbA1c. |
 
-Advice uses the survivor's own blood sugar group for the fast estimate.
+Every recommendation carries a real-data check label (`agrees`, `same direction, not proven`, `no clear signal`, `disagrees`, `not tested`). [ROBUSTNESS.md](ROBUSTNESS.md) lists each check, how it could fail, and what it found.
 
 Status (ok / watch / alert) uses fixed CGM consensus thresholds (time in range, highs above 250, lows below 70). Personal effects are reported only where the person's own data supports them: their meals are bootstrapped, then blended with the cohort (empirical Bayes). If they don't have enough data, the advice says so and uses the cohort number. Night-shift workers get no clock-time advice. People with frequent lows are told not to stretch their fasts.
 
