@@ -2,7 +2,7 @@
   "name": "c4-glucose-guide",
   "private": true,
   "scripts": {
-    "analyze": "uv run --with pandas --with numpy python -I scripts/analyze.py \"$C4_DATA\" public/data",
+    "build-data": "scripts/build-data.sh \"$C4_DATA\"",
     "typecheck": "wrangler types && tsc --noEmit",
     "deploy": "wrangler deploy",
     "e2e": "node scripts/e2e.mjs"

@@ -451,5 +451,86 @@
   "watch": 84,
   "alert": 77
  },
+ "realWorld": {
+  "cgmacros": {
+   "source": "CGMacros v1.0.0 (PhysioNet 2025): 45 real adults, 10 days, Libre sensor + Fitbit",
+   "meals": 1334,
+   "people": 45,
+   "activeHourShare": 53.1,
+   "movementPerMet": {
+    "est": -1.262,
+    "lo": -5.786,
+    "hi": 2.954,
+    "people": 44,
+    "rows": 1334
+   },
+   "activeHourVsNot": {
+    "est": -0.669,
+    "lo": -6.273,
+    "hi": 4.598,
+    "people": 44,
+    "rows": 1334
+   },
+   "lateDinner": {
+    "est": 4.62,
+    "lo": -1.517,
+    "hi": 11.37,
+    "people": 41,
+    "rows": 317
+   },
+   "carbsPer10g": {
+    "est": 2.058,
+    "lo": 1.137,
+    "hi": 3.546,
+    "people": 44,
+    "rows": 1334
+   },
+   "lateDinnerCount": 93,
+   "dinnerCount": 317
+  },
+  "nhanesSurvivors": {
+   "source": "NHANES 2011-2014, 808 real cancer survivors; unweighted (survey weights not applied)",
+   "survivors": 808,
+   "medians": {
+    "overnightFastHours": 12.2,
+    "lastEatingHour": 20.0,
+    "movementMims": 10946.0,
+    "hba1c": 5.7
+   },
+   "hba1cPerFastHour": {
+    "est": 0.01,
+    "lo": -0.027,
+    "hi": 0.047,
+    "n": 641
+   },
+   "hba1cPerLaterLastMealHour": {
+    "est": 0.039,
+    "lo": -0.012,
+    "hi": 0.09,
+    "n": 641
+   },
+   "hba1cPer1000Mims": {
+    "est": -0.023,
+    "lo": -0.049,
+    "hi": -0.001,
+    "n": 599
+   },
+   "noDiabetes": {
+    "hba1cPerFastHour": {
+     "est": 0.001,
+     "lo": -0.017,
+     "hi": 0.021,
+     "n": 473
+    },
+    "hba1cPer1000Mims": {
+     "est": 0.006,
+     "lo": -0.005,
+     "hi": 0.016,
+     "n": 439
+    }
+   }
+  },
+  "methods": "Real-data cross-check for C4: do the synthetic patterns hold in real people?\n\nUsage: uv run --with pandas --with numpy python -I scripts/realworld.py <dataset_dir> <out_dir>\nWrites <out_dir>/realworld.json.\n\n- CGMacros (45 real adults, minute-level Libre sensor + Fitbit): within-person effect of\n  movement in the hour after a meal and of a late dinner (>= 20:00) on the post-meal rise.\n  Rise = max Libre glucose 0-120 min after the meal minus the reading at the meal minute.\n  Meals with another logged meal in the next 120 min are dropped. CIs: cluster bootstrap\n  over people.\n- NHANES 2011-2014 cancer survivors (real, one snapshot each): association of overnight\n  fast, last eating hour and daily movement with HbA1c, adjusted for age and sex. Survey\n  weights are NOT applied (demo), so this describes the sample, not all US survivors."
+ },
  "methods": "- Meal response: baseline = last 15-min reading at or before the meal (<= 15 min earlier).\n  Rise = peak of the readings 15..120 min after the meal minus baseline. iAUC = area above\n  baseline over 0..120 min (mg/dL x h). Meals with another item of >= 100 kcal in the next\n  120 min are dropped, so the curve belongs to one meal.\n- Late dinner: dinner starting at or after 20:00. Within-person comparison (person fixed\n  effects), adjusted for carbs. Night-shift workers are left out.\n- Post-meal walk: walked_after_min > 0. Within-person, adjusted for carbs and meal type.\n  Walking was self-chosen, so this is an association, not proof.\n- Overnight fast: the randomized arm comparison (coaching + overnight fast vs coaching) on\n  week 12 minus week 0 change is the fair causal estimate. Within-person night-to-night\n  link between the overnight fast and next-morning glucose is shown as an association.\n- Cohort CIs: cluster bootstrap that resamples people. Personal CIs: bootstrap of that\n  person's meals, then empirical-Bayes shrinkage toward the cohort estimate."
 }

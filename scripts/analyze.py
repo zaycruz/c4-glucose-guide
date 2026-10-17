@@ -248,6 +248,8 @@ def main(data_dir, out_dir):
     glu["day"] = (glu.timestamp - pd.to_datetime(glu.participant_id.map(start))).dt.days
     glu["window"] = np.where(glu.day < 28, "weeks 1-2", "weeks 11-12")
 
+    rw_path = f"{out_dir}/realworld.json"  # from scripts/realworld.py, run first
+    realworld = json.load(open(rw_path)) if os.path.exists(rw_path) else None
     mr = meal_responses(meals, glu, parts)
     day_workers = mr[mr.work_schedule != "night shift"]
     dinners = day_workers[day_workers.meal_type == "dinner"]
@@ -500,6 +502,16 @@ def main(data_dir, out_dir):
             "Difference in mean (week 12 - week 0) between randomized arms, completers; bootstrap 95% CI.",
             ci=(tg["lo"], tg["hi"]), n=tg["n"])
 
+        if realworld:
+            cg = realworld["cgmacros"]
+            add("real_late_dinner", "Real-data check (CGMacros, 45 real adults): dinner at 8 pm or later vs earlier",
+                cg["lateDinner"]["est"], "mg/dL", "real", "Within-person, carbs adjusted; cluster bootstrap 95% CI.",
+                ci=(cg["lateDinner"]["lo"], cg["lateDinner"]["hi"]), n=cg["lateDinner"]["rows"],
+                caveat="Same direction as the program data, but the interval includes zero: not proven in real people yet.")
+            add("real_movement", "Real-data check (CGMacros): rise per extra MET of movement in the hour after a meal",
+                cg["movementPerMet"]["est"], "mg/dL", "real", "Within-person, carbs adjusted; cluster bootstrap 95% CI.",
+                ci=(cg["movementPerMet"]["lo"], cg["movementPerMet"]["hi"]), n=cg["movementPerMet"]["rows"],
+                caveat="No clear effect in 45 real adults over 10 days; Fitbit METs are a rough measure of walking.")
         evid = {e["id"]: e for e in ev}
         recs = []
 
@@ -562,6 +574,12 @@ def main(data_dir, out_dir):
                                     f"Your average was {v('mean_glucose')} mg/dL. Bring this to your next visit.",
                             "basis": "rule", "evidenceIds": ["tir", "mean_glucose", "status_rule"]})
 
+        if realworld:
+            for rec in recs:
+                if rec["id"] == "walk":
+                    rec["evidenceIds"].append("real_movement")
+                if rec["id"] == "late_dinner" and rec["basis"] != "rule":
+                    rec["evidenceIds"].append("real_late_dinner")
         # charts
         hourly = []
         for lab, part in (("weeks 1-2", gp[gp.window == "weeks 1-2"]), ("weeks 11-12", gp[gp.window == "weeks 11-12"])):
@@ -639,6 +657,7 @@ def main(data_dir, out_dir):
         "curves": curves,
         "trial": {"arms": trial["arms"], "contrasts": {o: {k: eff(v_) for k, v_ in d.items()} for o, d in trial["contrasts"].items()}},
         "statusCounts": status_counts,
+        "realWorld": realworld,
         "methods": __doc__.split("Methods (all numbers in evidence[] come from here):")[1].strip(),
     }
     with open(f"{out_dir}/cohort.json", "w") as f:

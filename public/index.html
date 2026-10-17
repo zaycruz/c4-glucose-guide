@@ -125,11 +125,20 @@ async function cohort(){
   <div class="card"><h3>Randomized program: week 12 minus week 0</h3><table><tr><th>outcome</th><th>fast + coaching vs coaching</th><th>coaching vs tips</th></tr>
    ${['hba1c_pct','fasting_glucose_mg_dl','weight_kg','fatigue_score_0_to_52','six_minute_walk_m'].map(o=>{const a=T[o]['coaching + overnight fast vs coaching'],b=T[o]['coaching vs tips by email'];return `<tr><td>${o}</td><td>${a.est} (${a.lo} to ${a.hi})</td><td>${b.est} (${b.lo} to ${b.hi})</td></tr>`}).join('')}</table>
    <p class="note">Groups were assigned at random, so these are fair comparisons. Completers only: ${Object.entries(c.trial.arms).map(([k,v])=>`${k} ${v.finished}/${v.randomized}`).join(', ')}.</p></div></div>
+  ${c.realWorld?(()=>{const g=c.realWorld.cgmacros,n=c.realWorld.nhanesSurvivors,ci=e=>`${e.est>0?'+':''}${e.est} (${e.lo} to ${e.hi})`;return `<div class="card" style="margin-top:14px"><h3>Does it hold in real people?</h3>
+   <table><tr><th>check</th><th>program (synthetic)</th><th>real data</th></tr>
+   <tr><td>Late dinner (8 pm+), rise in mg/dL</td><td>${ci(E.lateDinner)}</td><td>${ci(g.lateDinner)} · CGMacros, ${g.lateDinner.people} people</td></tr>
+   <tr><td>Movement after a meal, rise in mg/dL</td><td>walk: ${ci(E.walk)}</td><td>per MET: ${ci(g.movementPerMet)} · CGMacros</td></tr>
+   <tr><td>+10 g carbs, rise in mg/dL</td><td>${ci(E.carbsPer10g)}</td><td>${ci(g.carbsPer10g)} · CGMacros</td></tr>
+   <tr><td>Overnight fast, HbA1c per extra hour</td><td>trial arm: ${ci(T.hba1c_pct['coaching + overnight fast vs coaching'])} total</td><td>${ci(n.hba1cPerFastHour)} · NHANES survivors (n=${n.hba1cPerFastHour.n})</td></tr>
+   <tr><td>Daily movement, HbA1c per 1,000 MIMS</td><td>–</td><td>${ci(n.hba1cPer1000Mims)} · NHANES survivors (n=${n.hba1cPer1000Mims.n})</td></tr></table>
+   <p class="note">Real data points the same way for late dinners and daily movement but is far noisier: the late-dinner interval includes zero, and 45 people over 10 days show no clear post-meal movement effect. Treat program numbers as the method working, not as proof for real survivors. NHANES is unweighted and adjusted for age and sex only.</p></div>`})():''}
   <div class="card" style="margin-top:14px"><h3>Methods</h3><pre class="note" style="white-space:pre-wrap">${c.methods}</pre></div>`;
 }
 $('#tabP').onclick=()=>{$('#vP').style.display='';$('#vC').style.display='none';$('#tabP').classList.add('on');$('#tabC').classList.remove('on')};
 $('#tabC').onclick=()=>{$('#vP').style.display='none';$('#vC').style.display='';$('#tabC').classList.add('on');$('#tabP').classList.remove('on');if(!$('#cohort').innerHTML)cohort()};
 load();
+if(location.hash==='#cohort')$('#tabC').onclick();
 </script>
 </body>
 </html>
