@@ -520,7 +520,6 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
   "survivorId": "c4-N0632",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
   "error": null,
-  "rawPreview": "{\"id\":\"chatcmpl-762b34e5-35bb-44ad-9453-674513d7b983\",\"object\":\"chat.completion\",\"created\":1792260333,\"model\":\"@cf/meta/llama-3.3-70b-instruct-sd\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"{\\\"items\\\":[{\\\"id\\\":\\\"talk_to_team\\\",\\\"text\\\":\\\"If you have low sugar, you might feel shaky or dizzy. Contact your care team today to ask if you need to change your diabetes medicine, such as insulin or sulfonylureas like glipizide, glyburide, or glimepiride.\\\"}]\",\"refusal\":null,\"annotations\":null,\"audio\":null,\"function_call\":null,\"reasoning\":null},\"logprobs\":null,\"finish_reason\":\"stop\",",
   "items": [
     {
       "id": "talk_to_team",
@@ -539,7 +538,7 @@ Each rewrite is checked. The Worker drops it and returns the template (`source: 
   "generatedAt": "2026-10-17T18:05:35.620Z",
   "generationMs": 1701,
   "cached": true,
-  "ms": 97
+  "ms": 108
 }
 ```
 
@@ -735,18 +734,18 @@ The latest E2E result for the deployed data: pass/fail, the count of traced numb
     "aiAdvice": {
       "survivorId": "c4-N0072",
       "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-      "ms": 3308,
+      "ms": 113,
       "itemsRephrasedByAi": 2,
       "items": 3
     },
     "careTeamToday": 10,
     "advice": {
-      "cached": false,
-      "ms": 4298
+      "cached": true,
+      "ms": 1234
     },
     "dataHash": "70f1ec29177ca2cb8ce496a4d6c89ae70fe651db91dcd7fad0a77ec826b70143",
-    "finishedAt": "2026-10-17T18:04:37.850Z",
-    "artifact": "runs/e2e-2026-10-17T18-03-55-762Z.json"
+    "finishedAt": "2026-10-17T18:14:39.667Z",
+    "artifact": "runs/e2e-2026-10-17T18-14-11-376Z.json"
   },
   "dataHash": "70f1ec29177ca2cb8ce496a4d6c89ae70fe651db91dcd7fad0a77ec826b70143",
   "commit": "7d930179ee5937eeff1656215123b48439391010",
