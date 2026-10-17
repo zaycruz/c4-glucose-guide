@@ -84,6 +84,9 @@ Status (ok / watch / alert) uses fixed CGM consensus thresholds (time in range, 
 - **Review the Spanish and Kreyòl text** with native speakers, then set `reviewed: true` in the API.
 - **Forecast:** a calibration check and a clinic-baseline comparison with a CI. **Serving:** p95 latency and cost per AI call, and a model-file hash proving served = evaluated.
 - **Survivor-facing numbers:** show only the real-data figure to survivors; keep the synthetic −18.3 / +9.2 in the clinician view.
+- **Same-day path, tested:** no survivor in this cohort has level 2 lows, so the "today" route is enforced by the E2E rule but never exercised by a real case. Add a fixture with readings below 54, and consider a same-day route for frequent lows in older adults.
+- **AI path in `/verification`:** measured p95 latency, cost and fallback rate over 30+ calls, and a logged warning whenever `servedModel` differs from `model`.
+- **Plainer survivor text:** keep CIs in the clinician view and give survivors one short sentence per action.
 
 ## Run
 
