@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glucose Guide</title>
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--ink:#1d2327;--mute:#5f6b73;--line:#e3e5e8;--accent:#1f6feb;--late:#d9480f;--ok:#2b8a3e;--watch:#e8a400;--alert:#c92a2a;--band:#e8f5e9}
+@media (prefers-color-scheme:dark){:root{--bg:#121416;--card:#1b1e21;--ink:#e8eaed;--mute:#9aa4ad;--line:#2c3136;--accent:#58a6ff;--late:#ff8a4c;--band:#1d2e22}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:16px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}
+header h1{font-size:18px;margin:0}header span{color:var(--mute);font-size:13px}
+nav button{background:none;border:1px solid var(--line);color:var(--ink);padding:6px 12px;border-radius:6px;cursor:pointer}
+nav button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+main{display:grid;grid-template-columns:300px 1fr;gap:16px;padding:16px;max-width:1300px;margin:auto}
+@media (max-width:800px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+#roster{max-height:80vh;overflow:auto;padding:6px}
+.tile{padding:8px 10px;border-radius:8px;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.tile:hover,.tile.sel{background:var(--bg)}
+.dot{width:10px;height:10px;border-radius:50%;margin-top:6px;flex:none}
+.ok{background:var(--ok)}.watch{background:var(--watch)}.alert{background:var(--alert)}
+.tile b{font-size:14px;display:block}.tile small{color:var(--mute)}
+.pill{display:inline-block;padding:2px 8px;border-radius:99px;color:#fff;font-size:12px;font-weight:600;text-transform:uppercase}
+h2{margin:0 0 4px;font-size:20px}h3{margin:0 0 8px;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px;margin-top:14px}
+.rec{border-left:4px solid var(--accent);padding:8px 12px;margin:10px 0;background:var(--bg);border-radius:0 8px 8px 0}
+.rec .basis{font-size:11px;text-transform:uppercase;color:var(--mute);letter-spacing:.04em}
+.chip{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:6px;padding:1px 6px;margin:4px 4px 0 0;cursor:pointer;color:var(--mute)}
+.ev{font-size:13px;border-top:1px solid var(--line);padding:6px 0}.ev.hl{background:#fff3bf33}
+.ev .v{font-weight:600}.ev small{color:var(--mute);display:block}
+svg text{fill:var(--mute);font-size:11px}.legend{font-size:12px;color:var(--mute)}.legend i{display:inline-block;width:14px;height:3px;margin:0 4px 3px 10px;vertical-align:middle}
+table{border-collapse:collapse;width:100%;font-size:13px}td,th{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}td:first-child,th:first-child{text-align:left}
+.note{color:var(--mute);font-size:12px}
+#aiBtn{margin-left:8px;font-size:12px;padding:3px 8px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;cursor:pointer}
+</style>
+</head>
+<body>
+<header><h1>Glucose Guide</h1><span>Meals, meal timing and movement vs blood sugar · Coach Console module C4 · synthetic data, nobody is real</span>
+<nav><button id="tabP" class="on">Survivors</button> <button id="tabC">Cohort findings</button></nav></header>
+<main id="vP"><div class="card" id="roster"></div><div id="panel"></div></main>
+<main id="vC" style="display:none;grid-template-columns:1fr"><div id="cohort"></div></main>
+<script>
+const $=s=>document.querySelector(s), el=(t,a={},h='')=>{const e=document.createElement(t);Object.assign(e,a);e.innerHTML=h;return e};
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmt=(v,u)=>v==null?'–':`${v}${u?(u==='%'?'%':' '+u):''}`;
+
+// minimal SVG charts
+function axes(W,H,P,xs,ymin,ymax,xl,yl){
+  const X=i=>P+i*(W-2*P)/(xs.length-1), Y=v=>H-P-(v-ymin)/(ymax-ymin)*(H-2*P);
+  let g=`<line x1="${P}" y1="${H-P}" x2="${W-P}" y2="${H-P}" stroke="${css('--line')}"/>`;
+  const ticks=5;for(let k=0;k<=ticks;k++){const v=ymin+k*(ymax-ymin)/ticks;g+=`<text x="${P-4}" y="${Y(v)+4}" text-anchor="end">${Math.round(v)}</text><line x1="${P}" x2="${W-P}" y1="${Y(v)}" y2="${Y(v)}" stroke="${css('--line')}" stroke-dasharray="2 3"/>`}
+  const step=Math.ceil(xs.length/8);xs.forEach((x,i)=>{if(i%step===0)g+=`<text x="${X(i)}" y="${H-P+14}" text-anchor="middle">${x}</text>`});
+  g+=`<text x="${W/2}" y="${H-2}" text-anchor="middle">${xl}</text><text x="10" y="${P-8}">${yl}</text>`;
+  return {g,X,Y};
+}
+function lineChart(xs,series,{xl='',yl='',band=null,zero=false}={}){
+  const W=420,H=230,P=38;const all=series.flatMap(s=>s.v||[]).filter(v=>v!=null);if(!all.length)return '<p class="note">Not enough data.</p>';
+  let lo=Math.min(...all,zero?0:Infinity),hi=Math.max(...all);if(band){lo=Math.min(lo,band[0]-10);hi=Math.max(hi,band[1]+10)}
+  const pad=(hi-lo)*.08||5;const {g,X,Y}=axes(W,H,P,xs,Math.floor(lo-pad),Math.ceil(hi+pad),xl,yl);
+  let b=band?`<rect x="${P}" width="${W-2*P}" y="${Y(band[1])}" height="${Y(band[0])-Y(band[1])}" fill="${css('--band')}"/>`:'';
+  let lines='';for(const s of series){if(!s.v)continue;let d='';s.v.forEach((v,i)=>{if(v==null)return;d+=(d?'L':'M')+X(i)+' '+Y(v)});
+    lines+=`<path d="${d}" fill="none" stroke="${s.c}" stroke-width="${s.w||2.5}" ${s.dash?'stroke-dasharray="5 4"':''}/>`}
+  const leg=series.filter(s=>s.v).map(s=>`<i style="background:${s.c}"></i>${s.l}`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%">${b}${g}${lines}</svg><div class="legend">${leg}</div>`;
+}
+function ciChart(bins,est,lo,hi,{yl='',xl='',color}={}){
+  const W=420,H=230,P=38;const ymin=Math.min(0,...lo)-3,ymax=Math.max(0,...hi)+3;const {g,X,Y}=axes(W,H,P,bins,ymin,ymax,xl,yl);
+  let m=`<line x1="${P}" x2="${W-P}" y1="${Y(0)}" y2="${Y(0)}" stroke="${css('--mute')}"/>`;
+  bins.forEach((_,i)=>{m+=`<line x1="${X(i)}" x2="${X(i)}" y1="${Y(lo[i])}" y2="${Y(hi[i])}" stroke="${color}" stroke-width="3" opacity=".45"/><circle cx="${X(i)}" cy="${Y(est[i])}" r="5" fill="${color}"/><text x="${X(i)+8}" y="${Y(est[i])-6}">${est[i]>0?'+':''}${est[i]}</text>`});
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%">${g}${m}</svg><div class="legend">dot = estimate · bar = 95% confidence interval</div>`;
+}
+function scatter(xs,ys){
+  if(!xs.length)return '<p class="note">No nights with sensor data.</p>';
+  const W=420,H=230,P=38,x0=Math.floor(Math.min(...xs))-1,x1=Math.ceil(Math.max(...xs))+1,y0=Math.min(...ys)-10,y1=Math.max(...ys)+10;
+  const X=v=>P+(v-x0)/(x1-x0)*(W-2*P),Y=v=>H-P-(v-y0)/(y1-y0)*(H-2*P);
+  let g='';for(let v=x0;v<=x1;v+=2)g+=`<text x="${X(v)}" y="${H-P+14}" text-anchor="middle">${v}</text>`;
+  for(let k=0;k<=4;k++){const v=y0+k*(y1-y0)/4;g+=`<text x="${P-4}" y="${Y(v)+4}" text-anchor="end">${Math.round(v)}</text>`}
+  g+=`<line x1="${X(13)}" x2="${X(13)}" y1="${P}" y2="${H-P}" stroke="${css('--ok')}" stroke-dasharray="4 3"/><text x="${X(13)+4}" y="${P+10}">13 h</text>`;
+  const pts=xs.map((x,i)=>`<circle cx="${X(x)}" cy="${Y(ys[i])}" r="4" fill="${css('--accent')}" opacity=".7"/>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%">${g}${pts}<text x="${W/2}" y="${H-2}" text-anchor="middle">overnight fast (hours)</text><text x="10" y="${P-8}">pre-breakfast mg/dL</text></svg>`;
+}
+
+let roster=[],cur=null;
+async function load(){
+  roster=await (await fetch('/api/c4/survivors')).json();
+  const r=$('#roster');r.innerHTML=`<div class="note" style="padding:6px 10px">${roster.length} survivors with a glucose sensor · sorted alert → watch → ok</div>`;
+  for(const s of roster){const t=el('div',{className:'tile'},`<span class="dot ${s.status}"></span><div><b>${s.displayName}</b><small>${s.headline}</small></div>`);t.onclick=()=>show(s.survivorId,t);r.append(t)}
+  const first=r.querySelector('.tile');show(roster[0].survivorId,first);
+}
+async function show(id,tile){
+  document.querySelectorAll('.tile').forEach(t=>t.classList.remove('sel'));tile&&tile.classList.add('sel');
+  const d=await (await fetch('/api/c4/survivors/'+id)).json();cur=d;const C=d.charts;
+  const ev=Object.fromEntries(d.evidence.map(e=>[e.id,e]));
+  const recs=d.recommendations.map(r=>`<div class="rec" data-id="${r.id}"><div class="basis">${r.basis==='personal'?'from your own data':r.basis==='trial'?'from the randomized program':r.basis==='cohort'?'from the program cohort':'rule'}</div><b>${r.title}</b><div class="txt">${r.text}</div>${r.evidenceIds.map(i=>`<span class="chip" data-ev="${i}">${ev[i]?.label||i}</span>`).join('')}</div>`).join('');
+  const evs=d.evidence.map(e=>`<div class="ev" id="ev-${e.id}"><span class="v">${fmt(e.value,e.unit)}</span>${e.ci?` <span class="note">95% CI ${e.ci[0]} to ${e.ci[1]}</span>`:''} · ${e.label}${e.n!=null?` <span class="note">(n=${e.n})</span>`:''}<small>${e.method}${e.caveat?' '+e.caveat:''}</small></div>`).join('');
+  const dr=C.dinnerResponse,wr=C.walkResponse,acc=css('--accent'),late=css('--late'),mute=css('--mute');
+  $('#panel').innerHTML=`<div class="card"><span class="pill ${d.status}">${d.status}</span> <h2 style="display:inline">${d.displayName}</h2><p><b>${d.headline}</b></p><p class="note">${d.summary}</p></div>
+  <div class="grid"><div class="card"><h3>What to try <button id="aiBtn">Rephrase with Workers AI</button></h3>${recs}<p class="note" id="aiNote"></p></div>
+  <div class="card"><h3>Evidence (every number above comes from here)</h3><div style="max-height:420px;overflow:auto">${evs}</div></div></div>
+  <div class="grid">
+   <div class="card"><h3>A typical day</h3>${lineChart(C.dailyProfile.hours,C.dailyProfile.series.map((s,i)=>({l:s.label,v:s.values,c:i?acc:mute})),{xl:'hour of day',yl:'mg/dL',band:C.dailyProfile.targetRange})}<p class="note">Green band = 70-180 mg/dL target range.</p></div>
+   <div class="card"><h3>Early vs late dinner (8 pm or later)</h3>${lineChart(dr.minutes,[{l:`you, early (${dr.you.nEarly})`,v:dr.you.early,c:acc},{l:`you, late (${dr.you.nLate})`,v:dr.you.late,c:late},{l:'cohort early',v:dr.cohort.early,c:acc,dash:1,w:1.5},{l:'cohort late',v:dr.cohort.late,c:late,dash:1,w:1.5}],{xl:'minutes after dinner',yl:'mg/dL above pre-meal',zero:true})}</div>
+   <div class="card"><h3>Walk after a meal vs not</h3>${lineChart(wr.minutes,[{l:`you, no walk (${wr.you.nNoWalk})`,v:wr.you.noWalk,c:late},{l:`you, walked (${wr.you.nWalk})`,v:wr.you.walk,c:css('--ok')},{l:'cohort no walk',v:wr.cohort.noWalk,c:late,dash:1,w:1.5},{l:'cohort walked',v:wr.cohort.walk,c:css('--ok'),dash:1,w:1.5}],{xl:'minutes after meal',yl:'mg/dL above pre-meal',zero:true})}</div>
+   <div class="card"><h3>Overnight fast vs next-morning sugar</h3>${scatter(C.overnightFast.hours,C.overnightFast.morningGlucose)}</div>
+   <div class="card"><h3>Check-ups</h3><table><tr><th></th><th>week 0</th><th>week 12</th></tr>${C.checkups.metrics.map((m,i)=>`<tr><td>${m}</td><td>${fmt(C.checkups.week0[i])}</td><td>${fmt(C.checkups.week12[i])}</td></tr>`).join('')}</table></div>
+  </div>`;
+  document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const t=$('#ev-'+c.dataset.ev);if(!t)return;document.querySelectorAll('.ev').forEach(x=>x.classList.remove('hl'));t.classList.add('hl');t.scrollIntoView({block:'nearest',behavior:'smooth'})});
+  $('#aiBtn').onclick=async()=>{$('#aiNote').textContent='Asking Workers AI…';const a=await (await fetch(`/api/c4/survivors/${d.survivorId}/advice`)).json();
+    for(const it of a.items){const box=document.querySelector(`.rec[data-id="${it.id}"] .txt`);if(box)box.textContent=it.text}
+    const ai=a.items.filter(i=>i.source==='ai').length,rej=a.items.filter(i=>i.rejected).length;
+    $('#aiNote').textContent=`${ai} of ${a.items.length} items rephrased by ${a.model} in ${a.ms} ms. ${rej} rewrites rejected because they used a number not in the evidence.${a.error?' AI error: '+a.error:''}`};
+}
+async function cohort(){
+  const c=await (await fetch('/api/c4/cohort')).json(),E=c.effects,T=c.trial.contrasts;
+  const wd=c.walkDose,dh=c.dinnerHour,acc=css('--accent'),late=css('--late');
+  const row=(l,e,u)=>`<tr><td>${l}</td><td>${e.est>0?'+':''}${e.est} ${u}</td><td>${e.lo} to ${e.hi}</td><td>${e.people??''}</td><td>${e.rows??e.n??''}</td></tr>`;
+  const bg=c.effectsByBloodSugarGroup;
+  $('#cohort').innerHTML=`<div class="card"><h2>Cohort findings</h2><p class="note">${c.source}. ${c.statusCounts.alert} alert, ${c.statusCounts.watch} watch, ${c.statusCounts.ok} ok among all sensor wearers.</p></div>
+  <div class="grid"><div class="card"><h3>How much walking is enough?</h3>${ciChart(wd.map(d=>d.bin),wd.map(d=>d.est),wd.map(d=>d.lo),wd.map(d=>d.hi),{yl:'mg/dL vs no walk',xl:'walk after the meal',color:css('--ok')})}<p class="note">Same person, same carbs: sugar rise after a meal with a walk of that length vs no walk. 10 minutes gets most of the benefit. Walking was self-chosen, so this is a pattern, not proof.</p></div>
+  <div class="card"><h3>Does a late dinner matter?</h3>${ciChart(dh.map(d=>d.bin),dh.map(d=>d.est),dh.map(d=>d.lo),dh.map(d=>d.hi),{yl:'mg/dL vs before 6 pm',xl:'dinner start time',color:late})}<p class="note">Same person, same carbs: every hour later adds to the rise. Night-shift workers left out.</p></div></div>
+  <div class="grid"><div class="card"><h3>Within-person effects on the post-meal rise</h3><table><tr><th>effect</th><th>estimate</th><th>95% CI</th><th>people</th><th>meals</th></tr>
+   ${row('Walk after meal (any length)',E.walk,'mg/dL')}${row('Dinner at 8 pm or later',E.lateDinner,'mg/dL')}${row('+10 g carbs',E.carbsPer10g,'mg/dL')}${row('Overnight fast, per extra hour → pre-breakfast',E.fastMorningPerHour,'mg/dL')}${row('Overnight fast ≥ 13 h → pre-breakfast',E.fast13Morning,'mg/dL')}</table>
+   <h3 style="margin-top:14px">By blood sugar group</h3><table><tr><th>group</th><th>walk</th><th>late dinner</th></tr>${Object.entries(bg).map(([k,v])=>`<tr><td>${k}</td><td>${v.walk.est} (${v.walk.lo} to ${v.walk.hi})</td><td>+${v.lateDinner.est} (${v.lateDinner.lo} to ${v.lateDinner.hi})</td></tr>`).join('')}</table><p class="note">The walk helps most in type 2 diabetes.</p></div>
+  <div class="card"><h3>Randomized program: week 12 minus week 0</h3><table><tr><th>outcome</th><th>fast + coaching vs coaching</th><th>coaching vs tips</th></tr>
+   ${['hba1c_pct','fasting_glucose_mg_dl','weight_kg','fatigue_score_0_to_52','six_minute_walk_m'].map(o=>{const a=T[o]['coaching + overnight fast vs coaching'],b=T[o]['coaching vs tips by email'];return `<tr><td>${o}</td><td>${a.est} (${a.lo} to ${a.hi})</td><td>${b.est} (${b.lo} to ${b.hi})</td></tr>`}).join('')}</table>
+   <p class="note">Groups were assigned at random, so these are fair comparisons. Completers only: ${Object.entries(c.trial.arms).map(([k,v])=>`${k} ${v.finished}/${v.randomized}`).join(', ')}.</p></div></div>
+  <div class="card" style="margin-top:14px"><h3>Methods</h3><pre class="note" style="white-space:pre-wrap">${c.methods}</pre></div>`;
+}
+$('#tabP').onclick=()=>{$('#vP').style.display='';$('#vC').style.display='none';$('#tabP').classList.add('on');$('#tabC').classList.remove('on')};
+$('#tabC').onclick=()=>{$('#vP').style.display='none';$('#vC').style.display='';$('#tabC').classList.add('on');$('#tabP').classList.remove('on');if(!$('#cohort').innerHTML)cohort()};
+load();
+</script>
+</body>
+</html>
