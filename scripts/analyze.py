@@ -338,8 +338,12 @@ def main(data_dir, out_dir):
 
     rw_path = f"{out_dir}/realworld.json"  # from scripts/realworld.py, run first
     realworld = json.load(open(rw_path)) if os.path.exists(rw_path) else None
-    ml_path = f"{out_dir}/mlcompare.json"  # from scripts/ml_compare.py (optional machine-learning cross-check)
-    mlc = json.load(open(ml_path)) if os.path.exists(ml_path) else None
+    ml_path = f"{out_dir}/ml_effects.json"  # the ML engine, from scripts/ml_effects.py (scripts/build-ml.sh, on Proxmox)
+    if not os.path.exists(ml_path):
+        sys.exit(f"missing {ml_path}: the advice runs on the ML engine. Run scripts/build-ml.sh first.")
+    ml = json.load(open(ml_path))
+    mc_path = f"{out_dir}/mlcompare.json"  # statistics vs ML benchmark (scripts/ml_compare.py)
+    mlc = json.load(open(mc_path)) if os.path.exists(mc_path) else None
     mr = meal_responses(meals, glu, parts)
     day_workers = mr[mr.work_schedule != "night shift"]
     dinners = day_workers[day_workers.meal_type == "dinner"]
@@ -417,13 +421,23 @@ def main(data_dir, out_dir):
     cohort["fastMorningPerHour"] = fe_effect(night, ["overnight_fast_hours"], ycol="morning")
     cohort["fast13Morning"] = fe_effect(night, ["fast13"], ycol="morning")
 
+    # ---------- swap in the ML engine (double ML) for every meal-level effect ----------
+    # The fixed-effects (FE) numbers above stay as the statistics cross-check. Overnight-fast effects stay FE:
+    # there are no meal features for ML to learn from at the night level.
+    stats = {"effects": {k: dict(v_) for k, v_ in cohort.items()}, "walkDose": dose, "dinnerHour": dinner_hour, "byGroup": by_group}
+    for k, v_ in ml["cohort"].items():
+        if k != "negativeControl":
+            cohort[k] = dict(v_)
+    by_group, dose, dinner_hour = ml["byGroup"], ml["walkDose"], ml["dinnerHour"]
+
     # ---------- robustness of the walk finding ----------
     nc_df = mrw[mrw.pre15.notna()]
     rob = {
-        "negativeControl": fe_effect(nc_df, ["walked"] + walk_cov, ycol="pre15"),
+        "negativeControl": dict(ml["cohort"]["negativeControl"]),
         "instrument": iv_walk(mrw, parts, walk_cov),
     }
-    rob["eValue"] = e_value(cohort["walk"]["est"], cohort["walk"]["hi"], within_resid_sd(mrw, ["walked"] + walk_cov))
+    rob["eValue"] = e_value(cohort["walk"]["est"], cohort["walk"]["hi"], ml["cohort"]["walk"]["residSd"])
+    stats["negativeControl"] = fe_effect(nc_df, ["walked"] + walk_cov, ycol="pre15")
 
     # randomized arms: week12 - week0
     c0 = checks[checks.visit == "week 0"].set_index("participant_id")
@@ -496,6 +510,9 @@ def main(data_dir, out_dir):
     real_checks, power = {}, {}
     if realworld:
         cg, nw = realworld["cgmacros"], realworld.get("nhanesSurvivorsWeighted")
+        cg["walk10Statistics"], cg["lateDinnerStatistics"] = cg.get("walk10"), cg["lateDinner"]
+        cg["walk10"], cg["lateDinner"] = ml["real"]["walk10"], ml["real"]["lateDinner"]  # same ML engine as the program
+        cg["engine"] = "double ML (gradient boosting), same as the program; FE kept as *Statistics"
         real_checks = {
             "walk": {"program": cohort["walk"]["est"], "real": cg.get("walk10"), "source": "CGMacros, walk = " + cg.get("walkDefinition", "")},
             "lateDinner": {"program": cohort["lateDinner"]["est"], "real": cg["lateDinner"], "source": "CGMacros"},
@@ -529,11 +546,8 @@ def main(data_dir, out_dir):
         if sub is None:
             per[pid] = {"walk": None, "late": None}
             continue
-        din = sub[sub.meal_type == "dinner"]
-        per[pid] = {
-            "walk": person_effect(sub, "walked", walk_cov),
-            "late": person_effect(din, "late", ["carbs_g"]) if parts.set_index("participant_id").loc[pid, "work_schedule"] != "night shift" else None,
-        }
+        mp = ml["personal"].get(pid, {})
+        per[pid] = {"walk": mp.get("walk"), "late": mp.get("late")}
     tau_w = dl_tau2([p["walk"] for p in per.values()])
     tau_l = dl_tau2([p["late"] for p in per.values()])
 
@@ -613,7 +627,7 @@ def main(data_dir, out_dir):
         sl = shrink(pl, cohort["lateDinner"], tau_l)
         if pw:
             add("walk_effect_own", "Your sugar rise after meals with a walk vs without", pw["est"], "mg/dL", "person",
-                "Your meals only: regression of rise on walk, carbs and meal type; 95% CI from 300 bootstrap resamples of your meals.",
+                "Your meals only, from the ML engine: what the meal predicts is removed first (gradient boosting, cross-fitted), then the walk effect is fitted on what is left; 95% CI from 300 bootstrap resamples of your meals.",
                 ci=(pw["lo"], pw["hi"]), n=pw["n_flag"] + pw["n_other"],
                 caveat="You chose when to walk, so this is a pattern, not proof.")
             add("walk_effect_blend", "Best estimate for you (your data blended with the cohort)", sw["est"], "mg/dL", "person",
@@ -622,7 +636,7 @@ def main(data_dir, out_dir):
                 ci=(sw["lo"], sw["hi"]))
         if pl:
             add("late_effect_own", "Your sugar rise after dinners at 8 pm or later vs earlier", pl["est"], "mg/dL", "person",
-                "Your dinners only: regression of rise on late start and carbs; 95% CI from 300 bootstrap resamples.",
+                "Your dinners only, from the ML engine: what the meal predicts is removed first (gradient boosting, cross-fitted), then the late-start effect is fitted on what is left; 95% CI from 300 bootstrap resamples.",
                 ci=(pl["lo"], pl["hi"]), n=pl["n_flag"] + pl["n_other"],
                 caveat="Late dinners may differ in other ways (what you ate, how tired you were).")
             add("late_effect_blend", "Best estimate for you (your data blended with the cohort)", sl["est"], "mg/dL", "person",
@@ -641,32 +655,32 @@ def main(data_dir, out_dir):
         # cohort evidence copied in so each panel stands alone
         cw, cl = cohort["walk"], cohort["lateDinner"]
         add("cohort_walk", "Program-wide: rise after meals with a walk vs without (same person)", cw["est"], "mg/dL", "cohort",
-            "Within-person regression (person fixed effects) adjusted for carbs and meal type; 95% CI from cluster bootstrap over people.",
+            ml["method"]["walk"],
             ci=(cw["lo"], cw["hi"]), n=cw["rows"], caveat="Walking was self-chosen: association, not proof.")
         best = min([d for d in dose if d["bin"] != "none"], key=lambda d: d["est"])
         d1019 = next(d for d in dose if d["bin"] == "10-19 min")
         add("cohort_walk_10_19", "Program-wide: rise after a 10-19 min walk vs no walk", d1019["est"], "mg/dL", "cohort",
-            "Within-person, carbs and meal type adjusted; cluster bootstrap 95% CI.", ci=(d1019["lo"], d1019["hi"]), n=d1019["n_meals"])
+            ml["method"]["walk"], ci=(d1019["lo"], d1019["hi"]), n=d1019["n_meals"])
         d2029 = next(d for d in dose if d["bin"] == "20-29 min")
         d30 = next(d for d in dose if d["bin"] == "30+ min")
         add("cohort_walk_20_29", "Program-wide: rise after a 20-29 min walk vs no walk", d2029["est"], "mg/dL", "cohort",
-            "Within-person, carbs and meal type adjusted; cluster bootstrap 95% CI.", ci=(d2029["lo"], d2029["hi"]), n=d2029["n_meals"])
+            ml["method"]["walk"], ci=(d2029["lo"], d2029["hi"]), n=d2029["n_meals"])
         add("cohort_walk_30plus", "Program-wide: rise after a 30+ min walk vs no walk", d30["est"], "mg/dL", "cohort",
-            "Within-person, carbs and meal type adjusted; cluster bootstrap 95% CI.", ci=(d30["lo"], d30["hi"]), n=d30["n_meals"])
+            ml["method"]["walk"], ci=(d30["lo"], d30["hi"]), n=d30["n_meals"])
         h89 = next(d for d in dinner_hour if d["bin"] == "8-9pm")
         add("cohort_dinner_8_9pm", "Program-wide: rise after dinner at 8-9 pm vs before 6 pm (same person)", h89["est"], "mg/dL", "cohort",
-            "Within-person, carbs adjusted; night-shift workers excluded; cluster bootstrap 95% CI.", ci=(h89["lo"], h89["hi"]), n=h89["n_meals"],
+            ml["method"]["hour"] + " Night-shift workers excluded.", ci=(h89["lo"], h89["hi"]), n=h89["n_meals"],
             caveat="Association, not proof.")
         add("cohort_late", "Program-wide: rise after dinners at 8 pm or later vs earlier (same person)", cl["est"], "mg/dL", "cohort",
-            "Within-person regression adjusted for carbs; night-shift workers excluded; cluster bootstrap 95% CI.",
+            ml["method"]["late"] + " Night-shift workers excluded.",
             ci=(cl["lo"], cl["hi"]), n=cl["rows"], caveat="Association, not proof.")
         cwd = cohort["walkAfterDinner"]
         cwo = cohort["walkAfterOtherMeals"]
         add("cohort_walk_dinner", "Program-wide: rise after dinner with a walk vs without (same person)", cwd["est"], "mg/dL", "cohort",
-            "Within-person regression on dinners, adjusted for carbs; night-shift workers excluded; cluster bootstrap 95% CI.",
+            ml["method"]["walkDinner"] + " Dinners only; night-shift workers excluded.",
             ci=(cwd["lo"], cwd["hi"]), n=cwd["rows"], caveat="Walking was self-chosen: association, not proof.")
         add("cohort_walk_other", "Program-wide: rise after other meals with a walk vs without (same person)", cwo["est"], "mg/dL", "cohort",
-            "Within-person regression on breakfasts, lunches and snacks, adjusted for carbs and meal type; cluster bootstrap 95% CI.",
+            ml["method"]["walk"] + " Breakfasts, lunches and snacks.",
             ci=(cwo["lo"], cwo["hi"]), n=cwo["rows"])
         tsg = trial["fastVsCoachingBySubgroup"]["hba1c_pct"][f"blood sugar: {info.blood_sugar_group}"]
         add("trial_fast_hba1c_group", f"Randomized, people who started with {info.blood_sugar_group}: HbA1c change, coaching + overnight fast vs coaching alone",
@@ -688,7 +702,7 @@ def main(data_dir, out_dir):
         if realworld:
             cg = realworld["cgmacros"]
             add("real_late_dinner", "Real-data check (CGMacros, 45 real adults): dinner at 8 pm or later vs earlier",
-                cg["lateDinner"]["est"], "mg/dL", "real", "Within-person, carbs adjusted; cluster bootstrap 95% CI.",
+                cg["lateDinner"]["est"], "mg/dL", "real", "Same ML engine as the program (double ML, calories and macros), within person; person-clustered 95% CI.",
                 ci=(cg["lateDinner"]["lo"], cg["lateDinner"]["hi"]), n=cg["lateDinner"]["rows"],
                 caveat="Same direction as the program data, but the interval includes zero: not proven in real people yet.")
             add("real_movement", "Real-data check (CGMacros): rise per extra MET of movement in the hour after a meal",
@@ -697,7 +711,7 @@ def main(data_dir, out_dir):
                 caveat="No clear effect in 45 real adults over 10 days; Fitbit METs are a rough measure of walking.")
             if cg.get("walk10"):
                 add("real_walk", "Real-data check (CGMacros): rise after meals followed by a walk vs not",
-                    cg["walk10"]["est"], "mg/dL", "real", f"Walk = {cg['walkDefinition']}. Within-person, carbs adjusted; cluster bootstrap 95% CI.",
+                    cg["walk10"]["est"], "mg/dL", "real", f"Walk = {cg['walkDefinition']}. Same ML engine as the program (double ML, calories, macros and meal type), within person; person-clustered 95% CI.",
                     ci=(cg["walk10"]["lo"], cg["walk10"]["hi"]), n=cg["walk10"]["rows"],
                     caveat=f"Check result: {real_checks['walk']['label']}. About {power['walk']['peopleForRealEffect']} people would be needed to confirm an effect this size.")
             nw = realworld.get("nhanesSurvivorsWeighted")
@@ -709,23 +723,30 @@ def main(data_dir, out_dir):
                     caveat=f"Check result: {real_checks['overnightFast']['label']}. A one-time survey snapshot, not a trial.")
         nc = rob["negativeControl"]
         add("cohort_walk_negctrl", "Check: pre-meal sugar before meals that were later followed by a walk vs not (same person)", nc["est"], "mg/dL", "cohort",
-            "Negative control: a walk after the meal cannot change the reading 15 min before it. Same model as the walk effect; cluster bootstrap 95% CI.",
+            "Negative control: a walk after the meal cannot change the reading 15 min before it. Same ML engine as the walk effect (double ML); person-clustered 95% CI.",
             ci=(nc["lo"], nc["hi"]), n=nc["rows"], caveat="Near zero, so walk meals do not start from a different place.")
         add("cohort_walk_evalue", "Check: how strongly a hidden factor would have to link to both walking and the rise to explain the walk effect away (E-value)",
             rob["eValue"]["estimate"], "x (risk ratio)", "cohort",
-            f"VanderWeele-Ding E-value; mean difference converted with the within-person residual SD ({r(rob['eValue']['sdUsed'])} mg/dL). "
+            f"VanderWeele-Ding E-value; mean difference converted with the ML engine's within-person residual SD ({r(rob['eValue']['sdUsed'])} mg/dL). "
             f"For the CI bound nearer zero: {r(rob['eValue']['ciBound'])}.")
-        if mlc:
-            for eid, key, what in (("cohort_walk_dml", "walk", "a walk after the meal"), ("cohort_late_dml", "lateDinner", "dinner at 8 pm or later")):
-                dm = mlc["realEffects"][key]["Double ML (gradient boosting)"]
-                fe_ = mlc["realEffects"][key]["Fixed effects (statistics, used now)"]
-                agree = dm["lo"] <= fe_["hi"] and fe_["lo"] <= dm["hi"] and np.sign(dm["est"]) == np.sign(fe_["est"])
-                add(eid, f"Machine-learning cross-check (double ML): rise with {what}, same person", dm["est"], "mg/dL", "cohort",
-                    "Double machine learning: gradient-boosting models remove what carbs, pre-meal sugar, hour and meal type predict, "
-                    "then the effect is fitted on what is left; 3-fold cross-fitting, person-clustered 95% CI. See ML_COMPARISON.md.",
-                    ci=(dm["lo"], dm["hi"]), caveat=f"Statistical estimate with the same inputs: {fe_['est']:+g}. "
-                    + ("The intervals overlap, so the number does not depend on a straight-line model." if agree
-                       else "The two disagree; treat the advice number with extra caution."))
+        for eid, key, what in (("cohort_walk_fe", "walk", "a walk after the meal"), ("cohort_late_fe", "lateDinner", "dinner at 8 pm or later")):
+            fe_, dm = stats["effects"][key], cohort[key]
+            agree = dm["lo"] <= fe_["hi"] and fe_["lo"] <= dm["hi"] and np.sign(dm["est"]) == np.sign(fe_["est"])
+            add(eid, f"Statistics cross-check (fixed-effects regression): rise with {what}, same person", fe_["est"], "mg/dL", "cohort",
+                "Within-person linear regression (person fixed effects) adjusted for carbs" + (" and meal type" if key == "walk" else "")
+                + "; cluster bootstrap 95% CI over people. The advice uses the ML engine; this is the classic check.",
+                ci=(fe_["lo"], fe_["hi"]), n=fe_["rows"],
+                caveat=f"ML engine: {r(dm['est']):+g}. " + ("The intervals overlap, so the number does not depend on the method." if agree
+                                                         else "The two disagree; treat the advice number with extra caution."))
+        fcp = ml["forecast"]["dinnerByPerson"].get(pid)
+        if fcp:
+            add("ml_forecast_dinner", "ML forecast: expected rise after your typical dinner", fcp["pred"], "mg/dL", "person",
+                "Gradient boosting trained on every program meal (calories, macros, meal type, start time, pre-meal sugar and its trend, "
+                "your usual rise). Each of your dinners is forecast by a model that never saw it (5-fold, out-of-fold); this is the average.",
+                n=fcp["n"], caveat="A forecast, not a measurement.")
+            add("ml_forecast_error", "ML forecast: typical miss on a meal it never saw", ml["forecast"]["mae"], "mg/dL", "cohort",
+                f"Mean absolute error over {ml['forecast']['meals']} out-of-fold meals; R² {ml['forecast']['r2']}. "
+                f"80% of misses fall between {ml['forecast']['err10']} and {ml['forecast']['err90']} mg/dL.")
         hz = trial["heterogeneity"]["hba1c_pct"]
         add("trial_fast_heterogeneity", "Randomized: do blood sugar groups differ in the fast effect on HbA1c? (test p-value)", hz["p"], "p", "trial",
             "Cochran Q across the three starting blood sugar groups (2 degrees of freedom). Under 0.05 would mean the groups really differ.",
@@ -804,7 +825,7 @@ def main(data_dir, out_dir):
         for rec in recs:
             if rec["id"] == "walk":
                 rec["evidenceIds"] += ["cohort_walk_negctrl", "cohort_walk_evalue"]
-            ml_eid = {"walk": "cohort_walk_dml", "late_dinner": "cohort_late_dml"}.get(rec["id"])
+            ml_eid = {"walk": "cohort_walk_fe", "late_dinner": "cohort_late_fe"}.get(rec["id"])
             if ml_eid in evid:
                 rec["evidenceIds"].append(ml_eid)
             key, eid = {"walk": ("walk", "real_walk"), "late_dinner": ("lateDinner", "real_late_dinner"),
@@ -899,6 +920,7 @@ def main(data_dir, out_dir):
                    f"{info.blood_sugar_group} at start; group: {info.group}; {info.work_schedule}. "
                    f"Average sugar {round(m_last["mean"])} mg/dL in {latest_label}, {round(m_last["tir"])}% of readings in range. "
                    + (f"Median rise after dinner {round(din.rise.median())} mg/dL. " if len(din) else "")
+                   + (f"ML forecast for a typical dinner: {round(fcp['pred'])} mg/dL. " if fcp else "")
                    + "Synthetic participant (made-up data).")
         detail = {"survivorId": sid, "displayName": display, "status": st, "statusReasons": reasons, "headline": headline, "tags": tags,
                   "summary": summary, "updatedAt": updated,
@@ -942,6 +964,10 @@ def main(data_dir, out_dir):
         },
         "statusCounts": status_counts,
         "realWorld": realworld,
+        "engine": ml["engine"],
+        "statistics": {k: (eff(v_) if isinstance(v_, dict) and "est" in v_ else v_) for k, v_ in stats.items() if k in ("effects", "negativeControl")}
+                      | {"walkDose": stats["walkDose"], "dinnerHour": stats["dinnerHour"]},
+        "forecast": {k: v_ for k, v_ in ml["forecast"].items() if k != "dinnerByPerson"},
         "mlCompare": mlc,
         "methods": __doc__.split("Methods (all numbers in evidence[] come from here):")[1].strip(),
     }

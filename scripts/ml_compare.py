@@ -235,9 +235,9 @@ def est_dml(d, Xc, folds=3):
 
 ESTIMATORS = {
     "Naive difference": est_naive,
-    "Fixed effects (statistics, used now)": est_fe,
+    "Fixed effects (statistics)": est_fe,
     "S-learner (gradient boosting)": est_slearner,
-    "Double ML (gradient boosting)": est_dml,
+    "Double ML (gradient boosting, shipped)": est_dml,
 }
 
 
@@ -268,7 +268,9 @@ def effect_benchmark(base, Xc, rng):
 
 def personal_benchmark(base, Xc, rng):
     people = base.participant_id.unique()
-    errs = {k: [] for k in ("Own data only (OLS)", "Blend with cohort (empirical Bayes, used now)", "S-learner per person (gradient boosting)")}
+    from ml_effects import MACROS as ML_MACROS, MT as ML_MT, dml, person_effects
+    errs = {k: [] for k in ("Own data only (OLS)", "Blend with cohort (empirical Bayes, statistics)", "S-learner per person (gradient boosting)",
+                            "Double ML residuals, blended with cohort (shipped)")}
     scored = []
     for _ in range(REPS_PERSON):
         tau_i = pd.Series(rng.normal(TAU, TAU_SD, len(people)), index=people)
@@ -283,10 +285,18 @@ def personal_benchmark(base, Xc, rng):
         boots = np.array([own[p]["est"] for p in ok])
         coh = {"est": fe, "lo": fe - 1.96 * boots.std() / np.sqrt(len(ok)), "hi": fe + 1.96 * boots.std() / np.sqrt(len(ok))}
         ml = est_slearner(d, Xc, per_person=True)
+        for c_ in ML_MT:
+            d[c_] = (d.meal_type == c_[3:]).astype(float)
+        dm = dml(d, "T", "y", ML_MACROS + ML_MT, keep=True, min_meals=1)
+        pdm = person_effects(dm["_frame"], rng)
+        tau2_dm = dl_tau2([e for e in pdm.values() if e])
         for p in ok:
             errs["Own data only (OLS)"].append(own[p]["est"] - tau_i[p])
-            errs["Blend with cohort (empirical Bayes, used now)"].append(shrink(own[p], coh, tau2)["est"] - tau_i[p])
+            errs["Blend with cohort (empirical Bayes, statistics)"].append(shrink(own[p], coh, tau2)["est"] - tau_i[p])
             errs["S-learner per person (gradient boosting)"].append(ml[p] - tau_i[p])
+            own_dm = pdm.get(p)
+            est_dm = shrink(own_dm, dm, tau2_dm)["est"] if own_dm else dm["est"]
+            errs["Double ML residuals, blended with cohort (shipped)"].append(est_dm - tau_i[p])
         scored.append(len(ok))
     return {"peopleScoredPerRep": int(np.median(scored)), "reps": REPS_PERSON,
             "rmse": {k: r(np.sqrt(np.mean(np.square(v))), 2) for k, v in errs.items()},
@@ -368,7 +378,7 @@ def main(data_dir, out_path):
     Xd = features(din, ["carbs_g"])[["carbs_g", "baseline"]]
     for name, d, Xr in (("walk", allm, Xa), ("lateDinner", din, Xd)):
         real[name] = {}
-        for k in ("Fixed effects (statistics, used now)", "Double ML (gradient boosting)"):
+        for k in ("Fixed effects (statistics)", "Double ML (gradient boosting, shipped)"):
             th, se = ESTIMATORS[k](d, Xr)
             real[name][k] = {"est": r(th), "lo": r(th - 1.96 * se), "hi": r(th + 1.96 * se)}
     real["note"] = "Same covariates for both (carbs, pre-meal sugar, hour, meal type for walks; carbs and pre-meal sugar for late dinners). FE here adds pre-meal sugar and hour, so it can differ slightly from the advice numbers."

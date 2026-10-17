@@ -1,0 +1,6864 @@
+{
+ "engine": "double machine learning (gradient boosting), within person",
+ "folds": 5,
+ "repeats": 3,
+ "seed": 20261017,
+ "method": {
+  "walk": "Double machine learning: gradient boosting learns what the meal (calories, carbs, protein, fat, fiber, sugar, meal type) predicts about the rise and about whether you walked; the effect is fitted on what is left, within person. 5-fold cross-fitting repeated 3 times; person-clustered 95% CI.",
+  "walkDinner": "Double machine learning: gradient boosting learns what the meal (calories, carbs, protein, fat, fiber, sugar) predicts about the rise and about whether you walked; the effect is fitted on what is left, within person. 5-fold cross-fitting repeated 3 times; person-clustered 95% CI.",
+  "late": "Double machine learning: gradient boosting learns what the meal (calories, carbs, protein, fat, fiber, sugar) predicts about the rise and about whether dinner started at 8 pm or later; the effect is fitted on what is left, within person. 5-fold cross-fitting repeated 3 times; person-clustered 95% CI.",
+  "hour": "Double machine learning: gradient boosting learns what the meal (calories, carbs, protein, fat, fiber, sugar) predicts about the rise and about the dinner start time; the effect is fitted on what is left, within person. 5-fold cross-fitting repeated 3 times; person-clustered 95% CI.",
+  "negctrl": "Double machine learning: gradient boosting learns what the meal (calories, carbs, protein, fat, fiber, sugar, meal type) predicts about the pre-meal reading and about whether you walked; the effect is fitted on what is left, within person. 5-fold cross-fitting repeated 3 times; person-clustered 95% CI."
+ },
+ "cohort": {
+  "walk": {
+   "est": -17.77,
+   "lo": -19.19,
+   "hi": -16.35,
+   "se": 0.72,
+   "people": 500,
+   "rows": 18218,
+   "residSd": 20.05
+  },
+  "walkIauc": {
+   "est": -23.72,
+   "lo": -25.68,
+   "hi": -21.75,
+   "se": 1.0,
+   "people": 500,
+   "rows": 18218,
+   "residSd": 27.58
+  },
+  "walkAfterDinner": {
+   "est": -18.31,
+   "lo": -20.08,
+   "hi": -16.55,
+   "se": 0.9,
+   "people": 471,
+   "rows": 4693,
+   "residSd": 20.86
+  },
+  "walkAfterOtherMeals": {
+   "est": -14.61,
+   "lo": -16.51,
+   "hi": -12.7,
+   "se": 0.97,
+   "people": 500,
+   "rows": 13323,
+   "residSd": 18.74
+  },
+  "lateDinner": {
+   "est": 9.21,
+   "lo": 7.09,
+   "hi": 11.32,
+   "se": 1.08,
+   "people": 471,
+   "rows": 4693,
+   "residSd": 21.93
+  },
+  "lateDinnerIauc": {
+   "est": 12.92,
+   "lo": 9.97,
+   "hi": 15.88,
+   "se": 1.51,
+   "people": 471,
+   "rows": 4693,
+   "residSd": 30.93
+  },
+  "carbsPer10g": {
+   "est": 6.46,
+   "lo": 6.07,
+   "hi": 6.84,
+   "se": 0.2,
+   "people": 500,
+   "rows": 18218,
+   "residSd": 21.08
+  },
+  "negativeControl": {
+   "est": -0.35,
+   "lo": -1.38,
+   "hi": 0.68,
+   "se": 0.53,
+   "people": 500,
+   "rows": 18214,
+   "residSd": 19.51
+  }
+ },
+ "byGroup": {
+  "normal": {
+   "walk": {
+    "est": -13.18,
+    "lo": -14.62,
+    "hi": -11.74,
+    "se": 0.73,
+    "people": 230,
+    "rows": 8525,
+    "residSd": 14.46
+   },
+   "lateDinner": {
+    "est": 5.57,
+    "lo": 3.63,
+    "hi": 7.51,
+    "se": 0.99,
+    "people": 217,
+    "rows": 2193,
+    "residSd": 16.57
+   }
+  },
+  "prediabetes": {
+   "walk": {
+    "est": -18.68,
+    "lo": -21.67,
+    "hi": -15.69,
+    "se": 1.52,
+    "people": 145,
+    "rows": 5289,
+    "residSd": 21.5
+   },
+   "lateDinner": {
+    "est": 12.08,
+    "lo": 6.52,
+    "hi": 17.65,
+    "se": 2.84,
+    "people": 139,
+    "rows": 1365,
+    "residSd": 24.96
+   }
+  },
+  "type 2 diabetes": {
+   "walk": {
+    "est": -23.32,
+    "lo": -26.75,
+    "hi": -19.89,
+    "se": 1.75,
+    "people": 125,
+    "rows": 4404,
+    "residSd": 25.81
+   },
+   "lateDinner": {
+    "est": 10.02,
+    "lo": 4.98,
+    "hi": 15.06,
+    "se": 2.57,
+    "people": 115,
+    "rows": 1135,
+    "residSd": 28.71
+   }
+  }
+ },
+ "walkDose": [
+  {
+   "bin": "none",
+   "est": 0.0,
+   "lo": 0.0,
+   "hi": 0.0,
+   "n_meals": 16679
+  },
+  {
+   "bin": "10-19 min",
+   "est": -17.47,
+   "lo": -19.11,
+   "hi": -15.82,
+   "se": 0.84,
+   "people": 500,
+   "rows": 18218,
+   "residSd": 20.05,
+   "n_meals": 866
+  },
+  {
+   "bin": "20-29 min",
+   "est": -19.5,
+   "lo": -21.87,
+   "hi": -17.13,
+   "se": 1.21,
+   "people": 500,
+   "rows": 18218,
+   "residSd": 20.05,
+   "n_meals": 311
+  },
+  {
+   "bin": "30+ min",
+   "est": -16.63,
+   "lo": -19.03,
+   "hi": -14.22,
+   "se": 1.23,
+   "people": 500,
+   "rows": 18218,
+   "residSd": 20.05,
+   "n_meals": 362
+  }
+ ],
+ "dinnerHour": [
+  {
+   "bin": "before 6pm",
+   "est": 0.0,
+   "lo": 0.0,
+   "hi": 0.0,
+   "n_meals": 642
+  },
+  {
+   "bin": "6-7pm",
+   "est": 3.88,
+   "lo": 1.3,
+   "hi": 6.46,
+   "se": 1.32,
+   "people": 471,
+   "rows": 4689,
+   "residSd": 21.61,
+   "n_meals": 817
+  },
+  {
+   "bin": "7-8pm",
+   "est": 8.35,
+   "lo": 5.39,
+   "hi": 11.3,
+   "se": 1.51,
+   "people": 471,
+   "rows": 4689,
+   "residSd": 21.61,
+   "n_meals": 1014
+  },
+  {
+   "bin": "8-9pm",
+   "est": 13.27,
+   "lo": 9.71,
+   "hi": 16.83,
+   "se": 1.82,
+   "people": 471,
+   "rows": 4689,
+   "residSd": 21.61,
+   "n_meals": 964
+  },
+  {
+   "bin": "9-10pm",
+   "est": 18.2,
+   "lo": 14.6,
+   "hi": 21.8,
+   "se": 1.84,
+   "people": 471,
+   "rows": 4689,
+   "residSd": 21.61,
+   "n_meals": 738
+  },
+  {
+   "bin": "10pm or later",
+   "est": 25.44,
+   "lo": 20.64,
+   "hi": 30.24,
+   "se": 2.45,
+   "people": 471,
+   "rows": 4689,
+   "residSd": 21.61,
+   "n_meals": 532
+  }
+ ],
+ "personal": {
+  "N0006": {
+   "walk": null,
+   "late": null
+  },
+  "N0013": {
+   "walk": null,
+   "late": null
+  },
+  "N0018": {
+   "walk": {
+    "est": -3.74,
+    "se": 8.52,
+    "lo": -17.48,
+    "hi": 15.53,
+    "n_flag": 5,
+    "n_other": 58
+   },
+   "late": null
+  },
+  "N0020": {
+   "walk": null,
+   "late": {
+    "est": 41.2,
+    "se": 10.98,
+    "lo": 22.37,
+    "hi": 62.8,
+    "n_flag": 6,
+    "n_other": 3
+   }
+  },
+  "N0021": {
+   "walk": {
+    "est": -15.96,
+    "se": 14.25,
+    "lo": -38.23,
+    "hi": 14.47,
+    "n_flag": 3,
+    "n_other": 19
+   },
+   "late": null
+  },
+  "N0024": {
+   "walk": null,
+   "late": null
+  },
+  "N0026": {
+   "walk": {
+    "est": -28.33,
+    "se": 6.24,
+    "lo": -39.22,
+    "hi": -13.23,
+    "n_flag": 6,
+    "n_other": 37
+   },
+   "late": null
+  },
+  "N0028": {
+   "walk": {
+    "est": -28.15,
+    "se": 9.18,
+    "lo": -41.73,
+    "hi": -6.62,
+    "n_flag": 3,
+    "n_other": 24
+   },
+   "late": {
+    "est": 22.59,
+    "se": 12.58,
+    "lo": -4.72,
+    "hi": 42.81,
+    "n_flag": 3,
+    "n_other": 4
+   }
+  },
+  "N0031": {
+   "walk": null,
+   "late": {
+    "est": -19.44,
+    "se": 9.09,
+    "lo": -37.06,
+    "hi": -0.83,
+    "n_flag": 5,
+    "n_other": 3
+   }
+  },
+  "N0035": {
+   "walk": {
+    "est": -15.76,
+    "se": 5.62,
+    "lo": -27.06,
+    "hi": -6.37,
+    "n_flag": 5,
+    "n_other": 43
+   },
+   "late": null
+  },
+  "N0044": {
+   "walk": {
+    "est": -25.83,
+    "se": 17.09,
+    "lo": -34.59,
+    "hi": 35.79,
+    "n_flag": 3,
+    "n_other": 62
+   },
+   "late": null
+  },
+  "N0048": {
+   "walk": {
+    "est": -15.88,
+    "se": 6.54,
+    "lo": -27.93,
+    "hi": -2.46,
+    "n_flag": 5,
+    "n_other": 40
+   },
+   "late": null
+  },
+  "N0051": {
+   "walk": {
+    "est": -31.09,
+    "se": 9.45,
+    "lo": -48.36,
+    "hi": -10.29,
+    "n_flag": 6,
+    "n_other": 42
+   },
+   "late": {
+    "est": 25.4,
+    "se": 11.38,
+    "lo": 1.7,
+    "hi": 49.58,
+    "n_flag": 9,
+    "n_other": 6
+   }
+  },
+  "N0055": {
+   "walk": null,
+   "late": null
+  },
+  "N0057": {
+   "walk": {
+    "est": -27.18,
+    "se": 15.27,
+    "lo": -59.98,
+    "hi": -0.55,
+    "n_flag": 6,
+    "n_other": 35
+   },
+   "late": {
+    "est": 36.89,
+    "se": 20.04,
+    "lo": 0.94,
+    "hi": 78.1,
+    "n_flag": 6,
+    "n_other": 4
+   }
+  },
+  "N0059": {
+   "walk": {
+    "est": -25.42,
+    "se": 5.3,
+    "lo": -35.98,
+    "hi": -15.58,
+    "n_flag": 5,
+    "n_other": 41
+   },
+   "late": {
+    "est": -10.31,
+    "se": 7.08,
+    "lo": -25.99,
+    "hi": 3.81,
+    "n_flag": 9,
+    "n_other": 4
+   }
+  },
+  "N0061": {
+   "walk": {
+    "est": -12.11,
+    "se": 7.58,
+    "lo": -23.07,
+    "hi": 7.13,
+    "n_flag": 4,
+    "n_other": 24
+   },
+   "late": null
+  },
+  "N0062": {
+   "walk": null,
+   "late": {
+    "est": -4.92,
+    "se": 5.24,
+    "lo": -15.44,
+    "hi": 4.0,
+    "n_flag": 4,
+    "n_other": 8
+   }
+  },
+  "N0072": {
+   "walk": null,
+   "late": null
+  },
+  "N0080": {
+   "walk": null,
+   "late": null
+  },
+  "N0085": {
+   "walk": null,
+   "late": null
+  },
+  "N0088": {
+   "walk": null,
+   "late": null
+  },
+  "N0092": {
+   "walk": {
+    "est": -33.57,
+    "se": 6.44,
+    "lo": -43.7,
+    "hi": -19.96,
+    "n_flag": 6,
+    "n_other": 16
+   },
+   "late": null
+  },
+  "N0093": {
+   "walk": null,
+   "late": null
+  },
+  "N0097": {
+   "walk": null,
+   "late": null
+  },
+  "N0100": {
+   "walk": null,
+   "late": null
+  },
+  "N0103": {
+   "walk": {
+    "est": -11.67,
+    "se": 4.62,
+    "lo": -19.46,
+    "hi": -0.59,
+    "n_flag": 5,
+    "n_other": 42
+   },
+   "late": {
+    "est": 1.19,
+    "se": 5.13,
+    "lo": -8.39,
+    "hi": 11.49,
+    "n_flag": 8,
+    "n_other": 7
+   }
+  },
+  "N0105": {
+   "walk": {
+    "est": -18.45,
+    "se": 5.24,
+    "lo": -29.33,
+    "hi": -8.81,
+    "n_flag": 10,
+    "n_other": 26
+   },
+   "late": {
+    "est": 10.63,
+    "se": 8.53,
+    "lo": -8.6,
+    "hi": 23.69,
+    "n_flag": 5,
+    "n_other": 7
+   }
+  },
+  "N0108": {
+   "walk": null,
+   "late": null
+  },
+  "N0113": {
+   "walk": {
+    "est": -19.05,
+    "se": 4.7,
+    "lo": -27.68,
+    "hi": -9.28,
+    "n_flag": 7,
+    "n_other": 37
+   },
+   "late": {
+    "est": -3.93,
+    "se": 8.91,
+    "lo": -20.64,
+    "hi": 14.28,
+    "n_flag": 3,
+    "n_other": 9
+   }
+  },
+  "N0117": {
+   "walk": null,
+   "late": null
+  },
+  "N0128": {
+   "walk": null,
+   "late": null
+  },
+  "N0134": {
+   "walk": null,
+   "late": null
+  },
+  "N0139": {
+   "walk": {
+    "est": -23.7,
+    "se": 11.14,
+    "lo": -43.71,
+    "hi": -2.76,
+    "n_flag": 3,
+    "n_other": 31
+   },
+   "late": null
+  },
+  "N0145": {
+   "walk": {
+    "est": -19.17,
+    "se": 9.81,
+    "lo": -32.69,
+    "hi": 6.23,
+    "n_flag": 3,
+    "n_other": 39
+   },
+   "late": null
+  },
+  "N0148": {
+   "walk": {
+    "est": -15.55,
+    "se": 6.08,
+    "lo": -25.92,
+    "hi": -2.94,
+    "n_flag": 4,
+    "n_other": 31
+   },
+   "late": null
+  },
+  "N0149": {
+   "walk": null,
+   "late": null
+  },
+  "N0151": {
+   "walk": {
+    "est": -86.28,
+    "se": 17.25,
+    "lo": -126.08,
+    "hi": -56.64,
+    "n_flag": 5,
+    "n_other": 29
+   },
+   "late": null
+  },
+  "N0155": {
+   "walk": {
+    "est": -8.16,
+    "se": 4.76,
+    "lo": -14.57,
+    "hi": 3.32,
+    "n_flag": 4,
+    "n_other": 57
+   },
+   "late": null
+  },
+  "N0166": {
+   "walk": null,
+   "late": null
+  },
+  "N0176": {
+   "walk": null,
+   "late": null
+  },
+  "N0179": {
+   "walk": null,
+   "late": {
+    "est": 4.48,
+    "se": 18.0,
+    "lo": -24.94,
+    "hi": 42.09,
+    "n_flag": 3,
+    "n_other": 5
+   }
+  },
+  "N0181": {
+   "walk": null,
+   "late": null
+  },
+  "N0183": {
+   "walk": null,
+   "late": null
+  },
+  "N0187": {
+   "walk": {
+    "est": -26.15,
+    "se": 6.11,
+    "lo": -38.87,
+    "hi": -14.4,
+    "n_flag": 6,
+    "n_other": 28
+   },
+   "late": null
+  },
+  "N0191": {
+   "walk": null,
+   "late": null
+  },
+  "N0193": {
+   "walk": {
+    "est": -0.05,
+    "se": 15.82,
+    "lo": -38.85,
+    "hi": 23.07,
+    "n_flag": 3,
+    "n_other": 27
+   },
+   "late": {
+    "est": -15.47,
+    "se": 13.2,
+    "lo": -45.34,
+    "hi": 7.73,
+    "n_flag": 3,
+    "n_other": 6
+   }
+  },
+  "N0194": {
+   "walk": null,
+   "late": null
+  },
+  "N0200": {
+   "walk": {
+    "est": -54.25,
+    "se": 13.39,
+    "lo": -78.82,
+    "hi": -22.48,
+    "n_flag": 3,
+    "n_other": 32
+   },
+   "late": null
+  },
+  "N0204": {
+   "walk": null,
+   "late": null
+  },
+  "N0205": {
+   "walk": null,
+   "late": null
+  },
+  "N0206": {
+   "walk": null,
+   "late": null
+  },
+  "N0207": {
+   "walk": null,
+   "late": null
+  },
+  "N0208": {
+   "walk": null,
+   "late": null
+  },
+  "N0212": {
+   "walk": null,
+   "late": null
+  },
+  "N0214": {
+   "walk": {
+    "est": -33.82,
+    "se": 10.89,
+    "lo": -52.38,
+    "hi": -8.15,
+    "n_flag": 5,
+    "n_other": 19
+   },
+   "late": {
+    "est": 43.02,
+    "se": 8.59,
+    "lo": 25.21,
+    "hi": 57.9,
+    "n_flag": 7,
+    "n_other": 4
+   }
+  },
+  "N0215": {
+   "walk": null,
+   "late": {
+    "est": 8.58,
+    "se": 4.93,
+    "lo": -1.89,
+    "hi": 16.9,
+    "n_flag": 3,
+    "n_other": 5
+   }
+  },
+  "N0216": {
+   "walk": {
+    "est": 0.26,
+    "se": 3.05,
+    "lo": -4.97,
+    "hi": 6.17,
+    "n_flag": 4,
+    "n_other": 32
+   },
+   "late": null
+  },
+  "N0226": {
+   "walk": null,
+   "late": null
+  },
+  "N0228": {
+   "walk": {
+    "est": -2.38,
+    "se": 10.97,
+    "lo": -21.95,
+    "hi": 20.37,
+    "n_flag": 3,
+    "n_other": 27
+   },
+   "late": null
+  },
+  "N0231": {
+   "walk": null,
+   "late": null
+  },
+  "N0235": {
+   "walk": null,
+   "late": null
+  },
+  "N0237": {
+   "walk": null,
+   "late": null
+  },
+  "N0244": {
+   "walk": null,
+   "late": {
+    "est": -4.53,
+    "se": 8.05,
+    "lo": -17.0,
+    "hi": 14.65,
+    "n_flag": 5,
+    "n_other": 3
+   }
+  },
+  "N0246": {
+   "walk": {
+    "est": -39.37,
+    "se": 12.86,
+    "lo": -62.6,
+    "hi": -14.01,
+    "n_flag": 3,
+    "n_other": 25
+   },
+   "late": {
+    "est": -16.35,
+    "se": 18.84,
+    "lo": -49.73,
+    "hi": 25.06,
+    "n_flag": 3,
+    "n_other": 3
+   }
+  },
+  "N0254": {
+   "walk": null,
+   "late": null
+  },
+  "N0255": {
+   "walk": null,
+   "late": {
+    "est": -1.47,
+    "se": 11.43,
+    "lo": -24.31,
+    "hi": 16.8,
+    "n_flag": 3,
+    "n_other": 6
+   }
+  },
+  "N0260": {
+   "walk": null,
+   "late": null
+  },
+  "N0262": {
+   "walk": null,
+   "late": null
+  },
+  "N0266": {
+   "walk": {
+    "est": -42.18,
+    "se": 13.04,
+    "lo": -73.66,
+    "hi": -19.35,
+    "n_flag": 3,
+    "n_other": 26
+   },
+   "late": null
+  },
+  "N0278": {
+   "walk": null,
+   "late": null
+  },
+  "N0287": {
+   "walk": {
+    "est": -7.66,
+    "se": 4.95,
+    "lo": -16.89,
+    "hi": 1.98,
+    "n_flag": 8,
+    "n_other": 40
+   },
+   "late": null
+  },
+  "N0288": {
+   "walk": null,
+   "late": null
+  },
+  "N0294": {
+   "walk": {
+    "est": -34.68,
+    "se": 9.54,
+    "lo": -52.4,
+    "hi": -20.94,
+    "n_flag": 4,
+    "n_other": 54
+   },
+   "late": null
+  },
+  "N0300": {
+   "walk": {
+    "est": -7.83,
+    "se": 6.56,
+    "lo": -19.86,
+    "hi": 5.28,
+    "n_flag": 6,
+    "n_other": 37
+   },
+   "late": null
+  },
+  "N0320": {
+   "walk": null,
+   "late": null
+  },
+  "N0326": {
+   "walk": null,
+   "late": null
+  },
+  "N0328": {
+   "walk": {
+    "est": -6.39,
+    "se": 7.04,
+    "lo": -21.03,
+    "hi": 5.93,
+    "n_flag": 9,
+    "n_other": 27
+   },
+   "late": null
+  },
+  "N0340": {
+   "walk": {
+    "est": -22.98,
+    "se": 4.15,
+    "lo": -32.02,
+    "hi": -15.14,
+    "n_flag": 8,
+    "n_other": 29
+   },
+   "late": {
+    "est": 1.35,
+    "se": 9.29,
+    "lo": -15.21,
+    "hi": 18.73,
+    "n_flag": 5,
+    "n_other": 8
+   }
+  },
+  "N0349": {
+   "walk": {
+    "est": -19.3,
+    "se": 16.66,
+    "lo": -60.45,
+    "hi": 1.57,
+    "n_flag": 3,
+    "n_other": 30
+   },
+   "late": null
+  },
+  "N0351": {
+   "walk": {
+    "est": -10.8,
+    "se": 13.86,
+    "lo": -36.9,
+    "hi": 16.26,
+    "n_flag": 3,
+    "n_other": 24
+   },
+   "late": null
+  },
+  "N0354": {
+   "walk": {
+    "est": -16.38,
+    "se": 5.92,
+    "lo": -27.96,
+    "hi": -5.02,
+    "n_flag": 13,
+    "n_other": 64
+   },
+   "late": {
+    "est": -5.25,
+    "se": 10.76,
+    "lo": -34.08,
+    "hi": 7.77,
+    "n_flag": 16,
+    "n_other": 3
+   }
+  },
+  "N0356": {
+   "walk": {
+    "est": -4.11,
+    "se": 36.96,
+    "lo": -77.15,
+    "hi": 58.54,
+    "n_flag": 4,
+    "n_other": 29
+   },
+   "late": {
+    "est": 60.44,
+    "se": 16.13,
+    "lo": 27.6,
+    "hi": 86.89,
+    "n_flag": 8,
+    "n_other": 3
+   }
+  },
+  "N0357": {
+   "walk": null,
+   "late": null
+  },
+  "N0358": {
+   "walk": null,
+   "late": null
+  },
+  "N0364": {
+   "walk": {
+    "est": -16.61,
+    "se": 6.26,
+    "lo": -29.43,
+    "hi": -5.24,
+    "n_flag": 5,
+    "n_other": 32
+   },
+   "late": {
+    "est": 2.45,
+    "se": 12.95,
+    "lo": -18.18,
+    "hi": 31.98,
+    "n_flag": 6,
+    "n_other": 3
+   }
+  },
+  "N0365": {
+   "walk": {
+    "est": -20.38,
+    "se": 6.73,
+    "lo": -31.91,
+    "hi": -7.48,
+    "n_flag": 4,
+    "n_other": 39
+   },
+   "late": {
+    "est": 23.04,
+    "se": 9.52,
+    "lo": 6.23,
+    "hi": 41.75,
+    "n_flag": 9,
+    "n_other": 4
+   }
+  },
+  "N0375": {
+   "walk": {
+    "est": -5.38,
+    "se": 6.5,
+    "lo": -16.21,
+    "hi": 6.94,
+    "n_flag": 5,
+    "n_other": 46
+   },
+   "late": null
+  },
+  "N0377": {
+   "walk": {
+    "est": -22.07,
+    "se": 11.79,
+    "lo": -46.15,
+    "hi": -1.78,
+    "n_flag": 9,
+    "n_other": 45
+   },
+   "late": null
+  },
+  "N0383": {
+   "walk": null,
+   "late": null
+  },
+  "N0391": {
+   "walk": null,
+   "late": null
+  },
+  "N0404": {
+   "walk": null,
+   "late": null
+  },
+  "N0406": {
+   "walk": {
+    "est": -11.41,
+    "se": 4.72,
+    "lo": -21.42,
+    "hi": -3.15,
+    "n_flag": 12,
+    "n_other": 50
+   },
+   "late": null
+  },
+  "N0408": {
+   "walk": null,
+   "late": null
+  },
+  "N0411": {
+   "walk": {
+    "est": -32.9,
+    "se": 11.59,
+    "lo": -54.44,
+    "hi": -11.02,
+    "n_flag": 5,
+    "n_other": 24
+   },
+   "late": null
+  },
+  "N0412": {
+   "walk": null,
+   "late": null
+  },
+  "N0417": {
+   "walk": null,
+   "late": null
+  },
+  "N0419": {
+   "walk": null,
+   "late": {
+    "est": 25.01,
+    "se": 29.78,
+    "lo": -24.89,
+    "hi": 82.72,
+    "n_flag": 4,
+    "n_other": 6
+   }
+  },
+  "N0424": {
+   "walk": null,
+   "late": null
+  },
+  "N0432": {
+   "walk": {
+    "est": -33.04,
+    "se": 12.57,
+    "lo": -54.54,
+    "hi": -9.45,
+    "n_flag": 4,
+    "n_other": 40
+   },
+   "late": null
+  },
+  "N0434": {
+   "walk": null,
+   "late": null
+  },
+  "N0439": {
+   "walk": null,
+   "late": null
+  },
+  "N0443": {
+   "walk": null,
+   "late": null
+  },
+  "N0445": {
+   "walk": null,
+   "late": null
+  },
+  "N0461": {
+   "walk": null,
+   "late": {
+    "est": 9.52,
+    "se": 11.18,
+    "lo": -10.32,
+    "hi": 33.12,
+    "n_flag": 8,
+    "n_other": 7
+   }
+  },
+  "N0464": {
+   "walk": null,
+   "late": null
+  },
+  "N0465": {
+   "walk": {
+    "est": -14.99,
+    "se": 25.19,
+    "lo": -69.72,
+    "hi": 16.8,
+    "n_flag": 4,
+    "n_other": 59
+   },
+   "late": null
+  },
+  "N0478": {
+   "walk": {
+    "est": 2.24,
+    "se": 9.09,
+    "lo": -14.88,
+    "hi": 18.99,
+    "n_flag": 3,
+    "n_other": 22
+   },
+   "late": null
+  },
+  "N0481": {
+   "walk": {
+    "est": -12.65,
+    "se": 5.58,
+    "lo": -21.34,
+    "hi": 0.82,
+    "n_flag": 5,
+    "n_other": 47
+   },
+   "late": {
+    "est": -0.53,
+    "se": 6.22,
+    "lo": -11.33,
+    "hi": 12.15,
+    "n_flag": 8,
+    "n_other": 7
+   }
+  },
+  "N0484": {
+   "walk": {
+    "est": -5.57,
+    "se": 5.87,
+    "lo": -15.49,
+    "hi": 8.28,
+    "n_flag": 4,
+    "n_other": 20
+   },
+   "late": null
+  },
+  "N0487": {
+   "walk": null,
+   "late": null
+  },
+  "N0495": {
+   "walk": null,
+   "late": null
+  },
+  "N0496": {
+   "walk": {
+    "est": -12.8,
+    "se": 11.23,
+    "lo": -33.78,
+    "hi": 10.82,
+    "n_flag": 7,
+    "n_other": 13
+   },
+   "late": null
+  },
+  "N0497": {
+   "walk": {
+    "est": -8.75,
+    "se": 4.13,
+    "lo": -16.61,
+    "hi": -0.97,
+    "n_flag": 11,
+    "n_other": 31
+   },
+   "late": null
+  },
+  "N0500": {
+   "walk": {
+    "est": -3.85,
+    "se": 7.66,
+    "lo": -19.28,
+    "hi": 9.61,
+    "n_flag": 8,
+    "n_other": 46
+   },
+   "late": null
+  },
+  "N0506": {
+   "walk": null,
+   "late": null
+  },
+  "N0508": {
+   "walk": null,
+   "late": {
+    "est": 23.65,
+    "se": 9.7,
+    "lo": 5.4,
+    "hi": 42.74,
+    "n_flag": 8,
+    "n_other": 3
+   }
+  },
+  "N0524": {
+   "walk": {
+    "est": -16.47,
+    "se": 18.03,
+    "lo": -36.64,
+    "hi": 32.86,
+    "n_flag": 3,
+    "n_other": 40
+   },
+   "late": {
+    "est": 1.39,
+    "se": 11.16,
+    "lo": -19.01,
+    "hi": 23.97,
+    "n_flag": 4,
+    "n_other": 7
+   }
+  },
+  "N0526": {
+   "walk": {
+    "est": -10.56,
+    "se": 4.94,
+    "lo": -21.51,
+    "hi": -2.63,
+    "n_flag": 11,
+    "n_other": 38
+   },
+   "late": null
+  },
+  "N0532": {
+   "walk": {
+    "est": -19.6,
+    "se": 6.65,
+    "lo": -32.2,
+    "hi": -6.71,
+    "n_flag": 12,
+    "n_other": 39
+   },
+   "late": {
+    "est": 17.17,
+    "se": 6.74,
+    "lo": 2.34,
+    "hi": 28.74,
+    "n_flag": 12,
+    "n_other": 6
+   }
+  },
+  "N0533": {
+   "walk": {
+    "est": -8.66,
+    "se": 13.1,
+    "lo": -32.43,
+    "hi": 16.25,
+    "n_flag": 5,
+    "n_other": 53
+   },
+   "late": {
+    "est": 15.54,
+    "se": 11.54,
+    "lo": -7.32,
+    "hi": 39.39,
+    "n_flag": 8,
+    "n_other": 5
+   }
+  },
+  "N0551": {
+   "walk": {
+    "est": -5.53,
+    "se": 9.12,
+    "lo": -23.65,
+    "hi": 9.92,
+    "n_flag": 4,
+    "n_other": 29
+   },
+   "late": {
+    "est": -4.04,
+    "se": 10.56,
+    "lo": -22.97,
+    "hi": 18.34,
+    "n_flag": 5,
+    "n_other": 6
+   }
+  },
+  "N0553": {
+   "walk": null,
+   "late": null
+  },
+  "N0555": {
+   "walk": null,
+   "late": null
+  },
+  "N0557": {
+   "walk": {
+    "est": -13.98,
+    "se": 7.54,
+    "lo": -28.67,
+    "hi": -0.22,
+    "n_flag": 7,
+    "n_other": 14
+   },
+   "late": null
+  },
+  "N0566": {
+   "walk": {
+    "est": -8.14,
+    "se": 9.03,
+    "lo": -27.35,
+    "hi": 6.43,
+    "n_flag": 5,
+    "n_other": 31
+   },
+   "late": null
+  },
+  "N0567": {
+   "walk": {
+    "est": -26.73,
+    "se": 6.43,
+    "lo": -38.45,
+    "hi": -13.02,
+    "n_flag": 5,
+    "n_other": 52
+   },
+   "late": {
+    "est": 9.77,
+    "se": 13.35,
+    "lo": -20.08,
+    "hi": 33.66,
+    "n_flag": 9,
+    "n_other": 3
+   }
+  },
+  "N0568": {
+   "walk": null,
+   "late": null
+  },
+  "N0576": {
+   "walk": {
+    "est": -11.21,
+    "se": 13.83,
+    "lo": -27.05,
+    "hi": 27.71,
+    "n_flag": 3,
+    "n_other": 57
+   },
+   "late": null
+  },
+  "N0579": {
+   "walk": {
+    "est": -9.94,
+    "se": 2.87,
+    "lo": -16.49,
+    "hi": -5.69,
+    "n_flag": 5,
+    "n_other": 32
+   },
+   "late": null
+  },
+  "N0586": {
+   "walk": null,
+   "late": null
+  },
+  "N0587": {
+   "walk": null,
+   "late": null
+  },
+  "N0594": {
+   "walk": {
+    "est": -19.25,
+    "se": 9.47,
+    "lo": -35.21,
+    "hi": 0.56,
+    "n_flag": 9,
+    "n_other": 51
+   },
+   "late": null
+  },
+  "N0597": {
+   "walk": {
+    "est": -46.94,
+    "se": 19.62,
+    "lo": -90.58,
+    "hi": -10.86,
+    "n_flag": 3,
+    "n_other": 26
+   },
+   "late": null
+  },
+  "N0600": {
+   "walk": null,
+   "late": null
+  },
+  "N0607": {
+   "walk": {
+    "est": 1.75,
+    "se": 7.79,
+    "lo": -13.36,
+    "hi": 18.45,
+    "n_flag": 3,
+    "n_other": 40
+   },
+   "late": null
+  },
+  "N0621": {
+   "walk": {
+    "est": -10.27,
+    "se": 5.4,
+    "lo": -19.03,
+    "hi": 4.49,
+    "n_flag": 4,
+    "n_other": 50
+   },
+   "late": {
+    "est": 9.0,
+    "se": 5.11,
+    "lo": -0.71,
+    "hi": 18.42,
+    "n_flag": 8,
+    "n_other": 6
+   }
+  },
+  "N0622": {
+   "walk": {
+    "est": -22.78,
+    "se": 9.06,
+    "lo": -37.0,
+    "hi": -0.14,
+    "n_flag": 3,
+    "n_other": 48
+   },
+   "late": null
+  },
+  "N0624": {
+   "walk": null,
+   "late": {
+    "est": 7.28,
+    "se": 7.5,
+    "lo": -9.95,
+    "hi": 19.42,
+    "n_flag": 3,
+    "n_other": 6
+   }
+  },
+  "N0625": {
+   "walk": null,
+   "late": null
+  },
+  "N0631": {
+   "walk": null,
+   "late": null
+  },
+  "N0632": {
+   "walk": {
+    "est": -19.52,
+    "se": 6.42,
+    "lo": -32.44,
+    "hi": -8.04,
+    "n_flag": 4,
+    "n_other": 37
+   },
+   "late": {
+    "est": -1.19,
+    "se": 8.4,
+    "lo": -18.22,
+    "hi": 13.52,
+    "n_flag": 8,
+    "n_other": 6
+   }
+  },
+  "N0634": {
+   "walk": {
+    "est": -29.71,
+    "se": 14.59,
+    "lo": -62.19,
+    "hi": -5.75,
+    "n_flag": 4,
+    "n_other": 33
+   },
+   "late": {
+    "est": 19.06,
+    "se": 15.6,
+    "lo": -8.47,
+    "hi": 52.21,
+    "n_flag": 4,
+    "n_other": 6
+   }
+  },
+  "N0636": {
+   "walk": null,
+   "late": null
+  },
+  "N0639": {
+   "walk": null,
+   "late": {
+    "est": -0.88,
+    "se": 9.23,
+    "lo": -16.9,
+    "hi": 18.24,
+    "n_flag": 5,
+    "n_other": 4
+   }
+  },
+  "N0645": {
+   "walk": {
+    "est": 7.17,
+    "se": 21.37,
+    "lo": -25.05,
+    "hi": 53.57,
+    "n_flag": 4,
+    "n_other": 21
+   },
+   "late": {
+    "est": 39.3,
+    "se": 21.56,
+    "lo": 3.75,
+    "hi": 80.92,
+    "n_flag": 3,
+    "n_other": 4
+   }
+  },
+  "N0666": {
+   "walk": {
+    "est": -7.23,
+    "se": 7.12,
+    "lo": -22.73,
+    "hi": 5.02,
+    "n_flag": 8,
+    "n_other": 36
+   },
+   "late": null
+  },
+  "N0668": {
+   "walk": null,
+   "late": null
+  },
+  "N0671": {
+   "walk": null,
+   "late": null
+  },
+  "N0677": {
+   "walk": {
+    "est": 1.95,
+    "se": 6.29,
+    "lo": -7.7,
+    "hi": 15.75,
+    "n_flag": 5,
+    "n_other": 34
+   },
+   "late": null
+  },
+  "N0682": {
+   "walk": {
+    "est": -1.57,
+    "se": 5.65,
+    "lo": -12.89,
+    "hi": 8.08,
+    "n_flag": 3,
+    "n_other": 18
+   },
+   "late": null
+  },
+  "N0686": {
+   "walk": null,
+   "late": {
+    "est": 17.85,
+    "se": 13.98,
+    "lo": -7.09,
+    "hi": 46.63,
+    "n_flag": 5,
+    "n_other": 3
+   }
+  },
+  "N0687": {
+   "walk": null,
+   "late": null
+  },
+  "N0690": {
+   "walk": {
+    "est": -29.95,
+    "se": 10.08,
+    "lo": -54.35,
+    "hi": -13.06,
+    "n_flag": 5,
+    "n_other": 45
+   },
+   "late": null
+  },
+  "N0691": {
+   "walk": {
+    "est": -11.98,
+    "se": 8.67,
+    "lo": -24.65,
+    "hi": 10.39,
+    "n_flag": 3,
+    "n_other": 29
+   },
+   "late": null
+  },
+  "N0699": {
+   "walk": {
+    "est": -5.05,
+    "se": 6.17,
+    "lo": -17.52,
+    "hi": 5.1,
+    "n_flag": 7,
+    "n_other": 30
+   },
+   "late": null
+  },
+  "N0701": {
+   "walk": {
+    "est": -25.56,
+    "se": 5.22,
+    "lo": -33.59,
+    "hi": -13.45,
+    "n_flag": 6,
+    "n_other": 24
+   },
+   "late": null
+  },
+  "N0711": {
+   "walk": null,
+   "late": {
+    "est": 2.9,
+    "se": 5.75,
+    "lo": -7.24,
+    "hi": 15.27,
+    "n_flag": 13,
+    "n_other": 4
+   }
+  },
+  "N0713": {
+   "walk": {
+    "est": -17.37,
+    "se": 14.94,
+    "lo": -42.1,
+    "hi": 15.97,
+    "n_flag": 9,
+    "n_other": 33
+   },
+   "late": {
+    "est": 29.76,
+    "se": 17.93,
+    "lo": -4.94,
+    "hi": 65.97,
+    "n_flag": 7,
+    "n_other": 6
+   }
+  },
+  "N0715": {
+   "walk": {
+    "est": 1.21,
+    "se": 7.74,
+    "lo": -8.45,
+    "hi": 17.46,
+    "n_flag": 3,
+    "n_other": 65
+   },
+   "late": null
+  },
+  "N0718": {
+   "walk": {
+    "est": -12.15,
+    "se": 17.17,
+    "lo": -53.77,
+    "hi": 15.87,
+    "n_flag": 3,
+    "n_other": 34
+   },
+   "late": null
+  },
+  "N0731": {
+   "walk": {
+    "est": -15.31,
+    "se": 7.3,
+    "lo": -27.33,
+    "hi": 3.1,
+    "n_flag": 4,
+    "n_other": 28
+   },
+   "late": null
+  },
+  "N0732": {
+   "walk": null,
+   "late": null
+  },
+  "N0733": {
+   "walk": {
+    "est": -25.65,
+    "se": 6.16,
+    "lo": -38.53,
+    "hi": -14.96,
+    "n_flag": 7,
+    "n_other": 33
+   },
+   "late": {
+    "est": 5.16,
+    "se": 8.43,
+    "lo": -8.92,
+    "hi": 25.18,
+    "n_flag": 5,
+    "n_other": 8
+   }
+  },
+  "N0738": {
+   "walk": {
+    "est": -17.05,
+    "se": 4.67,
+    "lo": -25.86,
+    "hi": -8.47,
+    "n_flag": 8,
+    "n_other": 52
+   },
+   "late": {
+    "est": 1.28,
+    "se": 7.44,
+    "lo": -13.07,
+    "hi": 16.84,
+    "n_flag": 7,
+    "n_other": 6
+   }
+  },
+  "N0740": {
+   "walk": {
+    "est": -7.77,
+    "se": 3.69,
+    "lo": -16.24,
+    "hi": -1.51,
+    "n_flag": 10,
+    "n_other": 78
+   },
+   "late": null
+  },
+  "N0741": {
+   "walk": null,
+   "late": null
+  },
+  "N0743": {
+   "walk": {
+    "est": -13.14,
+    "se": 14.26,
+    "lo": -53.96,
+    "hi": 5.5,
+    "n_flag": 3,
+    "n_other": 48
+   },
+   "late": {
+    "est": 2.62,
+    "se": 13.48,
+    "lo": -19.34,
+    "hi": 29.83,
+    "n_flag": 5,
+    "n_other": 7
+   }
+  },
+  "N0744": {
+   "walk": null,
+   "late": null
+  },
+  "N0745": {
+   "walk": {
+    "est": 0.8,
+    "se": 12.49,
+    "lo": -15.68,
+    "hi": 36.49,
+    "n_flag": 3,
+    "n_other": 37
+   },
+   "late": null
+  },
+  "N0752": {
+   "walk": {
+    "est": -41.72,
+    "se": 14.11,
+    "lo": -77.9,
+    "hi": -19.12,
+    "n_flag": 4,
+    "n_other": 36
+   },
+   "late": null
+  },
+  "N0758": {
+   "walk": {
+    "est": -5.44,
+    "se": 5.66,
+    "lo": -16.14,
+    "hi": 6.63,
+    "n_flag": 5,
+    "n_other": 28
+   },
+   "late": null
+  },
+  "N0760": {
+   "walk": null,
+   "late": null
+  },
+  "N0761": {
+   "walk": null,
+   "late": null
+  },
+  "N0764": {
+   "walk": {
+    "est": -12.97,
+    "se": 7.7,
+    "lo": -25.03,
+    "hi": -0.08,
+    "n_flag": 5,
+    "n_other": 31
+   },
+   "late": null
+  },
+  "N0766": {
+   "walk": null,
+   "late": null
+  },
+  "N0767": {
+   "walk": {
+    "est": -26.66,
+    "se": 4.88,
+    "lo": -37.78,
+    "hi": -18.53,
+    "n_flag": 7,
+    "n_other": 32
+   },
+   "late": {
+    "est": 1.65,
+    "se": 10.5,
+    "lo": -19.25,
+    "hi": 18.5,
+    "n_flag": 9,
+    "n_other": 3
+   }
+  },
+  "N0771": {
+   "walk": {
+    "est": 1.91,
+    "se": 12.14,
+    "lo": -31.21,
+    "hi": 19.87,
+    "n_flag": 5,
+    "n_other": 44
+   },
+   "late": null
+  },
+  "N0778": {
+   "walk": {
+    "est": -35.26,
+    "se": 14.74,
+    "lo": -60.08,
+    "hi": -8.29,
+    "n_flag": 5,
+    "n_other": 22
+   },
+   "late": null
+  },
+  "N0781": {
+   "walk": {
+    "est": -37.03,
+    "se": 11.28,
+    "lo": -59.1,
+    "hi": -14.6,
+    "n_flag": 5,
+    "n_other": 43
+   },
+   "late": null
+  },
+  "N0782": {
+   "walk": {
+    "est": -19.7,
+    "se": 13.53,
+    "lo": -44.49,
+    "hi": 6.2,
+    "n_flag": 5,
+    "n_other": 32
+   },
+   "late": {
+    "est": 17.57,
+    "se": 15.92,
+    "lo": -14.11,
+    "hi": 48.99,
+    "n_flag": 3,
+    "n_other": 4
+   }
+  },
+  "N0784": {
+   "walk": null,
+   "late": null
+  },
+  "N0790": {
+   "walk": {
+    "est": -42.55,
+    "se": 16.84,
+    "lo": -74.72,
+    "hi": -6.15,
+    "n_flag": 6,
+    "n_other": 24
+   },
+   "late": null
+  },
+  "N0792": {
+   "walk": null,
+   "late": null
+  },
+  "N0794": {
+   "walk": {
+    "est": -28.23,
+    "se": 11.51,
+    "lo": -50.56,
+    "hi": -6.02,
+    "n_flag": 5,
+    "n_other": 18
+   },
+   "late": null
+  },
+  "N0805": {
+   "walk": {
+    "est": -10.8,
+    "se": 9.45,
+    "lo": -21.47,
+    "hi": 11.89,
+    "n_flag": 3,
+    "n_other": 59
+   },
+   "late": {
+    "est": -3.73,
+    "se": 8.97,
+    "lo": -21.16,
+    "hi": 12.06,
+    "n_flag": 12,
+    "n_other": 4
+   }
+  },
+  "N0807": {
+   "walk": null,
+   "late": null
+  },
+  "N0808": {
+   "walk": null,
+   "late": {
+    "est": -3.52,
+    "se": 17.02,
+    "lo": -38.69,
+    "hi": 23.66,
+    "n_flag": 4,
+    "n_other": 14
+   }
+  },
+  "N0812": {
+   "walk": null,
+   "late": {
+    "est": 17.97,
+    "se": 14.55,
+    "lo": -4.67,
+    "hi": 53.07,
+    "n_flag": 5,
+    "n_other": 4
+   }
+  },
+  "N0815": {
+   "walk": {
+    "est": -10.8,
+    "se": 6.72,
+    "lo": -22.14,
+    "hi": 4.39,
+    "n_flag": 7,
+    "n_other": 44
+   },
+   "late": {
+    "est": -8.47,
+    "se": 11.22,
+    "lo": -28.11,
+    "hi": 16.55,
+    "n_flag": 4,
+    "n_other": 7
+   }
+  },
+  "N0820": {
+   "walk": {
+    "est": -0.23,
+    "se": 15.36,
+    "lo": -22.47,
+    "hi": 40.32,
+    "n_flag": 3,
+    "n_other": 20
+   },
+   "late": null
+  },
+  "N0826": {
+   "walk": null,
+   "late": null
+  },
+  "N0827": {
+   "walk": null,
+   "late": null
+  },
+  "N0828": {
+   "walk": null,
+   "late": null
+  },
+  "N0833": {
+   "walk": null,
+   "late": null
+  },
+  "N0835": {
+   "walk": null,
+   "late": null
+  },
+  "N0840": {
+   "walk": null,
+   "late": null
+  },
+  "N0849": {
+   "walk": {
+    "est": -34.84,
+    "se": 16.67,
+    "lo": -68.65,
+    "hi": -6.27,
+    "n_flag": 5,
+    "n_other": 35
+   },
+   "late": null
+  },
+  "N0850": {
+   "walk": {
+    "est": -1.1,
+    "se": 8.17,
+    "lo": -15.73,
+    "hi": 17.18,
+    "n_flag": 14,
+    "n_other": 35
+   },
+   "late": null
+  },
+  "N0854": {
+   "walk": null,
+   "late": null
+  },
+  "N0859": {
+   "walk": null,
+   "late": null
+  },
+  "N0865": {
+   "walk": null,
+   "late": null
+  },
+  "N0867": {
+   "walk": null,
+   "late": null
+  },
+  "N0872": {
+   "walk": {
+    "est": -30.05,
+    "se": 16.45,
+    "lo": -87.79,
+    "hi": -18.76,
+    "n_flag": 3,
+    "n_other": 43
+   },
+   "late": {
+    "est": 4.59,
+    "se": 13.65,
+    "lo": -18.36,
+    "hi": 32.88,
+    "n_flag": 4,
+    "n_other": 11
+   }
+  },
+  "N0874": {
+   "walk": {
+    "est": 7.6,
+    "se": 19.41,
+    "lo": -13.29,
+    "hi": 61.94,
+    "n_flag": 3,
+    "n_other": 40
+   },
+   "late": {
+    "est": 21.58,
+    "se": 10.43,
+    "lo": 2.15,
+    "hi": 44.14,
+    "n_flag": 6,
+    "n_other": 6
+   }
+  },
+  "N0877": {
+   "walk": {
+    "est": -19.98,
+    "se": 5.6,
+    "lo": -28.18,
+    "hi": -9.62,
+    "n_flag": 3,
+    "n_other": 24
+   },
+   "late": {
+    "est": 13.82,
+    "se": 9.83,
+    "lo": -5.12,
+    "hi": 29.9,
+    "n_flag": 6,
+    "n_other": 4
+   }
+  },
+  "N0886": {
+   "walk": {
+    "est": -34.88,
+    "se": 10.93,
+    "lo": -47.27,
+    "hi": -8.54,
+    "n_flag": 3,
+    "n_other": 42
+   },
+   "late": {
+    "est": -6.46,
+    "se": 12.19,
+    "lo": -28.57,
+    "hi": 18.53,
+    "n_flag": 4,
+    "n_other": 10
+   }
+  },
+  "N0888": {
+   "walk": null,
+   "late": null
+  },
+  "N0891": {
+   "walk": null,
+   "late": null
+  },
+  "N0893": {
+   "walk": null,
+   "late": null
+  },
+  "N0900": {
+   "walk": {
+    "est": -25.92,
+    "se": 9.94,
+    "lo": -44.72,
+    "hi": -8.95,
+    "n_flag": 6,
+    "n_other": 40
+   },
+   "late": null
+  },
+  "N0903": {
+   "walk": null,
+   "late": null
+  },
+  "N0906": {
+   "walk": {
+    "est": -13.12,
+    "se": 5.5,
+    "lo": -23.14,
+    "hi": -1.11,
+    "n_flag": 6,
+    "n_other": 30
+   },
+   "late": {
+    "est": 12.24,
+    "se": 7.29,
+    "lo": -1.59,
+    "hi": 28.1,
+    "n_flag": 7,
+    "n_other": 4
+   }
+  },
+  "N0907": {
+   "walk": null,
+   "late": null
+  },
+  "N0912": {
+   "walk": null,
+   "late": null
+  },
+  "N0916": {
+   "walk": {
+    "est": -16.31,
+    "se": 11.66,
+    "lo": -41.12,
+    "hi": 3.13,
+    "n_flag": 4,
+    "n_other": 31
+   },
+   "late": null
+  },
+  "N0917": {
+   "walk": null,
+   "late": {
+    "est": 15.18,
+    "se": 9.45,
+    "lo": -6.19,
+    "hi": 28.89,
+    "n_flag": 5,
+    "n_other": 4
+   }
+  },
+  "N0920": {
+   "walk": {
+    "est": -25.3,
+    "se": 12.06,
+    "lo": -54.89,
+    "hi": -8.0,
+    "n_flag": 5,
+    "n_other": 36
+   },
+   "late": null
+  },
+  "N0926": {
+   "walk": {
+    "est": -6.66,
+    "se": 9.74,
+    "lo": -25.44,
+    "hi": 13.92,
+    "n_flag": 4,
+    "n_other": 39
+   },
+   "late": null
+  },
+  "N0928": {
+   "walk": null,
+   "late": null
+  },
+  "N0929": {
+   "walk": {
+    "est": -28.26,
+    "se": 19.84,
+    "lo": -74.35,
+    "hi": 1.47,
+    "n_flag": 3,
+    "n_other": 17
+   },
+   "late": {
+    "est": 3.68,
+    "se": 18.47,
+    "lo": -29.29,
+    "hi": 43.38,
+    "n_flag": 4,
+    "n_other": 4
+   }
+  },
+  "N0931": {
+   "walk": null,
+   "late": null
+  },
+  "N0937": {
+   "walk": {
+    "est": 1.58,
+    "se": 7.73,
+    "lo": -14.28,
+    "hi": 14.64,
+    "n_flag": 4,
+    "n_other": 37
+   },
+   "late": {
+    "est": 21.43,
+    "se": 6.08,
+    "lo": 7.73,
+    "hi": 31.8,
+    "n_flag": 5,
+    "n_other": 7
+   }
+  },
+  "N0939": {
+   "walk": null,
+   "late": {
+    "est": -24.9,
+    "se": 13.28,
+    "lo": -52.32,
+    "hi": -3.31,
+    "n_flag": 4,
+    "n_other": 6
+   }
+  },
+  "N0943": {
+   "walk": null,
+   "late": null
+  },
+  "N0950": {
+   "walk": null,
+   "late": null
+  },
+  "N0954": {
+   "walk": null,
+   "late": null
+  },
+  "N0964": {
+   "walk": null,
+   "late": null
+  },
+  "N0965": {
+   "walk": {
+    "est": -5.99,
+    "se": 7.67,
+    "lo": -16.56,
+    "hi": 11.88,
+    "n_flag": 7,
+    "n_other": 66
+   },
+   "late": {
+    "est": 22.64,
+    "se": 8.28,
+    "lo": 6.85,
+    "hi": 38.84,
+    "n_flag": 3,
+    "n_other": 14
+   }
+  },
+  "N0968": {
+   "walk": {
+    "est": -8.13,
+    "se": 5.65,
+    "lo": -18.0,
+    "hi": 2.85,
+    "n_flag": 6,
+    "n_other": 44
+   },
+   "late": null
+  },
+  "N0971": {
+   "walk": null,
+   "late": null
+  },
+  "N0975": {
+   "walk": null,
+   "late": {
+    "est": 14.95,
+    "se": 8.78,
+    "lo": -0.89,
+    "hi": 32.47,
+    "n_flag": 5,
+    "n_other": 3
+   }
+  },
+  "N0978": {
+   "walk": null,
+   "late": null
+  },
+  "N0983": {
+   "walk": null,
+   "late": {
+    "est": 1.8,
+    "se": 19.47,
+    "lo": -39.31,
+    "hi": 40.26,
+    "n_flag": 3,
+    "n_other": 3
+   }
+  },
+  "N0984": {
+   "walk": {
+    "est": -33.22,
+    "se": 7.7,
+    "lo": -50.76,
+    "hi": -17.8,
+    "n_flag": 6,
+    "n_other": 41
+   },
+   "late": null
+  },
+  "N0992": {
+   "walk": {
+    "est": -26.49,
+    "se": 31.33,
+    "lo": -135.89,
+    "hi": 2.91,
+    "n_flag": 3,
+    "n_other": 35
+   },
+   "late": null
+  },
+  "N0993": {
+   "walk": null,
+   "late": {
+    "est": 4.47,
+    "se": 16.81,
+    "lo": -28.32,
+    "hi": 33.91,
+    "n_flag": 4,
+    "n_other": 3
+   }
+  },
+  "N0995": {
+   "walk": null,
+   "late": null
+  },
+  "N1000": {
+   "walk": {
+    "est": -15.5,
+    "se": 9.3,
+    "lo": -38.19,
+    "hi": 0.16,
+    "n_flag": 5,
+    "n_other": 46
+   },
+   "late": null
+  },
+  "N1002": {
+   "walk": {
+    "est": -31.34,
+    "se": 12.09,
+    "lo": -55.36,
+    "hi": -9.31,
+    "n_flag": 4,
+    "n_other": 16
+   },
+   "late": null
+  },
+  "N1003": {
+   "walk": null,
+   "late": null
+  },
+  "N1004": {
+   "walk": null,
+   "late": {
+    "est": 4.34,
+    "se": 6.73,
+    "lo": -7.51,
+    "hi": 18.37,
+    "n_flag": 12,
+    "n_other": 5
+   }
+  },
+  "N1008": {
+   "walk": {
+    "est": -31.03,
+    "se": 17.34,
+    "lo": -62.65,
+    "hi": 0.33,
+    "n_flag": 4,
+    "n_other": 19
+   },
+   "late": null
+  },
+  "N1010": {
+   "walk": {
+    "est": -21.97,
+    "se": 12.03,
+    "lo": -44.6,
+    "hi": 2.1,
+    "n_flag": 6,
+    "n_other": 23
+   },
+   "late": {
+    "est": 17.04,
+    "se": 14.99,
+    "lo": -13.41,
+    "hi": 41.4,
+    "n_flag": 6,
+    "n_other": 3
+   }
+  },
+  "N1011": {
+   "walk": {
+    "est": -27.1,
+    "se": 15.48,
+    "lo": -66.32,
+    "hi": -6.86,
+    "n_flag": 3,
+    "n_other": 30
+   },
+   "late": null
+  },
+  "N1014": {
+   "walk": {
+    "est": -3.75,
+    "se": 6.91,
+    "lo": -18.26,
+    "hi": 8.6,
+    "n_flag": 6,
+    "n_other": 26
+   },
+   "late": {
+    "est": 7.58,
+    "se": 8.15,
+    "lo": -10.93,
+    "hi": 19.74,
+    "n_flag": 3,
+    "n_other": 8
+   }
+  },
+  "N1017": {
+   "walk": {
+    "est": -11.86,
+    "se": 9.95,
+    "lo": -30.73,
+    "hi": 7.92,
+    "n_flag": 8,
+    "n_other": 31
+   },
+   "late": null
+  },
+  "N1020": {
+   "walk": {
+    "est": -9.94,
+    "se": 16.91,
+    "lo": -40.83,
+    "hi": 24.97,
+    "n_flag": 4,
+    "n_other": 37
+   },
+   "late": {
+    "est": -3.23,
+    "se": 8.48,
+    "lo": -21.92,
+    "hi": 13.34,
+    "n_flag": 8,
+    "n_other": 3
+   }
+  },
+  "N1021": {
+   "walk": null,
+   "late": null
+  },
+  "N1024": {
+   "walk": {
+    "est": -10.12,
+    "se": 6.04,
+    "lo": -21.31,
+    "hi": 3.08,
+    "n_flag": 7,
+    "n_other": 33
+   },
+   "late": null
+  },
+  "N1026": {
+   "walk": null,
+   "late": null
+  },
+  "N1036": {
+   "walk": null,
+   "late": null
+  },
+  "N1039": {
+   "walk": {
+    "est": -31.08,
+    "se": 13.78,
+    "lo": -58.4,
+    "hi": -10.13,
+    "n_flag": 3,
+    "n_other": 33
+   },
+   "late": null
+  },
+  "N1041": {
+   "walk": null,
+   "late": {
+    "est": -0.1,
+    "se": 18.34,
+    "lo": -37.17,
+    "hi": 30.91,
+    "n_flag": 7,
+    "n_other": 3
+   }
+  },
+  "N1042": {
+   "walk": {
+    "est": -19.73,
+    "se": 4.96,
+    "lo": -31.15,
+    "hi": -12.32,
+    "n_flag": 5,
+    "n_other": 42
+   },
+   "late": null
+  },
+  "N1046": {
+   "walk": {
+    "est": -13.54,
+    "se": 6.52,
+    "lo": -22.66,
+    "hi": -0.77,
+    "n_flag": 6,
+    "n_other": 57
+   },
+   "late": null
+  },
+  "N1050": {
+   "walk": {
+    "est": -5.76,
+    "se": 6.18,
+    "lo": -20.38,
+    "hi": 2.16,
+    "n_flag": 4,
+    "n_other": 38
+   },
+   "late": null
+  },
+  "N1052": {
+   "walk": {
+    "est": -23.18,
+    "se": 6.81,
+    "lo": -32.77,
+    "hi": -7.7,
+    "n_flag": 3,
+    "n_other": 53
+   },
+   "late": {
+    "est": -7.19,
+    "se": 10.66,
+    "lo": -28.23,
+    "hi": 11.55,
+    "n_flag": 3,
+    "n_other": 6
+   }
+  },
+  "N1053": {
+   "walk": {
+    "est": -40.65,
+    "se": 7.14,
+    "lo": -56.71,
+    "hi": -28.27,
+    "n_flag": 7,
+    "n_other": 34
+   },
+   "late": null
+  },
+  "N1066": {
+   "walk": {
+    "est": -27.71,
+    "se": 7.84,
+    "lo": -42.72,
+    "hi": -13.14,
+    "n_flag": 7,
+    "n_other": 28
+   },
+   "late": null
+  },
+  "N1071": {
+   "walk": null,
+   "late": null
+  },
+  "N1078": {
+   "walk": {
+    "est": -14.69,
+    "se": 8.54,
+    "lo": -29.67,
+    "hi": 0.93,
+    "n_flag": 5,
+    "n_other": 34
+   },
+   "late": null
+  },
+  "N1085": {
+   "walk": {
+    "est": -23.75,
+    "se": 9.06,
+    "lo": -41.71,
+    "hi": -6.95,
+    "n_flag": 6,
+    "n_other": 28
+   },
+   "late": {
+    "est": 2.5,
+    "se": 13.1,
+    "lo": -23.46,
+    "hi": 27.53,
+    "n_flag": 9,
+    "n_other": 4
+   }
+  },
+  "N1087": {
+   "walk": {
+    "est": -21.18,
+    "se": 4.48,
+    "lo": -29.88,
+    "hi": -12.38,
+    "n_flag": 4,
+    "n_other": 48
+   },
+   "late": null
+  },
+  "N1088": {
+   "walk": null,
+   "late": null
+  },
+  "N1097": {
+   "walk": null,
+   "late": null
+  },
+  "N1103": {
+   "walk": null,
+   "late": {
+    "est": 6.68,
+    "se": 5.84,
+    "lo": -5.44,
+    "hi": 16.74,
+    "n_flag": 7,
+    "n_other": 6
+   }
+  },
+  "N1104": {
+   "walk": null,
+   "late": null
+  },
+  "N1106": {
+   "walk": {
+    "est": -8.43,
+    "se": 6.38,
+    "lo": -21.19,
+    "hi": 3.15,
+    "n_flag": 5,
+    "n_other": 44
+   },
+   "late": null
+  },
+  "N1107": {
+   "walk": null,
+   "late": null
+  },
+  "N1109": {
+   "walk": null,
+   "late": null
+  },
+  "N1112": {
+   "walk": {
+    "est": -2.29,
+    "se": 6.0,
+    "lo": -11.86,
+    "hi": 11.66,
+    "n_flag": 7,
+    "n_other": 47
+   },
+   "late": null
+  },
+  "N1115": {
+   "walk": {
+    "est": -8.66,
+    "se": 8.05,
+    "lo": -23.92,
+    "hi": 6.25,
+    "n_flag": 5,
+    "n_other": 36
+   },
+   "late": null
+  },
+  "N1118": {
+   "walk": null,
+   "late": null
+  },
+  "N1138": {
+   "walk": {
+    "est": -24.97,
+    "se": 10.31,
+    "lo": -43.53,
+    "hi": -3.24,
+    "n_flag": 5,
+    "n_other": 39
+   },
+   "late": null
+  },
+  "N1140": {
+   "walk": null,
+   "late": null
+  },
+  "N1149": {
+   "walk": null,
+   "late": null
+  },
+  "N1150": {
+   "walk": {
+    "est": -29.62,
+    "se": 9.57,
+    "lo": -50.25,
+    "hi": -11.58,
+    "n_flag": 6,
+    "n_other": 29
+   },
+   "late": null
+  },
+  "N1155": {
+   "walk": {
+    "est": -18.15,
+    "se": 10.32,
+    "lo": -35.45,
+    "hi": 4.83,
+    "n_flag": 4,
+    "n_other": 39
+   },
+   "late": {
+    "est": 23.62,
+    "se": 6.25,
+    "lo": 8.79,
+    "hi": 33.95,
+    "n_flag": 11,
+    "n_other": 5
+   }
+  },
+  "N1156": {
+   "walk": {
+    "est": -10.58,
+    "se": 5.61,
+    "lo": -19.07,
+    "hi": 1.42,
+    "n_flag": 8,
+    "n_other": 39
+   },
+   "late": {
+    "est": -6.42,
+    "se": 6.75,
+    "lo": -20.67,
+    "hi": 5.08,
+    "n_flag": 8,
+    "n_other": 5
+   }
+  },
+  "N1160": {
+   "walk": {
+    "est": -11.28,
+    "se": 13.53,
+    "lo": -31.35,
+    "hi": 24.34,
+    "n_flag": 3,
+    "n_other": 15
+   },
+   "late": null
+  },
+  "N1161": {
+   "walk": {
+    "est": -22.17,
+    "se": 6.32,
+    "lo": -37.99,
+    "hi": -14.6,
+    "n_flag": 3,
+    "n_other": 27
+   },
+   "late": null
+  },
+  "N1167": {
+   "walk": null,
+   "late": null
+  },
+  "N1183": {
+   "walk": {
+    "est": -5.44,
+    "se": 6.13,
+    "lo": -17.61,
+    "hi": 6.7,
+    "n_flag": 6,
+    "n_other": 40
+   },
+   "late": null
+  },
+  "N1184": {
+   "walk": null,
+   "late": null
+  },
+  "N1186": {
+   "walk": null,
+   "late": null
+  },
+  "N1197": {
+   "walk": null,
+   "late": null
+  },
+  "N1198": {
+   "walk": null,
+   "late": null
+  },
+  "N1204": {
+   "walk": {
+    "est": -32.76,
+    "se": 9.97,
+    "lo": -47.49,
+    "hi": -6.04,
+    "n_flag": 4,
+    "n_other": 36
+   },
+   "late": null
+  },
+  "N1207": {
+   "walk": {
+    "est": -17.74,
+    "se": 10.98,
+    "lo": -31.04,
+    "hi": 9.68,
+    "n_flag": 3,
+    "n_other": 20
+   },
+   "late": null
+  },
+  "N1212": {
+   "walk": null,
+   "late": {
+    "est": 61.89,
+    "se": 19.95,
+    "lo": 29.68,
+    "hi": 102.63,
+    "n_flag": 5,
+    "n_other": 3
+   }
+  },
+  "N1213": {
+   "walk": null,
+   "late": null
+  },
+  "N1216": {
+   "walk": null,
+   "late": null
+  },
+  "N1217": {
+   "walk": null,
+   "late": null
+  },
+  "N1219": {
+   "walk": null,
+   "late": null
+  },
+  "N1221": {
+   "walk": {
+    "est": -9.88,
+    "se": 6.87,
+    "lo": -23.19,
+    "hi": 2.85,
+    "n_flag": 7,
+    "n_other": 29
+   },
+   "late": null
+  },
+  "N1224": {
+   "walk": {
+    "est": -11.89,
+    "se": 6.32,
+    "lo": -26.29,
+    "hi": -0.89,
+    "n_flag": 8,
+    "n_other": 44
+   },
+   "late": {
+    "est": 3.72,
+    "se": 8.87,
+    "lo": -12.86,
+    "hi": 22.1,
+    "n_flag": 3,
+    "n_other": 11
+   }
+  },
+  "N1225": {
+   "walk": {
+    "est": -5.15,
+    "se": 8.4,
+    "lo": -20.66,
+    "hi": 12.05,
+    "n_flag": 3,
+    "n_other": 31
+   },
+   "late": null
+  },
+  "N1237": {
+   "walk": {
+    "est": -14.27,
+    "se": 4.31,
+    "lo": -22.84,
+    "hi": -6.31,
+    "n_flag": 6,
+    "n_other": 28
+   },
+   "late": null
+  },
+  "N1242": {
+   "walk": {
+    "est": 0.84,
+    "se": 11.79,
+    "lo": -23.07,
+    "hi": 21.89,
+    "n_flag": 6,
+    "n_other": 32
+   },
+   "late": null
+  },
+  "N1244": {
+   "walk": {
+    "est": -8.0,
+    "se": 7.72,
+    "lo": -22.07,
+    "hi": 6.57,
+    "n_flag": 8,
+    "n_other": 12
+   },
+   "late": {
+    "est": -10.82,
+    "se": 9.08,
+    "lo": -26.52,
+    "hi": 8.74,
+    "n_flag": 3,
+    "n_other": 6
+   }
+  },
+  "N1246": {
+   "walk": {
+    "est": -23.08,
+    "se": 15.53,
+    "lo": -58.87,
+    "hi": 0.73,
+    "n_flag": 4,
+    "n_other": 19
+   },
+   "late": null
+  },
+  "N1249": {
+   "walk": null,
+   "late": null
+  },
+  "N1253": {
+   "walk": null,
+   "late": null
+  },
+  "N1260": {
+   "walk": {
+    "est": -12.66,
+    "se": 8.22,
+    "lo": -29.01,
+    "hi": 6.25,
+    "n_flag": 7,
+    "n_other": 34
+   },
+   "late": null
+  },
+  "N1269": {
+   "walk": null,
+   "late": null
+  },
+  "N1271": {
+   "walk": {
+    "est": -11.12,
+    "se": 6.54,
+    "lo": -21.83,
+    "hi": 2.01,
+    "n_flag": 4,
+    "n_other": 18
+   },
+   "late": null
+  },
+  "N1274": {
+   "walk": {
+    "est": -13.82,
+    "se": 5.03,
+    "lo": -23.84,
+    "hi": -4.04,
+    "n_flag": 10,
+    "n_other": 49
+   },
+   "late": null
+  },
+  "N1276": {
+   "walk": {
+    "est": -14.11,
+    "se": 8.93,
+    "lo": -30.82,
+    "hi": 4.12,
+    "n_flag": 7,
+    "n_other": 40
+   },
+   "late": null
+  },
+  "N1277": {
+   "walk": null,
+   "late": null
+  },
+  "N1278": {
+   "walk": null,
+   "late": null
+  },
+  "N1283": {
+   "walk": null,
+   "late": null
+  },
+  "N1286": {
+   "walk": {
+    "est": -13.35,
+    "se": 4.07,
+    "lo": -21.63,
+    "hi": -6.04,
+    "n_flag": 7,
+    "n_other": 54
+   },
+   "late": null
+  },
+  "N1289": {
+   "walk": {
+    "est": -38.58,
+    "se": 7.21,
+    "lo": -54.21,
+    "hi": -24.96,
+    "n_flag": 4,
+    "n_other": 52
+   },
+   "late": {
+    "est": 22.45,
+    "se": 10.22,
+    "lo": 4.27,
+    "hi": 43.69,
+    "n_flag": 11,
+    "n_other": 6
+   }
+  },
+  "N1303": {
+   "walk": null,
+   "late": null
+  },
+  "N1305": {
+   "walk": {
+    "est": -67.01,
+    "se": 26.0,
+    "lo": -133.23,
+    "hi": -38.49,
+    "n_flag": 4,
+    "n_other": 46
+   },
+   "late": null
+  },
+  "N1311": {
+   "walk": {
+    "est": 0.97,
+    "se": 8.56,
+    "lo": -13.65,
+    "hi": 19.05,
+    "n_flag": 5,
+    "n_other": 45
+   },
+   "late": {
+    "est": 9.96,
+    "se": 5.65,
+    "lo": -0.99,
+    "hi": 19.08,
+    "n_flag": 8,
+    "n_other": 4
+   }
+  },
+  "N1313": {
+   "walk": null,
+   "late": {
+    "est": 1.37,
+    "se": 19.38,
+    "lo": -35.63,
+    "hi": 37.96,
+    "n_flag": 6,
+    "n_other": 4
+   }
+  },
+  "N1318": {
+   "walk": null,
+   "late": null
+  },
+  "N1319": {
+   "walk": null,
+   "late": null
+  },
+  "N1320": {
+   "walk": null,
+   "late": {
+    "est": -18.82,
+    "se": 8.29,
+    "lo": -36.2,
+    "hi": -4.1,
+    "n_flag": 5,
+    "n_other": 4
+   }
+  },
+  "N1321": {
+   "walk": null,
+   "late": null
+  },
+  "N1322": {
+   "walk": {
+    "est": -22.27,
+    "se": 10.41,
+    "lo": -50.04,
+    "hi": -11.8,
+    "n_flag": 3,
+    "n_other": 43
+   },
+   "late": null
+  },
+  "N1328": {
+   "walk": {
+    "est": -14.82,
+    "se": 9.78,
+    "lo": -31.2,
+    "hi": 7.24,
+    "n_flag": 4,
+    "n_other": 35
+   },
+   "late": {
+    "est": 12.82,
+    "se": 10.65,
+    "lo": -8.44,
+    "hi": 31.75,
+    "n_flag": 9,
+    "n_other": 4
+   }
+  },
+  "N1332": {
+   "walk": null,
+   "late": null
+  },
+  "N1333": {
+   "walk": {
+    "est": 14.97,
+    "se": 41.17,
+    "lo": -60.49,
+    "hi": 102.02,
+    "n_flag": 3,
+    "n_other": 34
+   },
+   "late": null
+  },
+  "N1336": {
+   "walk": null,
+   "late": null
+  },
+  "N1337": {
+   "walk": {
+    "est": -60.59,
+    "se": 19.35,
+    "lo": -94.65,
+    "hi": -27.5,
+    "n_flag": 3,
+    "n_other": 34
+   },
+   "late": {
+    "est": -5.11,
+    "se": 28.52,
+    "lo": -56.15,
+    "hi": 47.55,
+    "n_flag": 4,
+    "n_other": 5
+   }
+  },
+  "N1339": {
+   "walk": null,
+   "late": null
+  },
+  "N1345": {
+   "walk": null,
+   "late": null
+  },
+  "N1350": {
+   "walk": {
+    "est": -13.84,
+    "se": 10.26,
+    "lo": -28.34,
+    "hi": 9.09,
+    "n_flag": 3,
+    "n_other": 35
+   },
+   "late": {
+    "est": -3.57,
+    "se": 6.58,
+    "lo": -13.33,
+    "hi": 12.79,
+    "n_flag": 8,
+    "n_other": 4
+   }
+  },
+  "N1361": {
+   "walk": null,
+   "late": null
+  },
+  "N1369": {
+   "walk": null,
+   "late": null
+  },
+  "N1377": {
+   "walk": null,
+   "late": null
+  },
+  "N1384": {
+   "walk": {
+    "est": -11.45,
+    "se": 6.98,
+    "lo": -26.71,
+    "hi": 1.47,
+    "n_flag": 5,
+    "n_other": 40
+   },
+   "late": {
+    "est": 4.95,
+    "se": 8.24,
+    "lo": -10.07,
+    "hi": 19.47,
+    "n_flag": 10,
+    "n_other": 4
+   }
+  },
+  "N1387": {
+   "walk": null,
+   "late": null
+  },
+  "N1402": {
+   "walk": {
+    "est": -29.68,
+    "se": 13.26,
+    "lo": -59.22,
+    "hi": -6.71,
+    "n_flag": 6,
+    "n_other": 36
+   },
+   "late": null
+  },
+  "N1403": {
+   "walk": {
+    "est": -4.92,
+    "se": 14.72,
+    "lo": -30.28,
+    "hi": 25.59,
+    "n_flag": 5,
+    "n_other": 39
+   },
+   "late": null
+  },
+  "N1411": {
+   "walk": {
+    "est": -9.49,
+    "se": 6.28,
+    "lo": -23.17,
+    "hi": 1.6,
+    "n_flag": 6,
+    "n_other": 28
+   },
+   "late": null
+  },
+  "N1418": {
+   "walk": null,
+   "late": null
+  },
+  "N1420": {
+   "walk": {
+    "est": 0.82,
+    "se": 10.47,
+    "lo": -18.67,
+    "hi": 19.94,
+    "n_flag": 3,
+    "n_other": 24
+   },
+   "late": null
+  },
+  "N1422": {
+   "walk": null,
+   "late": null
+  },
+  "N1423": {
+   "walk": null,
+   "late": {
+    "est": -5.72,
+    "se": 2.96,
+    "lo": -10.47,
+    "hi": 0.64,
+    "n_flag": 6,
+    "n_other": 4
+   }
+  },
+  "N1424": {
+   "walk": null,
+   "late": null
+  },
+  "N1428": {
+   "walk": {
+    "est": -33.38,
+    "se": 21.89,
+    "lo": -98.06,
+    "hi": -10.94,
+    "n_flag": 3,
+    "n_other": 41
+   },
+   "late": {
+    "est": 7.95,
+    "se": 11.85,
+    "lo": -14.82,
+    "hi": 29.26,
+    "n_flag": 8,
+    "n_other": 6
+   }
+  },
+  "N1430": {
+   "walk": null,
+   "late": null
+  },
+  "N1434": {
+   "walk": {
+    "est": -45.79,
+    "se": 10.65,
+    "lo": -60.98,
+    "hi": -17.08,
+    "n_flag": 5,
+    "n_other": 36
+   },
+   "late": null
+  },
+  "N1438": {
+   "walk": {
+    "est": -56.92,
+    "se": 21.67,
+    "lo": -117.73,
+    "hi": -30.21,
+    "n_flag": 4,
+    "n_other": 41
+   },
+   "late": null
+  },
+  "N1440": {
+   "walk": null,
+   "late": null
+  },
+  "N1442": {
+   "walk": {
+    "est": -17.05,
+    "se": 10.36,
+    "lo": -37.49,
+    "hi": 1.65,
+    "n_flag": 4,
+    "n_other": 33
+   },
+   "late": null
+  },
+  "N1447": {
+   "walk": null,
+   "late": null
+  },
+  "N1450": {
+   "walk": {
+    "est": -3.39,
+    "se": 4.5,
+    "lo": -11.54,
+    "hi": 5.43,
+    "n_flag": 5,
+    "n_other": 31
+   },
+   "late": null
+  },
+  "N1451": {
+   "walk": null,
+   "late": null
+  },
+  "N1452": {
+   "walk": null,
+   "late": {
+    "est": -0.55,
+    "se": 9.56,
+    "lo": -17.49,
+    "hi": 18.46,
+    "n_flag": 3,
+    "n_other": 8
+   }
+  },
+  "N1456": {
+   "walk": null,
+   "late": null
+  },
+  "N1471": {
+   "walk": null,
+   "late": {
+    "est": 15.27,
+    "se": 20.35,
+    "lo": -12.26,
+    "hi": 61.6,
+    "n_flag": 3,
+    "n_other": 11
+   }
+  },
+  "N1490": {
+   "walk": null,
+   "late": null
+  },
+  "N1491": {
+   "walk": null,
+   "late": null
+  },
+  "N1495": {
+   "walk": {
+    "est": -13.35,
+    "se": 8.72,
+    "lo": -30.93,
+    "hi": 4.08,
+    "n_flag": 6,
+    "n_other": 33
+   },
+   "late": {
+    "est": 13.45,
+    "se": 13.25,
+    "lo": -13.76,
+    "hi": 41.04,
+    "n_flag": 8,
+    "n_other": 3
+   }
+  },
+  "N1496": {
+   "walk": null,
+   "late": null
+  },
+  "N1497": {
+   "walk": null,
+   "late": null
+  },
+  "N1503": {
+   "walk": {
+    "est": -7.01,
+    "se": 11.19,
+    "lo": -33.04,
+    "hi": 9.64,
+    "n_flag": 5,
+    "n_other": 21
+   },
+   "late": null
+  },
+  "N1504": {
+   "walk": null,
+   "late": null
+  },
+  "N1509": {
+   "walk": null,
+   "late": null
+  },
+  "N1510": {
+   "walk": null,
+   "late": null
+  },
+  "N1514": {
+   "walk": {
+    "est": -25.92,
+    "se": 10.42,
+    "lo": -52.73,
+    "hi": -9.95,
+    "n_flag": 3,
+    "n_other": 9
+   },
+   "late": null
+  },
+  "N1518": {
+   "walk": null,
+   "late": null
+  },
+  "N1526": {
+   "walk": {
+    "est": -22.56,
+    "se": 7.24,
+    "lo": -36.34,
+    "hi": -7.63,
+    "n_flag": 6,
+    "n_other": 39
+   },
+   "late": null
+  },
+  "N1530": {
+   "walk": {
+    "est": -11.25,
+    "se": 4.34,
+    "lo": -18.45,
+    "hi": -2.26,
+    "n_flag": 4,
+    "n_other": 48
+   },
+   "late": {
+    "est": -4.12,
+    "se": 7.16,
+    "lo": -17.7,
+    "hi": 10.37,
+    "n_flag": 10,
+    "n_other": 5
+   }
+  },
+  "N1535": {
+   "walk": null,
+   "late": null
+  },
+  "N1537": {
+   "walk": {
+    "est": -20.9,
+    "se": 6.98,
+    "lo": -34.02,
+    "hi": -7.66,
+    "n_flag": 6,
+    "n_other": 32
+   },
+   "late": null
+  },
+  "N1540": {
+   "walk": {
+    "est": -17.48,
+    "se": 10.3,
+    "lo": -37.3,
+    "hi": 0.45,
+    "n_flag": 5,
+    "n_other": 52
+   },
+   "late": {
+    "est": 15.24,
+    "se": 6.06,
+    "lo": 2.98,
+    "hi": 28.43,
+    "n_flag": 10,
+    "n_other": 5
+   }
+  },
+  "N1541": {
+   "walk": null,
+   "late": null
+  },
+  "N1553": {
+   "walk": null,
+   "late": null
+  },
+  "N1556": {
+   "walk": null,
+   "late": null
+  },
+  "N1557": {
+   "walk": null,
+   "late": null
+  },
+  "N1564": {
+   "walk": {
+    "est": -12.9,
+    "se": 6.79,
+    "lo": -26.83,
+    "hi": -0.92,
+    "n_flag": 7,
+    "n_other": 42
+   },
+   "late": null
+  },
+  "N1569": {
+   "walk": {
+    "est": -18.36,
+    "se": 6.53,
+    "lo": -29.21,
+    "hi": -3.61,
+    "n_flag": 5,
+    "n_other": 39
+   },
+   "late": {
+    "est": 14.36,
+    "se": 7.36,
+    "lo": -2.0,
+    "hi": 27.24,
+    "n_flag": 10,
+    "n_other": 3
+   }
+  },
+  "N1571": {
+   "walk": {
+    "est": -6.4,
+    "se": 5.21,
+    "lo": -15.96,
+    "hi": 4.38,
+    "n_flag": 6,
+    "n_other": 25
+   },
+   "late": null
+  },
+  "N1573": {
+   "walk": null,
+   "late": null
+  },
+  "N1577": {
+   "walk": null,
+   "late": null
+  },
+  "N1579": {
+   "walk": null,
+   "late": null
+  },
+  "N1581": {
+   "walk": null,
+   "late": null
+  },
+  "N1586": {
+   "walk": null,
+   "late": null
+  },
+  "N1590": {
+   "walk": {
+    "est": -3.59,
+    "se": 6.61,
+    "lo": -21.65,
+    "hi": 1.52,
+    "n_flag": 3,
+    "n_other": 65
+   },
+   "late": {
+    "est": -3.56,
+    "se": 5.16,
+    "lo": -13.78,
+    "hi": 6.77,
+    "n_flag": 12,
+    "n_other": 3
+   }
+  },
+  "N1592": {
+   "walk": null,
+   "late": null
+  },
+  "N1593": {
+   "walk": {
+    "est": -22.99,
+    "se": 9.78,
+    "lo": -45.18,
+    "hi": -10.07,
+    "n_flag": 3,
+    "n_other": 38
+   },
+   "late": null
+  },
+  "N1594": {
+   "walk": {
+    "est": -10.61,
+    "se": 6.09,
+    "lo": -23.99,
+    "hi": -0.53,
+    "n_flag": 3,
+    "n_other": 14
+   },
+   "late": null
+  },
+  "N1595": {
+   "walk": null,
+   "late": null
+  },
+  "N1603": {
+   "walk": null,
+   "late": {
+    "est": -2.1,
+    "se": 4.54,
+    "lo": -10.91,
+    "hi": 6.17,
+    "n_flag": 5,
+    "n_other": 4
+   }
+  },
+  "N1610": {
+   "walk": null,
+   "late": null
+  },
+  "N1611": {
+   "walk": {
+    "est": -10.37,
+    "se": 7.44,
+    "lo": -21.16,
+    "hi": 6.66,
+    "n_flag": 4,
+    "n_other": 42
+   },
+   "late": null
+  },
+  "N1615": {
+   "walk": {
+    "est": -11.69,
+    "se": 17.03,
+    "lo": -49.65,
+    "hi": 17.28,
+    "n_flag": 5,
+    "n_other": 52
+   },
+   "late": null
+  },
+  "N1627": {
+   "walk": null,
+   "late": null
+  },
+  "N1628": {
+   "walk": {
+    "est": -16.41,
+    "se": 5.52,
+    "lo": -26.27,
+    "hi": -5.46,
+    "n_flag": 9,
+    "n_other": 43
+   },
+   "late": null
+  },
+  "N1629": {
+   "walk": null,
+   "late": null
+  },
+  "N1632": {
+   "walk": null,
+   "late": null
+  },
+  "N1636": {
+   "walk": {
+    "est": -14.89,
+    "se": 4.82,
+    "lo": -22.97,
+    "hi": -5.11,
+    "n_flag": 5,
+    "n_other": 40
+   },
+   "late": {
+    "est": 3.75,
+    "se": 5.37,
+    "lo": -6.05,
+    "hi": 15.14,
+    "n_flag": 9,
+    "n_other": 7
+   }
+  },
+  "N1637": {
+   "walk": null,
+   "late": null
+  },
+  "N1638": {
+   "walk": null,
+   "late": null
+  },
+  "N1645": {
+   "walk": null,
+   "late": null
+  },
+  "N1647": {
+   "walk": null,
+   "late": null
+  },
+  "N1652": {
+   "walk": {
+    "est": -9.58,
+    "se": 7.61,
+    "lo": -23.18,
+    "hi": 5.76,
+    "n_flag": 7,
+    "n_other": 58
+   },
+   "late": {
+    "est": -4.35,
+    "se": 7.58,
+    "lo": -20.38,
+    "hi": 9.77,
+    "n_flag": 7,
+    "n_other": 8
+   }
+  },
+  "N1655": {
+   "walk": {
+    "est": -21.71,
+    "se": 8.56,
+    "lo": -40.91,
+    "hi": -8.92,
+    "n_flag": 3,
+    "n_other": 34
+   },
+   "late": {
+    "est": -4.29,
+    "se": 8.14,
+    "lo": -20.42,
+    "hi": 10.83,
+    "n_flag": 5,
+    "n_other": 8
+   }
+  },
+  "N1656": {
+   "walk": {
+    "est": -9.14,
+    "se": 4.65,
+    "lo": -18.21,
+    "hi": 0.09,
+    "n_flag": 5,
+    "n_other": 15
+   },
+   "late": {
+    "est": 9.62,
+    "se": 9.7,
+    "lo": -6.51,
+    "hi": 29.35,
+    "n_flag": 3,
+    "n_other": 4
+   }
+  },
+  "N1657": {
+   "walk": {
+    "est": -11.31,
+    "se": 8.14,
+    "lo": -26.8,
+    "hi": 4.17,
+    "n_flag": 3,
+    "n_other": 36
+   },
+   "late": null
+  },
+  "N1668": {
+   "walk": null,
+   "late": {
+    "est": 7.16,
+    "se": 7.53,
+    "lo": -6.06,
+    "hi": 20.92,
+    "n_flag": 3,
+    "n_other": 6
+   }
+  },
+  "N1670": {
+   "walk": null,
+   "late": null
+  },
+  "N1677": {
+   "walk": null,
+   "late": null
+  },
+  "N1678": {
+   "walk": {
+    "est": -11.68,
+    "se": 9.12,
+    "lo": -28.26,
+    "hi": 8.12,
+    "n_flag": 4,
+    "n_other": 25
+   },
+   "late": null
+  },
+  "N1679": {
+   "walk": null,
+   "late": {
+    "est": -14.41,
+    "se": 9.04,
+    "lo": -31.68,
+    "hi": 5.24,
+    "n_flag": 9,
+    "n_other": 4
+   }
+  },
+  "N1680": {
+   "walk": {
+    "est": -19.86,
+    "se": 12.36,
+    "lo": -43.48,
+    "hi": 3.97,
+    "n_flag": 4,
+    "n_other": 44
+   },
+   "late": null
+  },
+  "N1682": {
+   "walk": {
+    "est": -1.09,
+    "se": 3.69,
+    "lo": -8.31,
+    "hi": 5.43,
+    "n_flag": 6,
+    "n_other": 41
+   },
+   "late": {
+    "est": 0.76,
+    "se": 4.54,
+    "lo": -8.05,
+    "hi": 9.57,
+    "n_flag": 8,
+    "n_other": 5
+   }
+  },
+  "N1701": {
+   "walk": {
+    "est": -17.28,
+    "se": 2.43,
+    "lo": -21.42,
+    "hi": -11.65,
+    "n_flag": 10,
+    "n_other": 44
+   },
+   "late": {
+    "est": 4.61,
+    "se": 5.29,
+    "lo": -5.91,
+    "hi": 15.11,
+    "n_flag": 11,
+    "n_other": 6
+   }
+  },
+  "N1704": {
+   "walk": null,
+   "late": null
+  },
+  "N1705": {
+   "walk": {
+    "est": -15.31,
+    "se": 8.46,
+    "lo": -28.25,
+    "hi": 0.1,
+    "n_flag": 4,
+    "n_other": 40
+   },
+   "late": null
+  },
+  "N1706": {
+   "walk": null,
+   "late": null
+  },
+  "N1716": {
+   "walk": {
+    "est": -1.79,
+    "se": 11.95,
+    "lo": -25.89,
+    "hi": 18.76,
+    "n_flag": 6,
+    "n_other": 47
+   },
+   "late": null
+  },
+  "N1717": {
+   "walk": {
+    "est": -32.59,
+    "se": 10.43,
+    "lo": -54.81,
+    "hi": -14.68,
+    "n_flag": 5,
+    "n_other": 46
+   },
+   "late": {
+    "est": 5.2,
+    "se": 16.52,
+    "lo": -20.39,
+    "hi": 37.18,
+    "n_flag": 4,
+    "n_other": 12
+   }
+  },
+  "N1719": {
+   "walk": null,
+   "late": null
+  },
+  "N1723": {
+   "walk": {
+    "est": -11.79,
+    "se": 13.44,
+    "lo": -39.84,
+    "hi": 14.43,
+    "n_flag": 5,
+    "n_other": 20
+   },
+   "late": null
+  },
+  "N1725": {
+   "walk": {
+    "est": -0.98,
+    "se": 6.17,
+    "lo": -14.46,
+    "hi": 8.72,
+    "n_flag": 3,
+    "n_other": 36
+   },
+   "late": null
+  },
+  "N1727": {
+   "walk": null,
+   "late": {
+    "est": 14.98,
+    "se": 7.4,
+    "lo": 0.56,
+    "hi": 27.71,
+    "n_flag": 6,
+    "n_other": 10
+   }
+  },
+  "N1732": {
+   "walk": null,
+   "late": {
+    "est": 23.52,
+    "se": 11.97,
+    "lo": -3.81,
+    "hi": 42.54,
+    "n_flag": 6,
+    "n_other": 5
+   }
+  },
+  "N1734": {
+   "walk": {
+    "est": -16.78,
+    "se": 11.88,
+    "lo": -41.31,
+    "hi": 2.18,
+    "n_flag": 4,
+    "n_other": 21
+   },
+   "late": null
+  },
+  "N1744": {
+   "walk": null,
+   "late": {
+    "est": 5.87,
+    "se": 4.55,
+    "lo": -3.12,
+    "hi": 14.51,
+    "n_flag": 7,
+    "n_other": 6
+   }
+  },
+  "N1748": {
+   "walk": {
+    "est": -3.17,
+    "se": 18.61,
+    "lo": -37.87,
+    "hi": 30.48,
+    "n_flag": 3,
+    "n_other": 43
+   },
+   "late": {
+    "est": 28.67,
+    "se": 15.01,
+    "lo": -3.97,
+    "hi": 53.23,
+    "n_flag": 6,
+    "n_other": 7
+   }
+  },
+  "N1755": {
+   "walk": {
+    "est": -18.75,
+    "se": 6.28,
+    "lo": -29.12,
+    "hi": -5.01,
+    "n_flag": 3,
+    "n_other": 11
+   },
+   "late": null
+  },
+  "N1756": {
+   "walk": {
+    "est": -20.56,
+    "se": 7.86,
+    "lo": -33.88,
+    "hi": -5.01,
+    "n_flag": 7,
+    "n_other": 21
+   },
+   "late": null
+  },
+  "N1758": {
+   "walk": null,
+   "late": null
+  },
+  "N1759": {
+   "walk": null,
+   "late": null
+  },
+  "N1760": {
+   "walk": {
+    "est": -4.46,
+    "se": 6.96,
+    "lo": -12.01,
+    "hi": 15.54,
+    "n_flag": 3,
+    "n_other": 35
+   },
+   "late": {
+    "est": -1.94,
+    "se": 4.76,
+    "lo": -9.9,
+    "hi": 8.66,
+    "n_flag": 6,
+    "n_other": 6
+   }
+  },
+  "N1766": {
+   "walk": null,
+   "late": {
+    "est": -10.26,
+    "se": 5.76,
+    "lo": -20.91,
+    "hi": 0.71,
+    "n_flag": 6,
+    "n_other": 6
+   }
+  },
+  "N1767": {
+   "walk": {
+    "est": -28.53,
+    "se": 7.23,
+    "lo": -46.67,
+    "hi": -18.53,
+    "n_flag": 5,
+    "n_other": 66
+   },
+   "late": null
+  },
+  "N1771": {
+   "walk": {
+    "est": -15.42,
+    "se": 6.6,
+    "lo": -27.83,
+    "hi": -3.04,
+    "n_flag": 6,
+    "n_other": 42
+   },
+   "late": null
+  },
+  "N1774": {
+   "walk": null,
+   "late": null
+  },
+  "N1777": {
+   "walk": null,
+   "late": null
+  },
+  "N1779": {
+   "walk": null,
+   "late": null
+  },
+  "N1781": {
+   "walk": {
+    "est": -5.19,
+    "se": 7.9,
+    "lo": -19.07,
+    "hi": 11.4,
+    "n_flag": 4,
+    "n_other": 65
+   },
+   "late": null
+  },
+  "N1784": {
+   "walk": {
+    "est": -21.88,
+    "se": 8.9,
+    "lo": -37.78,
+    "hi": -2.71,
+    "n_flag": 3,
+    "n_other": 24
+   },
+   "late": null
+  },
+  "N1786": {
+   "walk": null,
+   "late": null
+  },
+  "N1797": {
+   "walk": null,
+   "late": null
+  },
+  "N1800": {
+   "walk": {
+    "est": -20.01,
+    "se": 11.93,
+    "lo": -42.4,
+    "hi": 3.21,
+    "n_flag": 6,
+    "n_other": 22
+   },
+   "late": null
+  },
+  "N1801": {
+   "walk": {
+    "est": -9.41,
+    "se": 6.01,
+    "lo": -21.35,
+    "hi": 1.52,
+    "n_flag": 8,
+    "n_other": 30
+   },
+   "late": null
+  },
+  "N1804": {
+   "walk": {
+    "est": -15.87,
+    "se": 5.13,
+    "lo": -27.23,
+    "hi": -6.48,
+    "n_flag": 6,
+    "n_other": 34
+   },
+   "late": {
+    "est": 10.33,
+    "se": 7.67,
+    "lo": -2.07,
+    "hi": 26.59,
+    "n_flag": 8,
+    "n_other": 4
+   }
+  },
+  "N1807": {
+   "walk": {
+    "est": -55.77,
+    "se": 44.94,
+    "lo": -168.73,
+    "hi": 20.09,
+    "n_flag": 4,
+    "n_other": 52
+   },
+   "late": null
+  },
+  "N1817": {
+   "walk": null,
+   "late": null
+  },
+  "N1819": {
+   "walk": null,
+   "late": null
+  },
+  "N1822": {
+   "walk": {
+    "est": -19.83,
+    "se": 7.73,
+    "lo": -37.82,
+    "hi": -9.16,
+    "n_flag": 3,
+    "n_other": 14
+   },
+   "late": null
+  },
+  "N1824": {
+   "walk": null,
+   "late": {
+    "est": 21.33,
+    "se": 10.59,
+    "lo": -0.59,
+    "hi": 38.74,
+    "n_flag": 3,
+    "n_other": 5
+   }
+  },
+  "N1830": {
+   "walk": {
+    "est": -20.7,
+    "se": 7.43,
+    "lo": -34.98,
+    "hi": -5.83,
+    "n_flag": 9,
+    "n_other": 39
+   },
+   "late": {
+    "est": 6.03,
+    "se": 10.73,
+    "lo": -13.64,
+    "hi": 27.45,
+    "n_flag": 5,
+    "n_other": 10
+   }
+  },
+  "N1834": {
+   "walk": null,
+   "late": null
+  },
+  "N1836": {
+   "walk": {
+    "est": -7.25,
+    "se": 5.55,
+    "lo": -17.29,
+    "hi": 5.54,
+    "n_flag": 4,
+    "n_other": 33
+   },
+   "late": null
+  },
+  "N1839": {
+   "walk": {
+    "est": -16.48,
+    "se": 8.96,
+    "lo": -32.52,
+    "hi": 2.1,
+    "n_flag": 4,
+    "n_other": 42
+   },
+   "late": null
+  },
+  "N1842": {
+   "walk": null,
+   "late": null
+  },
+  "N1846": {
+   "walk": {
+    "est": -43.81,
+    "se": 12.78,
+    "lo": -68.65,
+    "hi": -19.35,
+    "n_flag": 3,
+    "n_other": 18
+   },
+   "late": null
+  },
+  "N1847": {
+   "walk": {
+    "est": -18.66,
+    "se": 9.25,
+    "lo": -36.13,
+    "hi": 2.77,
+    "n_flag": 6,
+    "n_other": 38
+   },
+   "late": null
+  },
+  "N1853": {
+   "walk": null,
+   "late": null
+  },
+  "N1857": {
+   "walk": null,
+   "late": null
+  },
+  "N1861": {
+   "walk": null,
+   "late": null
+  },
+  "N1862": {
+   "walk": null,
+   "late": null
+  },
+  "N1863": {
+   "walk": {
+    "est": -60.84,
+    "se": 25.89,
+    "lo": -85.35,
+    "hi": 27.11,
+    "n_flag": 3,
+    "n_other": 33
+   },
+   "late": null
+  },
+  "N1867": {
+   "walk": null,
+   "late": null
+  },
+  "N1874": {
+   "walk": {
+    "est": -22.98,
+    "se": 7.84,
+    "lo": -38.11,
+    "hi": -11.39,
+    "n_flag": 3,
+    "n_other": 19
+   },
+   "late": null
+  },
+  "N1875": {
+   "walk": null,
+   "late": null
+  },
+  "N1877": {
+   "walk": {
+    "est": -25.44,
+    "se": 11.22,
+    "lo": -46.46,
+    "hi": -3.03,
+    "n_flag": 6,
+    "n_other": 33
+   },
+   "late": null
+  },
+  "N1879": {
+   "walk": null,
+   "late": {
+    "est": 3.48,
+    "se": 4.39,
+    "lo": -4.08,
+    "hi": 13.61,
+    "n_flag": 7,
+    "n_other": 3
+   }
+  },
+  "N1881": {
+   "walk": null,
+   "late": {
+    "est": 0.48,
+    "se": 13.8,
+    "lo": -20.17,
+    "hi": 34.22,
+    "n_flag": 6,
+    "n_other": 4
+   }
+  },
+  "N1883": {
+   "walk": {
+    "est": 3.81,
+    "se": 10.81,
+    "lo": -17.56,
+    "hi": 25.18,
+    "n_flag": 6,
+    "n_other": 24
+   },
+   "late": null
+  },
+  "N1884": {
+   "walk": {
+    "est": -27.49,
+    "se": 6.21,
+    "lo": -39.29,
+    "hi": -14.37,
+    "n_flag": 7,
+    "n_other": 57
+   },
+   "late": null
+  },
+  "N1889": {
+   "walk": {
+    "est": -20.62,
+    "se": 9.49,
+    "lo": -38.52,
+    "hi": -0.13,
+    "n_flag": 5,
+    "n_other": 33
+   },
+   "late": null
+  },
+  "N1891": {
+   "walk": null,
+   "late": {
+    "est": 17.14,
+    "se": 13.77,
+    "lo": -8.17,
+    "hi": 46.88,
+    "n_flag": 7,
+    "n_other": 5
+   }
+  },
+  "N1893": {
+   "walk": {
+    "est": -12.75,
+    "se": 14.63,
+    "lo": -29.7,
+    "hi": 35.51,
+    "n_flag": 3,
+    "n_other": 48
+   },
+   "late": null
+  },
+  "N1898": {
+   "walk": {
+    "est": -8.16,
+    "se": 11.42,
+    "lo": -29.63,
+    "hi": 14.12,
+    "n_flag": 5,
+    "n_other": 34
+   },
+   "late": null
+  },
+  "N1902": {
+   "walk": {
+    "est": -7.85,
+    "se": 10.05,
+    "lo": -25.98,
+    "hi": 13.1,
+    "n_flag": 8,
+    "n_other": 35
+   },
+   "late": null
+  },
+  "N1904": {
+   "walk": null,
+   "late": null
+  },
+  "N1912": {
+   "walk": {
+    "est": -16.89,
+    "se": 8.58,
+    "lo": -30.45,
+    "hi": 3.85,
+    "n_flag": 3,
+    "n_other": 26
+   },
+   "late": null
+  },
+  "N1913": {
+   "walk": null,
+   "late": null
+  },
+  "N1924": {
+   "walk": {
+    "est": -22.77,
+    "se": 14.07,
+    "lo": -49.01,
+    "hi": 4.66,
+    "n_flag": 4,
+    "n_other": 12
+   },
+   "late": null
+  },
+  "N1936": {
+   "walk": {
+    "est": -33.05,
+    "se": 18.28,
+    "lo": -68.88,
+    "hi": -0.62,
+    "n_flag": 4,
+    "n_other": 18
+   },
+   "late": {
+    "est": 57.14,
+    "se": 13.64,
+    "lo": 30.52,
+    "hi": 86.72,
+    "n_flag": 6,
+    "n_other": 3
+   }
+  },
+  "N1938": {
+   "walk": null,
+   "late": {
+    "est": 19.88,
+    "se": 9.83,
+    "lo": -0.52,
+    "hi": 38.47,
+    "n_flag": 7,
+    "n_other": 5
+   }
+  },
+  "N1942": {
+   "walk": {
+    "est": -23.79,
+    "se": 10.19,
+    "lo": -40.73,
+    "hi": -3.74,
+    "n_flag": 4,
+    "n_other": 27
+   },
+   "late": null
+  },
+  "N1944": {
+   "walk": null,
+   "late": null
+  },
+  "N1945": {
+   "walk": {
+    "est": -27.04,
+    "se": 7.15,
+    "lo": -42.5,
+    "hi": -15.13,
+    "n_flag": 6,
+    "n_other": 40
+   },
+   "late": null
+  },
+  "N1947": {
+   "walk": {
+    "est": -20.53,
+    "se": 11.03,
+    "lo": -40.56,
+    "hi": 4.59,
+    "n_flag": 5,
+    "n_other": 27
+   },
+   "late": null
+  },
+  "N1949": {
+   "walk": {
+    "est": -28.93,
+    "se": 13.5,
+    "lo": -57.53,
+    "hi": -7.13,
+    "n_flag": 4,
+    "n_other": 57
+   },
+   "late": null
+  },
+  "N1951": {
+   "walk": {
+    "est": -17.24,
+    "se": 12.92,
+    "lo": -42.04,
+    "hi": 3.34,
+    "n_flag": 3,
+    "n_other": 32
+   },
+   "late": null
+  },
+  "N1958": {
+   "walk": null,
+   "late": null
+  },
+  "N1963": {
+   "walk": {
+    "est": -18.72,
+    "se": 16.9,
+    "lo": -74.72,
+    "hi": -5.38,
+    "n_flag": 3,
+    "n_other": 30
+   },
+   "late": null
+  },
+  "N1965": {
+   "walk": {
+    "est": -16.09,
+    "se": 16.43,
+    "lo": -55.69,
+    "hi": 9.76,
+    "n_flag": 4,
+    "n_other": 48
+   },
+   "late": {
+    "est": 9.54,
+    "se": 17.17,
+    "lo": -19.41,
+    "hi": 45.89,
+    "n_flag": 7,
+    "n_other": 7
+   }
+  },
+  "N1967": {
+   "walk": null,
+   "late": null
+  },
+  "N1975": {
+   "walk": {
+    "est": -12.57,
+    "se": 6.15,
+    "lo": -25.53,
+    "hi": -1.18,
+    "n_flag": 4,
+    "n_other": 16
+   },
+   "late": null
+  },
+  "N1976": {
+   "walk": {
+    "est": -41.0,
+    "se": 13.11,
+    "lo": -65.07,
+    "hi": -14.95,
+    "n_flag": 4,
+    "n_other": 34
+   },
+   "late": {
+    "est": 3.87,
+    "se": 12.53,
+    "lo": -20.17,
+    "hi": 31.16,
+    "n_flag": 6,
+    "n_other": 3
+   }
+  },
+  "N1978": {
+   "walk": {
+    "est": -15.18,
+    "se": 11.65,
+    "lo": -36.02,
+    "hi": 8.76,
+    "n_flag": 9,
+    "n_other": 43
+   },
+   "late": {
+    "est": 37.37,
+    "se": 7.82,
+    "lo": 21.47,
+    "hi": 53.76,
+    "n_flag": 12,
+    "n_other": 5
+   }
+  },
+  "N1985": {
+   "walk": {
+    "est": -36.67,
+    "se": 13.79,
+    "lo": -59.86,
+    "hi": -5.42,
+    "n_flag": 3,
+    "n_other": 59
+   },
+   "late": null
+  },
+  "N1986": {
+   "walk": null,
+   "late": null
+  },
+  "N1987": {
+   "walk": null,
+   "late": {
+    "est": -0.65,
+    "se": 9.18,
+    "lo": -17.14,
+    "hi": 18.75,
+    "n_flag": 5,
+    "n_other": 4
+   }
+  },
+  "N1990": {
+   "walk": null,
+   "late": null
+  },
+  "N1997": {
+   "walk": null,
+   "late": null
+  },
+  "N1999": {
+   "walk": null,
+   "late": null
+  }
+ },
+ "forecast": {
+  "mae": 13.99,
+  "r2": 0.62,
+  "err10": -20.47,
+  "err90": 22.35,
+  "meals": 18218,
+  "dinnerByPerson": {
+   "N0006": {
+    "pred": 46.9,
+    "n": 10
+   },
+   "N0013": {
+    "pred": 52.4,
+    "n": 16
+   },
+   "N0018": {
+    "pred": 53.6,
+    "n": 20
+   },
+   "N0020": {
+    "pred": 86.8,
+    "n": 9
+   },
+   "N0021": {
+    "pred": 45.7,
+    "n": 6
+   },
+   "N0024": {
+    "pred": 103.0,
+    "n": 5
+   },
+   "N0026": {
+    "pred": 60.1,
+    "n": 14
+   },
+   "N0028": {
+    "pred": 41.4,
+    "n": 7
+   },
+   "N0031": {
+    "pred": 80.7,
+    "n": 8
+   },
+   "N0035": {
+    "pred": 48.5,
+    "n": 13
+   },
+   "N0044": {
+    "pred": 45.8,
+    "n": 12
+   },
+   "N0048": {
+    "pred": 38.9,
+    "n": 11
+   },
+   "N0051": {
+    "pred": 76.1,
+    "n": 15
+   },
+   "N0055": {
+    "pred": 112.1,
+    "n": 10
+   },
+   "N0057": {
+    "pred": 135.2,
+    "n": 10
+   },
+   "N0059": {
+    "pred": 50.8,
+    "n": 13
+   },
+   "N0061": {
+    "pred": 31.9,
+    "n": 6
+   },
+   "N0062": {
+    "pred": 39.0,
+    "n": 12
+   },
+   "N0072": {
+    "pred": 105.8,
+    "n": 8
+   },
+   "N0080": {
+    "pred": 49.4,
+    "n": 9
+   },
+   "N0085": {
+    "pred": 65.9,
+    "n": 8
+   },
+   "N0088": {
+    "pred": 62.8,
+    "n": 13
+   },
+   "N0092": {
+    "pred": 72.9,
+    "n": 8
+   },
+   "N0093": {
+    "pred": 111.5,
+    "n": 5
+   },
+   "N0097": {
+    "pred": 55.5,
+    "n": 2
+   },
+   "N0100": {
+    "pred": 66.2,
+    "n": 5
+   },
+   "N0103": {
+    "pred": 32.2,
+    "n": 15
+   },
+   "N0105": {
+    "pred": 40.6,
+    "n": 12
+   },
+   "N0108": {
+    "pred": 47.4,
+    "n": 4
+   },
+   "N0113": {
+    "pred": 39.0,
+    "n": 12
+   },
+   "N0117": {
+    "pred": 53.9,
+    "n": 9
+   },
+   "N0128": {
+    "pred": 26.5,
+    "n": 10
+   },
+   "N0134": {
+    "pred": 60.0,
+    "n": 9
+   },
+   "N0139": {
+    "pred": 47.3,
+    "n": 12
+   },
+   "N0145": {
+    "pred": 44.0,
+    "n": 12
+   },
+   "N0148": {
+    "pred": 67.9,
+    "n": 11
+   },
+   "N0149": {
+    "pred": 121.5,
+    "n": 10
+   },
+   "N0151": {
+    "pred": 152.1,
+    "n": 13
+   },
+   "N0155": {
+    "pred": 37.6,
+    "n": 15
+   },
+   "N0166": {
+    "pred": 52.4,
+    "n": 4
+   },
+   "N0176": {
+    "pred": 71.1,
+    "n": 6
+   },
+   "N0179": {
+    "pred": 59.0,
+    "n": 8
+   },
+   "N0181": {
+    "pred": 89.7,
+    "n": 16
+   },
+   "N0183": {
+    "pred": 79.5,
+    "n": 12
+   },
+   "N0187": {
+    "pred": 32.4,
+    "n": 10
+   },
+   "N0191": {
+    "pred": 51.6,
+    "n": 2
+   },
+   "N0193": {
+    "pred": 77.6,
+    "n": 9
+   },
+   "N0194": {
+    "pred": 54.0,
+    "n": 5
+   },
+   "N0200": {
+    "pred": 70.6,
+    "n": 9
+   },
+   "N0204": {
+    "pred": 49.8,
+    "n": 9
+   },
+   "N0205": {
+    "pred": 33.5,
+    "n": 4
+   },
+   "N0206": {
+    "pred": 42.4,
+    "n": 5
+   },
+   "N0207": {
+    "pred": 41.0,
+    "n": 3
+   },
+   "N0208": {
+    "pred": 34.6,
+    "n": 17
+   },
+   "N0212": {
+    "pred": 55.0,
+    "n": 9
+   },
+   "N0214": {
+    "pred": 67.6,
+    "n": 11
+   },
+   "N0215": {
+    "pred": 40.4,
+    "n": 8
+   },
+   "N0216": {
+    "pred": 25.1,
+    "n": 9
+   },
+   "N0226": {
+    "pred": 55.3,
+    "n": 11
+   },
+   "N0228": {
+    "pred": 35.8,
+    "n": 6
+   },
+   "N0231": {
+    "pred": 27.9,
+    "n": 6
+   },
+   "N0235": {
+    "pred": 28.4,
+    "n": 10
+   },
+   "N0237": {
+    "pred": 38.0,
+    "n": 5
+   },
+   "N0244": {
+    "pred": 35.6,
+    "n": 8
+   },
+   "N0246": {
+    "pred": 53.1,
+    "n": 6
+   },
+   "N0254": {
+    "pred": 31.6,
+    "n": 4
+   },
+   "N0255": {
+    "pred": 74.1,
+    "n": 9
+   },
+   "N0260": {
+    "pred": 70.3,
+    "n": 5
+   },
+   "N0262": {
+    "pred": 50.7,
+    "n": 8
+   },
+   "N0266": {
+    "pred": 79.3,
+    "n": 9
+   },
+   "N0278": {
+    "pred": 64.0,
+    "n": 3
+   },
+   "N0287": {
+    "pred": 21.4,
+    "n": 13
+   },
+   "N0288": {
+    "pred": 59.0,
+    "n": 6
+   },
+   "N0294": {
+    "pred": 51.3,
+    "n": 10
+   },
+   "N0300": {
+    "pred": 29.4,
+    "n": 13
+   },
+   "N0320": {
+    "pred": 59.3,
+    "n": 4
+   },
+   "N0326": {
+    "pred": 134.8,
+    "n": 5
+   },
+   "N0328": {
+    "pred": 49.5,
+    "n": 10
+   },
+   "N0340": {
+    "pred": 46.7,
+    "n": 13
+   },
+   "N0349": {
+    "pred": 54.7,
+    "n": 12
+   },
+   "N0351": {
+    "pred": 36.2,
+    "n": 7
+   },
+   "N0354": {
+    "pred": 63.1,
+    "n": 19
+   },
+   "N0356": {
+    "pred": 166.1,
+    "n": 11
+   },
+   "N0357": {
+    "pred": 67.1,
+    "n": 9
+   },
+   "N0358": {
+    "pred": 59.3,
+    "n": 7
+   },
+   "N0364": {
+    "pred": 53.8,
+    "n": 9
+   },
+   "N0365": {
+    "pred": 71.5,
+    "n": 13
+   },
+   "N0375": {
+    "pred": 40.5,
+    "n": 15
+   },
+   "N0377": {
+    "pred": 77.7,
+    "n": 13
+   },
+   "N0383": {
+    "pred": 70.6,
+    "n": 10
+   },
+   "N0391": {
+    "pred": 51.4,
+    "n": 3
+   },
+   "N0404": {
+    "pred": 45.3,
+    "n": 7
+   },
+   "N0406": {
+    "pred": 33.3,
+    "n": 17
+   },
+   "N0408": {
+    "pred": 90.2,
+    "n": 8
+   },
+   "N0411": {
+    "pred": 63.5,
+    "n": 7
+   },
+   "N0412": {
+    "pred": 94.3,
+    "n": 6
+   },
+   "N0417": {
+    "pred": 30.5,
+    "n": 6
+   },
+   "N0419": {
+    "pred": 71.7,
+    "n": 10
+   },
+   "N0424": {
+    "pred": 110.2,
+    "n": 4
+   },
+   "N0432": {
+    "pred": 50.6,
+    "n": 13
+   },
+   "N0434": {
+    "pred": 91.1,
+    "n": 3
+   },
+   "N0439": {
+    "pred": 64.2,
+    "n": 7
+   },
+   "N0443": {
+    "pred": 61.3,
+    "n": 8
+   },
+   "N0445": {
+    "pred": 71.5,
+    "n": 9
+   },
+   "N0461": {
+    "pred": 57.4,
+    "n": 15
+   },
+   "N0464": {
+    "pred": 36.1,
+    "n": 9
+   },
+   "N0465": {
+    "pred": 108.4,
+    "n": 10
+   },
+   "N0478": {
+    "pred": 17.5,
+    "n": 8
+   },
+   "N0481": {
+    "pred": 60.5,
+    "n": 15
+   },
+   "N0484": {
+    "pred": 30.3,
+    "n": 9
+   },
+   "N0487": {
+    "pred": 76.9,
+    "n": 8
+   },
+   "N0495": {
+    "pred": 66.6,
+    "n": 15
+   },
+   "N0496": {
+    "pred": 61.2,
+    "n": 8
+   },
+   "N0497": {
+    "pred": 35.6,
+    "n": 13
+   },
+   "N0500": {
+    "pred": 41.3,
+    "n": 10
+   },
+   "N0506": {
+    "pred": 61.2,
+    "n": 4
+   },
+   "N0508": {
+    "pred": 48.1,
+    "n": 11
+   },
+   "N0524": {
+    "pred": 30.2,
+    "n": 11
+   },
+   "N0526": {
+    "pred": 23.5,
+    "n": 11
+   },
+   "N0532": {
+    "pred": 58.8,
+    "n": 18
+   },
+   "N0533": {
+    "pred": 57.2,
+    "n": 13
+   },
+   "N0551": {
+    "pred": 47.6,
+    "n": 11
+   },
+   "N0553": {
+    "pred": 51.1,
+    "n": 9
+   },
+   "N0555": {
+    "pred": 31.5,
+    "n": 3
+   },
+   "N0557": {
+    "pred": 34.3,
+    "n": 8
+   },
+   "N0566": {
+    "pred": 31.6,
+    "n": 7
+   },
+   "N0567": {
+    "pred": 40.0,
+    "n": 12
+   },
+   "N0568": {
+    "pred": 32.0,
+    "n": 6
+   },
+   "N0576": {
+    "pred": 35.3,
+    "n": 15
+   },
+   "N0579": {
+    "pred": 32.4,
+    "n": 12
+   },
+   "N0586": {
+    "pred": 43.2,
+    "n": 7
+   },
+   "N0587": {
+    "pred": 122.4,
+    "n": 6
+   },
+   "N0594": {
+    "pred": 54.8,
+    "n": 11
+   },
+   "N0597": {
+    "pred": 80.5,
+    "n": 8
+   },
+   "N0600": {
+    "pred": 54.3,
+    "n": 9
+   },
+   "N0607": {
+    "pred": 22.0,
+    "n": 14
+   },
+   "N0621": {
+    "pred": 50.8,
+    "n": 14
+   },
+   "N0622": {
+    "pred": 54.3,
+    "n": 13
+   },
+   "N0624": {
+    "pred": 27.8,
+    "n": 9
+   },
+   "N0625": {
+    "pred": 52.0,
+    "n": 4
+   },
+   "N0631": {
+    "pred": 64.3,
+    "n": 8
+   },
+   "N0632": {
+    "pred": 45.7,
+    "n": 14
+   },
+   "N0634": {
+    "pred": 80.1,
+    "n": 10
+   },
+   "N0636": {
+    "pred": 25.7,
+    "n": 11
+   },
+   "N0639": {
+    "pred": 61.0,
+    "n": 9
+   },
+   "N0645": {
+    "pred": 55.2,
+    "n": 7
+   },
+   "N0666": {
+    "pred": 45.3,
+    "n": 12
+   },
+   "N0668": {
+    "pred": 37.7,
+    "n": 9
+   },
+   "N0671": {
+    "pred": 53.7,
+    "n": 12
+   },
+   "N0677": {
+    "pred": 47.3,
+    "n": 8
+   },
+   "N0682": {
+    "pred": 28.3,
+    "n": 9
+   },
+   "N0686": {
+    "pred": 51.7,
+    "n": 8
+   },
+   "N0687": {
+    "pred": 52.8,
+    "n": 7
+   },
+   "N0690": {
+    "pred": 82.4,
+    "n": 13
+   },
+   "N0691": {
+    "pred": 48.7,
+    "n": 12
+   },
+   "N0699": {
+    "pred": 51.1,
+    "n": 11
+   },
+   "N0701": {
+    "pred": 36.8,
+    "n": 11
+   },
+   "N0711": {
+    "pred": 51.9,
+    "n": 17
+   },
+   "N0713": {
+    "pred": 74.4,
+    "n": 13
+   },
+   "N0715": {
+    "pred": 42.5,
+    "n": 18
+   },
+   "N0718": {
+    "pred": 50.1,
+    "n": 9
+   },
+   "N0731": {
+    "pred": 30.9,
+    "n": 9
+   },
+   "N0732": {
+    "pred": 75.2,
+    "n": 7
+   },
+   "N0733": {
+    "pred": 41.3,
+    "n": 13
+   },
+   "N0738": {
+    "pred": 41.8,
+    "n": 13
+   },
+   "N0740": {
+    "pred": 28.4,
+    "n": 21
+   },
+   "N0741": {
+    "pred": 115.5,
+    "n": 7
+   },
+   "N0743": {
+    "pred": 74.4,
+    "n": 12
+   },
+   "N0744": {
+    "pred": 28.8,
+    "n": 7
+   },
+   "N0745": {
+    "pred": 26.6,
+    "n": 12
+   },
+   "N0752": {
+    "pred": 118.8,
+    "n": 8
+   },
+   "N0758": {
+    "pred": 45.3,
+    "n": 8
+   },
+   "N0760": {
+    "pred": 39.2,
+    "n": 5
+   },
+   "N0761": {
+    "pred": 73.0,
+    "n": 4
+   },
+   "N0764": {
+    "pred": 30.4,
+    "n": 14
+   },
+   "N0766": {
+    "pred": 43.0,
+    "n": 8
+   },
+   "N0767": {
+    "pred": 45.4,
+    "n": 12
+   },
+   "N0771": {
+    "pred": 78.1,
+    "n": 11
+   },
+   "N0778": {
+    "pred": 86.0,
+    "n": 8
+   },
+   "N0781": {
+    "pred": 44.5,
+    "n": 12
+   },
+   "N0782": {
+    "pred": 64.3,
+    "n": 7
+   },
+   "N0784": {
+    "pred": 55.7,
+    "n": 4
+   },
+   "N0790": {
+    "pred": 91.0,
+    "n": 9
+   },
+   "N0792": {
+    "pred": 58.1,
+    "n": 11
+   },
+   "N0794": {
+    "pred": 100.2,
+    "n": 7
+   },
+   "N0805": {
+    "pred": 59.1,
+    "n": 16
+   },
+   "N0807": {
+    "pred": 40.5,
+    "n": 7
+   },
+   "N0808": {
+    "pred": 86.5,
+    "n": 18
+   },
+   "N0812": {
+    "pred": 75.5,
+    "n": 9
+   },
+   "N0815": {
+    "pred": 39.3,
+    "n": 11
+   },
+   "N0820": {
+    "pred": 43.6,
+    "n": 5
+   },
+   "N0826": {
+    "pred": 37.8,
+    "n": 14
+   },
+   "N0827": {
+    "pred": 67.3,
+    "n": 6
+   },
+   "N0828": {
+    "pred": 51.1,
+    "n": 8
+   },
+   "N0833": {
+    "pred": 47.7,
+    "n": 2
+   },
+   "N0835": {
+    "pred": 134.9,
+    "n": 6
+   },
+   "N0840": {
+    "pred": 76.3,
+    "n": 13
+   },
+   "N0849": {
+    "pred": 80.1,
+    "n": 11
+   },
+   "N0850": {
+    "pred": 39.6,
+    "n": 13
+   },
+   "N0854": {
+    "pred": 54.1,
+    "n": 7
+   },
+   "N0859": {
+    "pred": 63.3,
+    "n": 8
+   },
+   "N0865": {
+    "pred": 38.1,
+    "n": 8
+   },
+   "N0867": {
+    "pred": 70.7,
+    "n": 10
+   },
+   "N0872": {
+    "pred": 69.8,
+    "n": 15
+   },
+   "N0874": {
+    "pred": 42.1,
+    "n": 12
+   },
+   "N0877": {
+    "pred": 52.8,
+    "n": 10
+   },
+   "N0886": {
+    "pred": 102.7,
+    "n": 14
+   },
+   "N0888": {
+    "pred": 64.5,
+    "n": 2
+   },
+   "N0891": {
+    "pred": 68.6,
+    "n": 10
+   },
+   "N0893": {
+    "pred": 28.8,
+    "n": 17
+   },
+   "N0900": {
+    "pred": 66.1,
+    "n": 15
+   },
+   "N0903": {
+    "pred": 119.6,
+    "n": 14
+   },
+   "N0906": {
+    "pred": 63.5,
+    "n": 11
+   },
+   "N0907": {
+    "pred": 140.8,
+    "n": 4
+   },
+   "N0912": {
+    "pred": 57.4,
+    "n": 3
+   },
+   "N0916": {
+    "pred": 44.1,
+    "n": 12
+   },
+   "N0917": {
+    "pred": 67.7,
+    "n": 9
+   },
+   "N0920": {
+    "pred": 53.2,
+    "n": 12
+   },
+   "N0926": {
+    "pred": 45.1,
+    "n": 13
+   },
+   "N0928": {
+    "pred": 51.2,
+    "n": 1
+   },
+   "N0929": {
+    "pred": 75.3,
+    "n": 8
+   },
+   "N0931": {
+    "pred": 37.6,
+    "n": 5
+   },
+   "N0937": {
+    "pred": 52.9,
+    "n": 12
+   },
+   "N0939": {
+    "pred": 60.7,
+    "n": 10
+   },
+   "N0943": {
+    "pred": 27.6,
+    "n": 11
+   },
+   "N0950": {
+    "pred": 68.5,
+    "n": 4
+   },
+   "N0954": {
+    "pred": 69.3,
+    "n": 5
+   },
+   "N0964": {
+    "pred": 69.7,
+    "n": 8
+   },
+   "N0965": {
+    "pred": 30.7,
+    "n": 17
+   },
+   "N0968": {
+    "pred": 39.9,
+    "n": 17
+   },
+   "N0971": {
+    "pred": 44.7,
+    "n": 7
+   },
+   "N0975": {
+    "pred": 23.3,
+    "n": 8
+   },
+   "N0978": {
+    "pred": 26.3,
+    "n": 10
+   },
+   "N0983": {
+    "pred": 44.6,
+    "n": 6
+   },
+   "N0984": {
+    "pred": 43.8,
+    "n": 13
+   },
+   "N0992": {
+    "pred": 115.6,
+    "n": 7
+   },
+   "N0993": {
+    "pred": 73.6,
+    "n": 7
+   },
+   "N0995": {
+    "pred": 88.2,
+    "n": 9
+   },
+   "N1000": {
+    "pred": 53.0,
+    "n": 16
+   },
+   "N1002": {
+    "pred": 35.9,
+    "n": 6
+   },
+   "N1003": {
+    "pred": 97.0,
+    "n": 7
+   },
+   "N1004": {
+    "pred": 51.8,
+    "n": 17
+   },
+   "N1008": {
+    "pred": 68.1,
+    "n": 5
+   },
+   "N1010": {
+    "pred": 56.0,
+    "n": 9
+   },
+   "N1011": {
+    "pred": 97.3,
+    "n": 8
+   },
+   "N1014": {
+    "pred": 48.4,
+    "n": 11
+   },
+   "N1017": {
+    "pred": 64.3,
+    "n": 13
+   },
+   "N1020": {
+    "pred": 52.3,
+    "n": 11
+   },
+   "N1021": {
+    "pred": 57.0,
+    "n": 7
+   },
+   "N1024": {
+    "pred": 68.0,
+    "n": 12
+   },
+   "N1026": {
+    "pred": 43.9,
+    "n": 15
+   },
+   "N1036": {
+    "pred": 37.5,
+    "n": 12
+   },
+   "N1039": {
+    "pred": 89.5,
+    "n": 8
+   },
+   "N1041": {
+    "pred": 70.4,
+    "n": 10
+   },
+   "N1042": {
+    "pred": 17.8,
+    "n": 10
+   },
+   "N1046": {
+    "pred": 45.6,
+    "n": 14
+   },
+   "N1050": {
+    "pred": 61.4,
+    "n": 11
+   },
+   "N1052": {
+    "pred": 40.0,
+    "n": 9
+   },
+   "N1053": {
+    "pred": 60.4,
+    "n": 14
+   },
+   "N1066": {
+    "pred": 60.1,
+    "n": 12
+   },
+   "N1071": {
+    "pred": 79.4,
+    "n": 5
+   },
+   "N1078": {
+    "pred": 34.8,
+    "n": 9
+   },
+   "N1085": {
+    "pred": 65.8,
+    "n": 13
+   },
+   "N1087": {
+    "pred": 51.3,
+    "n": 17
+   },
+   "N1088": {
+    "pred": 51.8,
+    "n": 6
+   },
+   "N1097": {
+    "pred": 76.0,
+    "n": 6
+   },
+   "N1103": {
+    "pred": 39.1,
+    "n": 13
+   },
+   "N1104": {
+    "pred": 70.8,
+    "n": 3
+   },
+   "N1106": {
+    "pred": 30.5,
+    "n": 13
+   },
+   "N1107": {
+    "pred": 54.6,
+    "n": 3
+   },
+   "N1109": {
+    "pred": 53.8,
+    "n": 4
+   },
+   "N1112": {
+    "pred": 27.8,
+    "n": 17
+   },
+   "N1115": {
+    "pred": 75.0,
+    "n": 9
+   },
+   "N1118": {
+    "pred": 149.2,
+    "n": 8
+   },
+   "N1138": {
+    "pred": 59.4,
+    "n": 13
+   },
+   "N1140": {
+    "pred": 39.3,
+    "n": 12
+   },
+   "N1149": {
+    "pred": 63.2,
+    "n": 8
+   },
+   "N1150": {
+    "pred": 80.0,
+    "n": 15
+   },
+   "N1155": {
+    "pred": 75.9,
+    "n": 16
+   },
+   "N1156": {
+    "pred": 73.8,
+    "n": 13
+   },
+   "N1160": {
+    "pred": 39.1,
+    "n": 7
+   },
+   "N1161": {
+    "pred": 47.3,
+    "n": 9
+   },
+   "N1167": {
+    "pred": 41.3,
+    "n": 8
+   },
+   "N1183": {
+    "pred": 82.5,
+    "n": 12
+   },
+   "N1184": {
+    "pred": 55.9,
+    "n": 5
+   },
+   "N1186": {
+    "pred": 117.5,
+    "n": 12
+   },
+   "N1197": {
+    "pred": 41.8,
+    "n": 9
+   },
+   "N1198": {
+    "pred": 93.9,
+    "n": 5
+   },
+   "N1204": {
+    "pred": 70.5,
+    "n": 11
+   },
+   "N1207": {
+    "pred": 56.2,
+    "n": 7
+   },
+   "N1212": {
+    "pred": 124.7,
+    "n": 8
+   },
+   "N1213": {
+    "pred": 38.3,
+    "n": 10
+   },
+   "N1216": {
+    "pred": 89.2,
+    "n": 7
+   },
+   "N1217": {
+    "pred": 58.7,
+    "n": 11
+   },
+   "N1219": {
+    "pred": 103.3,
+    "n": 4
+   },
+   "N1221": {
+    "pred": 31.7,
+    "n": 10
+   },
+   "N1224": {
+    "pred": 57.3,
+    "n": 14
+   },
+   "N1225": {
+    "pred": 54.5,
+    "n": 12
+   },
+   "N1237": {
+    "pred": 43.5,
+    "n": 11
+   },
+   "N1242": {
+    "pred": 67.2,
+    "n": 8
+   },
+   "N1244": {
+    "pred": 48.7,
+    "n": 9
+   },
+   "N1246": {
+    "pred": 29.7,
+    "n": 5
+   },
+   "N1249": {
+    "pred": 52.5,
+    "n": 5
+   },
+   "N1253": {
+    "pred": 26.0,
+    "n": 16
+   },
+   "N1260": {
+    "pred": 61.7,
+    "n": 11
+   },
+   "N1269": {
+    "pred": 59.9,
+    "n": 5
+   },
+   "N1271": {
+    "pred": 37.3,
+    "n": 6
+   },
+   "N1274": {
+    "pred": 44.5,
+    "n": 15
+   },
+   "N1276": {
+    "pred": 37.1,
+    "n": 15
+   },
+   "N1277": {
+    "pred": 28.8,
+    "n": 9
+   },
+   "N1278": {
+    "pred": 56.1,
+    "n": 7
+   },
+   "N1283": {
+    "pred": 36.8,
+    "n": 12
+   },
+   "N1286": {
+    "pred": 38.2,
+    "n": 18
+   },
+   "N1289": {
+    "pred": 76.8,
+    "n": 17
+   },
+   "N1303": {
+    "pred": 149.6,
+    "n": 8
+   },
+   "N1305": {
+    "pred": 136.1,
+    "n": 14
+   },
+   "N1311": {
+    "pred": 39.4,
+    "n": 12
+   },
+   "N1313": {
+    "pred": 60.0,
+    "n": 10
+   },
+   "N1318": {
+    "pred": 76.2,
+    "n": 10
+   },
+   "N1319": {
+    "pred": 54.1,
+    "n": 9
+   },
+   "N1320": {
+    "pred": 64.2,
+    "n": 9
+   },
+   "N1321": {
+    "pred": 108.7,
+    "n": 10
+   },
+   "N1322": {
+    "pred": 79.1,
+    "n": 14
+   },
+   "N1328": {
+    "pred": 83.8,
+    "n": 13
+   },
+   "N1332": {
+    "pred": 73.4,
+    "n": 10
+   },
+   "N1333": {
+    "pred": 53.2,
+    "n": 6
+   },
+   "N1336": {
+    "pred": 37.4,
+    "n": 10
+   },
+   "N1337": {
+    "pred": 74.8,
+    "n": 9
+   },
+   "N1339": {
+    "pred": 31.4,
+    "n": 6
+   },
+   "N1345": {
+    "pred": 52.0,
+    "n": 8
+   },
+   "N1350": {
+    "pred": 47.2,
+    "n": 12
+   },
+   "N1361": {
+    "pred": 61.6,
+    "n": 9
+   },
+   "N1369": {
+    "pred": 29.1,
+    "n": 2
+   },
+   "N1377": {
+    "pred": 69.1,
+    "n": 12
+   },
+   "N1384": {
+    "pred": 51.9,
+    "n": 14
+   },
+   "N1387": {
+    "pred": 38.5,
+    "n": 6
+   },
+   "N1402": {
+    "pred": 48.8,
+    "n": 9
+   },
+   "N1403": {
+    "pred": 51.1,
+    "n": 15
+   },
+   "N1411": {
+    "pred": 35.5,
+    "n": 10
+   },
+   "N1418": {
+    "pred": 156.0,
+    "n": 8
+   },
+   "N1420": {
+    "pred": 49.5,
+    "n": 5
+   },
+   "N1422": {
+    "pred": 42.4,
+    "n": 9
+   },
+   "N1423": {
+    "pred": 60.3,
+    "n": 10
+   },
+   "N1424": {
+    "pred": 44.3,
+    "n": 7
+   },
+   "N1428": {
+    "pred": 60.2,
+    "n": 14
+   },
+   "N1430": {
+    "pred": 52.0,
+    "n": 7
+   },
+   "N1434": {
+    "pred": 77.5,
+    "n": 12
+   },
+   "N1438": {
+    "pred": 121.6,
+    "n": 12
+   },
+   "N1440": {
+    "pred": 80.3,
+    "n": 6
+   },
+   "N1442": {
+    "pred": 38.9,
+    "n": 12
+   },
+   "N1447": {
+    "pred": 89.5,
+    "n": 6
+   },
+   "N1450": {
+    "pred": 23.0,
+    "n": 10
+   },
+   "N1451": {
+    "pred": 66.4,
+    "n": 4
+   },
+   "N1452": {
+    "pred": 45.2,
+    "n": 11
+   },
+   "N1456": {
+    "pred": 85.7,
+    "n": 7
+   },
+   "N1471": {
+    "pred": 53.3,
+    "n": 14
+   },
+   "N1490": {
+    "pred": 60.4,
+    "n": 10
+   },
+   "N1491": {
+    "pred": 45.9,
+    "n": 5
+   },
+   "N1495": {
+    "pred": 42.9,
+    "n": 11
+   },
+   "N1496": {
+    "pred": 41.5,
+    "n": 9
+   },
+   "N1497": {
+    "pred": 57.9,
+    "n": 16
+   },
+   "N1503": {
+    "pred": 38.7,
+    "n": 7
+   },
+   "N1504": {
+    "pred": 69.8,
+    "n": 4
+   },
+   "N1509": {
+    "pred": 50.8,
+    "n": 8
+   },
+   "N1510": {
+    "pred": 57.4,
+    "n": 5
+   },
+   "N1514": {
+    "pred": 48.5,
+    "n": 3
+   },
+   "N1518": {
+    "pred": 126.0,
+    "n": 7
+   },
+   "N1526": {
+    "pred": 50.6,
+    "n": 13
+   },
+   "N1530": {
+    "pred": 42.6,
+    "n": 15
+   },
+   "N1535": {
+    "pred": 66.7,
+    "n": 4
+   },
+   "N1537": {
+    "pred": 52.3,
+    "n": 10
+   },
+   "N1540": {
+    "pred": 58.6,
+    "n": 15
+   },
+   "N1541": {
+    "pred": 49.0,
+    "n": 6
+   },
+   "N1553": {
+    "pred": 36.5,
+    "n": 5
+   },
+   "N1556": {
+    "pred": 40.7,
+    "n": 11
+   },
+   "N1557": {
+    "pred": 79.8,
+    "n": 10
+   },
+   "N1564": {
+    "pred": 75.1,
+    "n": 15
+   },
+   "N1569": {
+    "pred": 75.5,
+    "n": 13
+   },
+   "N1571": {
+    "pred": 39.6,
+    "n": 11
+   },
+   "N1573": {
+    "pred": 52.1,
+    "n": 4
+   },
+   "N1577": {
+    "pred": 102.8,
+    "n": 6
+   },
+   "N1579": {
+    "pred": 55.8,
+    "n": 9
+   },
+   "N1581": {
+    "pred": 50.7,
+    "n": 9
+   },
+   "N1586": {
+    "pred": 52.3,
+    "n": 11
+   },
+   "N1590": {
+    "pred": 36.9,
+    "n": 15
+   },
+   "N1592": {
+    "pred": 61.2,
+    "n": 10
+   },
+   "N1593": {
+    "pred": 68.2,
+    "n": 7
+   },
+   "N1594": {
+    "pred": 42.1,
+    "n": 6
+   },
+   "N1595": {
+    "pred": 111.4,
+    "n": 8
+   },
+   "N1603": {
+    "pred": 30.3,
+    "n": 9
+   },
+   "N1610": {
+    "pred": 32.5,
+    "n": 13
+   },
+   "N1611": {
+    "pred": 49.3,
+    "n": 12
+   },
+   "N1615": {
+    "pred": 75.0,
+    "n": 17
+   },
+   "N1627": {
+    "pred": 93.7,
+    "n": 4
+   },
+   "N1628": {
+    "pred": 29.8,
+    "n": 15
+   },
+   "N1629": {
+    "pred": 36.3,
+    "n": 2
+   },
+   "N1632": {
+    "pred": 45.4,
+    "n": 14
+   },
+   "N1636": {
+    "pred": 30.9,
+    "n": 16
+   },
+   "N1637": {
+    "pred": 53.8,
+    "n": 8
+   },
+   "N1638": {
+    "pred": 49.7,
+    "n": 3
+   },
+   "N1645": {
+    "pred": 44.1,
+    "n": 10
+   },
+   "N1647": {
+    "pred": 15.5,
+    "n": 2
+   },
+   "N1652": {
+    "pred": 47.0,
+    "n": 15
+   },
+   "N1655": {
+    "pred": 38.3,
+    "n": 13
+   },
+   "N1656": {
+    "pred": 26.6,
+    "n": 7
+   },
+   "N1657": {
+    "pred": 43.4,
+    "n": 12
+   },
+   "N1668": {
+    "pred": 55.2,
+    "n": 9
+   },
+   "N1670": {
+    "pred": 54.4,
+    "n": 7
+   },
+   "N1677": {
+    "pred": 64.5,
+    "n": 14
+   },
+   "N1678": {
+    "pred": 83.1,
+    "n": 9
+   },
+   "N1679": {
+    "pred": 78.3,
+    "n": 13
+   },
+   "N1680": {
+    "pred": 83.9,
+    "n": 11
+   },
+   "N1682": {
+    "pred": 24.7,
+    "n": 13
+   },
+   "N1701": {
+    "pred": 28.6,
+    "n": 17
+   },
+   "N1704": {
+    "pred": 32.9,
+    "n": 4
+   },
+   "N1705": {
+    "pred": 34.1,
+    "n": 11
+   },
+   "N1706": {
+    "pred": 28.7,
+    "n": 8
+   },
+   "N1716": {
+    "pred": 73.6,
+    "n": 13
+   },
+   "N1717": {
+    "pred": 55.9,
+    "n": 16
+   },
+   "N1719": {
+    "pred": 73.7,
+    "n": 6
+   },
+   "N1723": {
+    "pred": 45.3,
+    "n": 8
+   },
+   "N1725": {
+    "pred": 47.0,
+    "n": 14
+   },
+   "N1727": {
+    "pred": 58.7,
+    "n": 16
+   },
+   "N1732": {
+    "pred": 63.9,
+    "n": 11
+   },
+   "N1734": {
+    "pred": 36.6,
+    "n": 8
+   },
+   "N1744": {
+    "pred": 31.5,
+    "n": 13
+   },
+   "N1748": {
+    "pred": 71.4,
+    "n": 13
+   },
+   "N1755": {
+    "pred": 40.2,
+    "n": 5
+   },
+   "N1756": {
+    "pred": 27.4,
+    "n": 11
+   },
+   "N1758": {
+    "pred": 68.1,
+    "n": 12
+   },
+   "N1759": {
+    "pred": 60.1,
+    "n": 13
+   },
+   "N1760": {
+    "pred": 37.3,
+    "n": 12
+   },
+   "N1766": {
+    "pred": 42.2,
+    "n": 12
+   },
+   "N1767": {
+    "pred": 37.5,
+    "n": 9
+   },
+   "N1771": {
+    "pred": 32.0,
+    "n": 16
+   },
+   "N1774": {
+    "pred": 77.4,
+    "n": 3
+   },
+   "N1777": {
+    "pred": 105.3,
+    "n": 7
+   },
+   "N1779": {
+    "pred": 62.1,
+    "n": 8
+   },
+   "N1781": {
+    "pred": 38.0,
+    "n": 18
+   },
+   "N1784": {
+    "pred": 72.4,
+    "n": 8
+   },
+   "N1786": {
+    "pred": 37.6,
+    "n": 16
+   },
+   "N1797": {
+    "pred": 108.2,
+    "n": 11
+   },
+   "N1800": {
+    "pred": 69.8,
+    "n": 10
+   },
+   "N1801": {
+    "pred": 42.9,
+    "n": 14
+   },
+   "N1804": {
+    "pred": 31.5,
+    "n": 12
+   },
+   "N1807": {
+    "pred": 128.6,
+    "n": 11
+   },
+   "N1817": {
+    "pred": 41.7,
+    "n": 6
+   },
+   "N1819": {
+    "pred": 28.4,
+    "n": 10
+   },
+   "N1822": {
+    "pred": 27.0,
+    "n": 4
+   },
+   "N1824": {
+    "pred": 55.1,
+    "n": 8
+   },
+   "N1830": {
+    "pred": 56.2,
+    "n": 15
+   },
+   "N1834": {
+    "pred": 43.8,
+    "n": 5
+   },
+   "N1836": {
+    "pred": 38.8,
+    "n": 11
+   },
+   "N1839": {
+    "pred": 51.9,
+    "n": 13
+   },
+   "N1842": {
+    "pred": 72.7,
+    "n": 13
+   },
+   "N1846": {
+    "pred": 83.5,
+    "n": 7
+   },
+   "N1847": {
+    "pred": 47.9,
+    "n": 11
+   },
+   "N1853": {
+    "pred": 79.5,
+    "n": 10
+   },
+   "N1857": {
+    "pred": 59.1,
+    "n": 13
+   },
+   "N1861": {
+    "pred": 75.5,
+    "n": 11
+   },
+   "N1862": {
+    "pred": 41.0,
+    "n": 10
+   },
+   "N1863": {
+    "pred": 42.5,
+    "n": 9
+   },
+   "N1867": {
+    "pred": 47.1,
+    "n": 1
+   },
+   "N1874": {
+    "pred": 29.3,
+    "n": 8
+   },
+   "N1875": {
+    "pred": 22.1,
+    "n": 7
+   },
+   "N1877": {
+    "pred": 101.5,
+    "n": 8
+   },
+   "N1879": {
+    "pred": 27.1,
+    "n": 10
+   },
+   "N1881": {
+    "pred": 40.4,
+    "n": 10
+   },
+   "N1883": {
+    "pred": 79.3,
+    "n": 10
+   },
+   "N1884": {
+    "pred": 65.6,
+    "n": 19
+   },
+   "N1889": {
+    "pred": 36.0,
+    "n": 10
+   },
+   "N1891": {
+    "pred": 77.1,
+    "n": 12
+   },
+   "N1893": {
+    "pred": 41.1,
+    "n": 13
+   },
+   "N1898": {
+    "pred": 54.8,
+    "n": 11
+   },
+   "N1902": {
+    "pred": 35.8,
+    "n": 14
+   },
+   "N1904": {
+    "pred": 82.0,
+    "n": 7
+   },
+   "N1912": {
+    "pred": 69.7,
+    "n": 11
+   },
+   "N1913": {
+    "pred": 49.0,
+    "n": 7
+   },
+   "N1924": {
+    "pred": 46.3,
+    "n": 4
+   },
+   "N1936": {
+    "pred": 47.4,
+    "n": 9
+   },
+   "N1938": {
+    "pred": 41.5,
+    "n": 12
+   },
+   "N1942": {
+    "pred": 30.5,
+    "n": 8
+   },
+   "N1944": {
+    "pred": 53.1,
+    "n": 5
+   },
+   "N1945": {
+    "pred": 67.9,
+    "n": 10
+   },
+   "N1947": {
+    "pred": 60.5,
+    "n": 8
+   },
+   "N1949": {
+    "pred": 57.6,
+    "n": 14
+   },
+   "N1951": {
+    "pred": 51.1,
+    "n": 5
+   },
+   "N1958": {
+    "pred": 56.0,
+    "n": 4
+   },
+   "N1963": {
+    "pred": 94.5,
+    "n": 9
+   },
+   "N1965": {
+    "pred": 101.2,
+    "n": 14
+   },
+   "N1967": {
+    "pred": 94.7,
+    "n": 10
+   },
+   "N1975": {
+    "pred": 39.4,
+    "n": 5
+   },
+   "N1976": {
+    "pred": 89.3,
+    "n": 9
+   },
+   "N1978": {
+    "pred": 94.7,
+    "n": 17
+   },
+   "N1985": {
+    "pred": 78.6,
+    "n": 17
+   },
+   "N1986": {
+    "pred": 27.7,
+    "n": 2
+   },
+   "N1987": {
+    "pred": 50.4,
+    "n": 9
+   },
+   "N1990": {
+    "pred": 81.7,
+    "n": 15
+   },
+   "N1997": {
+    "pred": 119.5,
+    "n": 17
+   },
+   "N1999": {
+    "pred": 31.7,
+    "n": 10
+   }
+  }
+ },
+ "real": {
+  "walk10": {
+   "est": -3.2,
+   "lo": -6.89,
+   "hi": 0.48,
+   "se": 1.88,
+   "people": 44,
+   "rows": 1329,
+   "residSd": 25.58
+  },
+  "lateDinner": {
+   "est": 2.61,
+   "lo": -5.11,
+   "hi": 10.33,
+   "se": 3.94,
+   "people": 41,
+   "rows": 314,
+   "residSd": 25.27
+  },
+  "note": "Same DML as the program, on CGMacros (calories, carbs, protein, fat, fiber; no sugar column)."
+ },
+ "seconds": 155
+}

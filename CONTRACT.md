@@ -115,7 +115,7 @@ Example (`c4-N0632`, trimmed):
       "evidenceId": "late_share"
     },
     {
-      "label": "Walks work: -18.2 mg/dL",
+      "label": "Walks work: -18.7 mg/dL",
       "tone": "good",
       "evidenceId": "walk_effect_blend"
     },
@@ -125,7 +125,7 @@ Example (`c4-N0632`, trimmed):
       "evidenceId": "fast_avg"
     }
   ],
-  "summary": "76-year-old female, colorectal cancer, 1.3 years after treatment; normal at start; group: coaching; day job. Average sugar 85 mg/dL in weeks 11-12, 95% of readings in range. Median rise after dinner 46 mg/dL. Synthetic participant (made-up data).",
+  "summary": "76-year-old female, colorectal cancer, 1.3 years after treatment; normal at start; group: coaching; day job. Average sugar 85 mg/dL in weeks 11-12, 95% of readings in range. Median rise after dinner 46 mg/dL. ML forecast for a typical dinner: 46 mg/dL. Synthetic participant (made-up data).",
   "updatedAt": "2024-06-23T23:45:00",
   "profile": {
     "age": 76,
@@ -173,43 +173,43 @@ Example (`c4-N0632`, trimmed):
     {
       "id": "walk_effect_own",
       "label": "Your sugar rise after meals with a walk vs without",
-      "value": -18.4,
+      "value": -19.5,
       "unit": "mg/dL",
       "ci": [
-        -26.3,
-        -8.5
+        -32.4,
+        -8
       ],
       "n": 41,
       "scope": "person",
-      "method": "Your meals only: regression of rise on walk, carbs and meal type; 95% CI from 300 bootstrap resamples of your meals.",
+      "method": "Your meals only, from the ML engine: what the meal predicts is removed first (gradient boosting, cross-fitted), then the walk effect is fitted on what is left; 95% CI from 300 bootstrap resamples of your meals.",
       "caveat": "You chose when to walk, so this is a pattern, not proof."
     },
     {
       "id": "cohort_late",
       "label": "Program-wide: rise after dinners at 8 pm or later vs earlier (same person)",
-      "value": 9.1,
+      "value": 9.2,
       "unit": "mg/dL",
       "ci": [
         7.1,
-        11.2
+        11.3
       ],
-      "n": 4711,
+      "n": 4693,
       "scope": "cohort",
-      "method": "Within-person regression adjusted for carbs; night-shift workers excluded; cluster bootstrap 95% CI.",
+      "method": "Double machine learning: gradient boosting learns what the meal (calories, carbs, protein, fat, fiber, sugar) predicts about the rise and about whether dinner started at 8 pm or later; the effect is fitted on what is left, within person. 5-fold cross-fitting repeated 3 times; person-clustered 95% CI. Night-shift workers excluded.",
       "caveat": "Association, not proof."
     },
     {
       "id": "cohort_walk_dinner",
       "label": "Program-wide: rise after dinner with a walk vs without (same person)",
-      "value": -18.7,
+      "value": -18.3,
       "unit": "mg/dL",
       "ci": [
-        -20.4,
-        -17.2
+        -20.1,
+        -16.6
       ],
-      "n": 4711,
+      "n": 4693,
       "scope": "cohort",
-      "method": "Within-person regression on dinners, adjusted for carbs; night-shift workers excluded; cluster bootstrap 95% CI.",
+      "method": "Double machine learning: gradient boosting learns what the meal (calories, carbs, protein, fat, fiber, sugar) predicts about the rise and about whether you walked; the effect is fitted on what is left, within person. 5-fold cross-fitting repeated 3 times; person-clustered 95% CI. Dinners only; night-shift workers excluded.",
       "caveat": "Walking was self-chosen: association, not proof."
     },
     {
@@ -229,35 +229,35 @@ Example (`c4-N0632`, trimmed):
     {
       "id": "real_late_dinner",
       "label": "Real-data check (CGMacros, 45 real adults): dinner at 8 pm or later vs earlier",
-      "value": 4.6,
+      "value": 2.6,
       "unit": "mg/dL",
       "ci": [
-        -1.7,
-        11.7
+        -5.1,
+        10.3
       ],
-      "n": 317,
+      "n": 314,
       "scope": "real",
-      "method": "Within-person, carbs adjusted; cluster bootstrap 95% CI.",
+      "method": "Same ML engine as the program (double ML, calories and macros), within person; person-clustered 95% CI.",
       "caveat": "Same direction as the program data, but the interval includes zero: not proven in real people yet."
     },
     {
       "id": "real_walk",
       "label": "Real-data check (CGMacros): rise after meals followed by a walk vs not",
-      "value": -4.4,
+      "value": -3.2,
       "unit": "mg/dL",
       "ci": [
-        -11.4,
-        1.4
+        -6.9,
+        0.5
       ],
-      "n": 1330,
+      "n": 1329,
       "scope": "real",
-      "method": "Walk = at least 10 straight minutes at 3+ METs (Fitbit) in the hour after the meal; meals with 50+ minutes of Fitbit data. Within-person, carbs adjusted; cluster bootstrap 95% CI.",
-      "caveat": "Check result: same direction, not proven. About 192 people would be needed to confirm an effect this size."
+      "method": "Walk = at least 10 straight minutes at 3+ METs (Fitbit) in the hour after the meal; meals with 50+ minutes of Fitbit data. Same ML engine as the program (double ML, calories, macros and meal type), within person; person-clustered 95% CI.",
+      "caveat": "Check result: same direction, not proven. About 120 people would be needed to confirm an effect this size."
     },
     {
       "id": "cohort_walk_negctrl",
       "label": "Check: pre-meal sugar before meals that were later followed by a walk vs not (same person)",
-      "value": -0.4,
+      "value": -0.3,
       "unit": "mg/dL",
       "ci": [
         -1.4,
@@ -265,7 +265,7 @@ Example (`c4-N0632`, trimmed):
       ],
       "n": 18214,
       "scope": "cohort",
-      "method": "Negative control: a walk after the meal cannot change the reading 15 min before it. Same model as the walk effect; cluster bootstrap 95% CI.",
+      "method": "Negative control: a walk after the meal cannot change the reading 15 min before it. Same ML engine as the walk effect (double ML); person-clustered 95% CI.",
       "caveat": "Near zero, so walk meals do not start from a different place."
     }
   ],
@@ -287,8 +287,8 @@ Example (`c4-N0632`, trimmed):
     {
       "id": "walk",
       "title": "Take a short walk after meals",
-      "text": "Your sugar rose about 18.2 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.7 mg/dL). A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
-      "weightOnYourData": 0.67,
+      "text": "Your sugar rose about 18.7 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.3 mg/dL). A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
+      "weightOnYourData": 0.53,
       "basis": "personal",
       "evidenceIds": [
         "walk_effect_own",
@@ -297,7 +297,7 @@ Example (`c4-N0632`, trimmed):
         "cohort_walk_10_19",
         "cohort_walk_negctrl",
         "cohort_walk_evalue",
-        "cohort_walk_dml",
+        "cohort_walk_fe",
         "real_walk"
       ],
       "realDataCheck": {
@@ -308,13 +308,13 @@ Example (`c4-N0632`, trimmed):
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "57.1% of your dinners started at 8 pm or later. Across the program, sugar rose about 9.1 mg/dL more after late dinners than after earlier ones in the same person, and 15.9 mg/dL more after a dinner at 8-9 pm than after one before 6 pm. Try to start dinner before 8 pm. A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
+      "text": "57.1% of your dinners started at 8 pm or later. Across the program, sugar rose about 9.2 mg/dL more after late dinners than after earlier ones in the same person, and 13.3 mg/dL more after a dinner at 8-9 pm than after one before 6 pm. Try to start dinner before 8 pm. A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
       "basis": "cohort",
       "evidenceIds": [
         "late_share",
         "cohort_late",
         "cohort_dinner_8_9pm",
-        "cohort_late_dml",
+        "cohort_late_fe",
         "real_late_dinner"
       ],
       "realDataCheck": {
@@ -429,21 +429,21 @@ Example (`c4-N0632`, trimmed):
       ],
       "est": [
         0,
-        -17.1,
-        -20.1,
-        -16.8
+        -17.5,
+        -19.5,
+        -16.6
       ],
       "lo": [
         0,
-        -18.9,
-        -22.3,
-        -19.1
+        -19.1,
+        -21.9,
+        -19
       ],
       "hi": [
         0,
-        -15.6,
-        -17.3,
-        -14.4
+        -15.8,
+        -17.1,
+        -14.2
       ],
       "nMeals": [
         16679,
@@ -504,14 +504,14 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
 {
   "survivorId": "c4-N0632",
   "model": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
-  "ms": 2873,
+  "ms": 4130,
   "error": null,
   "rawPreview": null,
   "items": [
     {
       "id": "talk_to_team",
       "title": "Tell your care team about low readings",
-      "text": "Some of your readings were below 70 mg/dL, which can make you feel shaky or dizzy. Share this with your team before your next visit.",
+      "text": "Some of your readings were below 70 mg/dL, which can make you feel shaky or dizzy, so share this with your team before your next visit. Your readings were below the target of under 4%.",
       "source": "ai",
       "evidenceIds": [
         "tbr70",
@@ -522,7 +522,7 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "walk",
       "title": "Take a short walk after meals",
-      "text": "Your sugar rose about 18.2 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.7 mg/dL). A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
+      "text": "Your sugar rose about 18.7 mg/dL less after meals when you walked. Aim for 10 to 20 minutes after dinner, where the program saw the biggest gain (18.3 mg/dL). A check in real adults (CGMacros) pointed the same way, but it is not proven there yet.",
       "source": "template",
       "evidenceIds": [
         "walk_effect_own",
@@ -531,11 +531,11 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
         "cohort_walk_10_19",
         "cohort_walk_negctrl",
         "cohort_walk_evalue",
-        "cohort_walk_dml",
+        "cohort_walk_fe",
         "real_walk"
       ],
       "rejected": {
-        "text": "Walking after meals helped your sugar rise 18.2 mg/dL less. Try walking 10 to 20 minutes after dinner.",
+        "text": "Walking after meals helped your sugar rise about 18.7 mg/dL less, so try to walk for 10 to 20 minutes after dinner. The biggest gain was seen when walking after dinner, with a difference of 18.3 mg/dL.",
         "untracedNumbers": [],
         "addedCausalWords": [
           "helped"
@@ -545,13 +545,13 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "late_dinner",
       "title": "Move dinner earlier",
-      "text": "Most of your dinners were at 8 pm or later, and sugar rose 9.1 mg/dL more after late dinners. Try to start dinner before 8 pm.",
+      "text": "Most of your dinners were at 8 pm or later, and sugar rose about 9.2 mg/dL more after late dinners than after earlier ones. Try to start dinner before 8 pm, as sugar rose 13.3 mg/dL more after a dinner at 8-9 pm than after one before 6 pm.",
       "source": "ai",
       "evidenceIds": [
         "late_share",
         "cohort_late",
         "cohort_dinner_8_9pm",
-        "cohort_late_dml",
+        "cohort_late_fe",
         "real_late_dinner"
       ],
       "rejected": null
@@ -559,14 +559,20 @@ Optional. Workers AI (`@cf/meta/llama-3.3-70b-instruct-fp8-fast`) rewrites the r
     {
       "id": "overnight_fast",
       "title": "Hold off on longer fasts for now",
-      "text": "Your overnight fast currently averages 9.9 hours. Check with your care team before making any changes to your overnight fast.",
-      "source": "ai",
+      "text": "5.3% of your readings were below 70 mg/dL, so check with your care team before stretching your overnight fast. Right now it averages 9.9 hours.",
+      "source": "template",
       "evidenceIds": [
         "tbr70",
         "fast_avg",
         "status_rule"
       ],
-      "rejected": null
+      "rejected": {
+        "text": "Some of your readings were below 70 mg/dL, so check with your care team before changing your overnight fast, which currently averages 9.9 hours. Your care team can help you decide what to do next.",
+        "untracedNumbers": [],
+        "addedCausalWords": [
+          "help"
+        ]
+      }
     }
   ]
 }
@@ -631,6 +637,20 @@ Cohort findings for a program-level view. Top-level keys:
     "nhanesSurvivorsWeighted",
     "methods"
   ],
+  "engine": "str",
+  "statistics": [
+    "effects",
+    "negativeControl",
+    "walkDose",
+    "dinnerHour"
+  ],
+  "forecast": [
+    "mae",
+    "r2",
+    "err10",
+    "err90",
+    "meals"
+  ],
   "mlCompare": [
     "generated",
     "seed",
@@ -656,26 +676,32 @@ Cohort findings for a program-level view. Top-level keys:
 ```json
 {
   "effects.walkAfterDinner": {
-    "est": -18.71,
-    "lo": -20.43,
-    "hi": -17.24,
+    "est": -18.31,
+    "lo": -20.08,
+    "hi": -16.55,
+    "se": 0.9,
     "people": 471,
-    "rows": 4711
+    "rows": 4693,
+    "residSd": 20.86
   },
   "effects.lateDinner": {
-    "est": 9.08,
-    "lo": 7.05,
-    "hi": 11.23,
+    "est": 9.21,
+    "lo": 7.09,
+    "hi": 11.32,
+    "se": 1.08,
     "people": 471,
-    "rows": 4711
+    "rows": 4693,
+    "residSd": 21.93
   },
   "walkDose[1]": {
     "bin": "10-19 min",
-    "est": -17.13,
-    "lo": -18.9,
-    "hi": -15.64,
+    "est": -17.47,
+    "lo": -19.11,
+    "hi": -15.82,
+    "se": 0.84,
     "people": 500,
     "rows": 18218,
+    "residSd": 20.05,
     "n_meals": 866
   },
   "trial.fastVsCoachingBySubgroup.hba1c_pct['blood sugar: type 2 diabetes']": {
@@ -693,11 +719,13 @@ Cohort findings for a program-level view. Top-level keys:
     "walkAfterDinnerMin": 7.7
   },
   "realWorld.cgmacros.lateDinner": {
-    "est": 4.62,
-    "lo": -1.699,
-    "hi": 11.739,
+    "est": 2.61,
+    "lo": -5.11,
+    "hi": 10.33,
+    "se": 3.94,
     "people": 41,
-    "rows": 317
+    "rows": 314,
+    "residSd": 25.27
   }
 }
 ```

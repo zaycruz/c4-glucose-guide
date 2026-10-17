@@ -75,9 +75,9 @@ This independently confirms the hand-built benchmark: tree ensembles on top, lin
 | Estimator | Linear confounding: bias · RMSE · 95% CI coverage | Nonlinear confounding: bias · RMSE · coverage |
 |---|---|---|
 | Naive difference | +10.9 · 11.0 · 0% | +12.0 · 12.1 · 0% |
-| Fixed effects (statistics, used now) | +1.0 · 1.2 · 65% | **+3.5 · 3.6 · 0%** |
+| Fixed effects (statistics) | +1.0 · 1.2 · 65% | **+3.5 · 3.6 · 0%** |
 | S-learner (gradient boosting) | +1.0 · 1.2 · no CI | +1.4 · 1.5 · no CI |
-| **Double ML (gradient boosting)** | **−0.2 · 0.7 · 85%** | **+0.3 · 0.7 · 95%** |
+| **Double ML (gradient boosting, shipped)** | **−0.2 · 0.7 · 85%** | **+0.3 · 0.7 · 95%** |
 
 Double ML wins both scenarios. Even with "linear" assignment, fixed effects understates the effect by about 10%, because the real rise depends on pre-meal sugar and carbs in ways a straight line does not fully capture. Under threshold-shaped confounding, fixed effects understates it by a third and its interval never covers the truth. That was the risk this benchmark was built to expose.
 
@@ -86,10 +86,11 @@ Double ML wins both scenarios. Even with "linear" assignment, fixed effects unde
 | Estimator | RMSE vs planted personal effect |
 |---|---|
 | Own data only (OLS) | 11.0 |
-| **Blend with cohort (empirical Bayes, used now)** | **4.7** |
-| S-learner per person (gradient boosting) | 5.1 |
+| **Blend with cohort (empirical Bayes on fixed-effects residuals)** | **4.6** |
+| Double ML residuals, blended with cohort (shipped) | 4.7 |
+| S-learner per person (gradient boosting) | 4.9 |
 
-The empirical-Bayes blend wins narrowly, and both beat own-data-only by more than half. ML pulls toward the cohort too (trees share strength), but less precisely.
+The two blends are within 0.15 mg/dL of each other (4.57 vs 4.72); both beat own-data-only by more than half. The shipped version keeps the same empirical-Bayes blend and gate, but takes each person's raw effect from the double-ML residuals. The plain S-learner is close behind and has no interval, so it can't drive the gate.
 
 ### D. Real program effects, same inputs for both
 
@@ -100,9 +101,12 @@ The empirical-Bayes blend wins narrowly, and both beat own-data-only by more tha
 
 The intervals overlap. With pre-meal sugar and hour added, fixed effects gives −19.2, against −17.6 in the advice, which adjusts for carbs and meal type only.
 
-## What changed (per the decision rule)
+## What changed
 
-- **Double ML is now a cross-check evidence item** (`cohort_walk_dml`, `cohort_late_dml`), cited on the walk and late-dinner advice. It beat fixed effects on planted effects and agrees with it on the real data, so the advice numbers don't depend on a straight-line model. Fixed effects stays the advice engine: it agrees, it is simpler to explain, and the personal blend builds on it.
-- **Personal effects stay with the empirical-Bayes blend.** It beat the ML per-person estimate.
-- **Proposed, not built: "predicted rise for this meal".** For new people and real data, gradient boosting or a random forest predicts the rise better than linear models. That fits a meal-planning feature ("this dinner will likely raise you about 45"), but it is a product call.
-- **Why ML isn't the whole engine:** the advice needs effect sizes with honest intervals that trace to evidence, not predictions. Plain ML gives predictions; it gives causal effects only when wrapped in a design like double ML, and then it agrees with the statistics.
+The first decision, per the rule above, kept fixed effects as the engine and added double ML as a cross-check. zay then overrode that: "lets use ML ... update our submission to use ML instead". The submission now runs on ML:
+
+- **Every meal-level effect comes from double ML** (`scripts/ml_effects.py`, run on Proxmox by `scripts/build-ml.sh`): the walk and late-dinner effects, walk dose, dinner hour, groups, the negative control and the CGMacros real-data checks. It is within-person (outcome and exposure demeaned per person, plus person-mean features), uses gradient-boosting nuisance models, 5-fold cross-fitting repeated 3 times, and person-clustered intervals. Several exposures are fitted jointly (walk-length bins, dinner-hour bins), so hours with little overlap are still estimated.
+- **Fixed effects is the cross-check now** (`cohort_walk_fe`, `cohort_late_fe`). The two agree: walk −17.8 (ML) vs −17.6; late dinner +9.2 vs +9.1. If they ever disagree, the evidence item says so.
+- **Personal effects** use each person's own double-ML residuals, then the same empirical-Bayes blend and the same gate (own CI excludes 0, own data ≥25% of the weight). On planted personal effects this scores 4.7 vs 4.6 for the fixed-effects version, a negligible cost.
+- **Built: an ML forecast** of each person's typical dinner rise (gradient boosting, out-of-fold, so no person's own meals train their forecast): MAE 14.0 mg/dL, R² 0.62. It appears in each summary and as evidence `ml_forecast_dinner`, with the error in `ml_forecast_error`.
+- **Still statistics, because no model is needed:** randomized-arm contrasts for the overnight fast, survey-weighted NHANES, and the sensor consensus rules for status.

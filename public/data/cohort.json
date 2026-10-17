@@ -2,53 +2,67 @@
  "source": "synthetic 12-week program (made up), 500 sensor wearers; checkups for all 2,000",
  "effects": {
   "lateDinner": {
-   "est": 9.08,
-   "lo": 7.05,
-   "hi": 11.23,
+   "est": 9.21,
+   "lo": 7.09,
+   "hi": 11.32,
+   "se": 1.08,
    "people": 471,
-   "rows": 4711
+   "rows": 4693,
+   "residSd": 21.93
   },
   "lateDinnerIauc": {
-   "est": 12.82,
-   "lo": 9.74,
-   "hi": 15.65,
+   "est": 12.92,
+   "lo": 9.97,
+   "hi": 15.88,
+   "se": 1.51,
    "people": 471,
-   "rows": 4711
+   "rows": 4693,
+   "residSd": 30.93
   },
   "walk": {
-   "est": -17.62,
-   "lo": -18.98,
-   "hi": -16.26,
+   "est": -17.77,
+   "lo": -19.19,
+   "hi": -16.35,
+   "se": 0.72,
    "people": 500,
-   "rows": 18218
+   "rows": 18218,
+   "residSd": 20.05
   },
   "walkIauc": {
-   "est": -23.48,
-   "lo": -25.3,
-   "hi": -21.66,
+   "est": -23.72,
+   "lo": -25.68,
+   "hi": -21.75,
+   "se": 1.0,
    "people": 500,
-   "rows": 18218
+   "rows": 18218,
+   "residSd": 27.58
   },
   "walkAfterDinner": {
-   "est": -18.71,
-   "lo": -20.43,
-   "hi": -17.24,
+   "est": -18.31,
+   "lo": -20.08,
+   "hi": -16.55,
+   "se": 0.9,
    "people": 471,
-   "rows": 4711
+   "rows": 4693,
+   "residSd": 20.86
   },
   "walkAfterOtherMeals": {
-   "est": -13.46,
-   "lo": -15.55,
-   "hi": -11.5,
+   "est": -14.61,
+   "lo": -16.51,
+   "hi": -12.7,
+   "se": 0.97,
    "people": 500,
-   "rows": 13323
+   "rows": 13323,
+   "residSd": 18.74
   },
   "carbsPer10g": {
-   "est": 5.34,
-   "lo": 5.11,
-   "hi": 5.6,
+   "est": 6.46,
+   "lo": 6.07,
+   "hi": 6.84,
+   "se": 0.2,
    "people": 500,
-   "rows": 18218
+   "rows": 18218,
+   "residSd": 21.08
   },
   "fastMorningPerHour": {
    "est": -0.44,
@@ -68,50 +82,62 @@
  "effectsByBloodSugarGroup": {
   "normal": {
    "walk": {
-    "est": -13.42,
-    "lo": -14.91,
-    "hi": -12.04,
+    "est": -13.18,
+    "lo": -14.62,
+    "hi": -11.74,
+    "se": 0.73,
     "people": 230,
-    "rows": 8525
+    "rows": 8525,
+    "residSd": 14.46
    },
    "lateDinner": {
-    "est": 5.79,
-    "lo": 3.6,
-    "hi": 7.73,
+    "est": 5.57,
+    "lo": 3.63,
+    "hi": 7.51,
+    "se": 0.99,
     "people": 217,
-    "rows": 2200
+    "rows": 2193,
+    "residSd": 16.57
    }
   },
   "prediabetes": {
    "walk": {
-    "est": -18.87,
+    "est": -18.68,
     "lo": -21.67,
-    "hi": -16.1,
+    "hi": -15.69,
+    "se": 1.52,
     "people": 145,
-    "rows": 5289
+    "rows": 5289,
+    "residSd": 21.5
    },
    "lateDinner": {
-    "est": 13.74,
-    "lo": 8.75,
-    "hi": 19.34,
+    "est": 12.08,
+    "lo": 6.52,
+    "hi": 17.65,
+    "se": 2.84,
     "people": 139,
-    "rows": 1371
+    "rows": 1365,
+    "residSd": 24.96
    }
   },
   "type 2 diabetes": {
    "walk": {
-    "est": -24.95,
-    "lo": -28.7,
-    "hi": -21.68,
+    "est": -23.32,
+    "lo": -26.75,
+    "hi": -19.89,
+    "se": 1.75,
     "people": 125,
-    "rows": 4404
+    "rows": 4404,
+    "residSd": 25.81
    },
    "lateDinner": {
-    "est": 9.6,
-    "lo": 5.04,
-    "hi": 14.66,
+    "est": 10.02,
+    "lo": 4.98,
+    "hi": 15.06,
+    "se": 2.57,
     "people": 115,
-    "rows": 1140
+    "rows": 1135,
+    "residSd": 28.71
    }
   }
  },
@@ -125,29 +151,35 @@
   },
   {
    "bin": "10-19 min",
-   "est": -17.13,
-   "lo": -18.9,
-   "hi": -15.64,
+   "est": -17.47,
+   "lo": -19.11,
+   "hi": -15.82,
+   "se": 0.84,
    "people": 500,
    "rows": 18218,
+   "residSd": 20.05,
    "n_meals": 866
   },
   {
    "bin": "20-29 min",
-   "est": -20.06,
-   "lo": -22.28,
-   "hi": -17.35,
+   "est": -19.5,
+   "lo": -21.87,
+   "hi": -17.13,
+   "se": 1.21,
    "people": 500,
    "rows": 18218,
+   "residSd": 20.05,
    "n_meals": 311
   },
   {
    "bin": "30+ min",
-   "est": -16.79,
-   "lo": -19.08,
-   "hi": -14.45,
+   "est": -16.63,
+   "lo": -19.03,
+   "hi": -14.22,
+   "se": 1.23,
    "people": 500,
    "rows": 18218,
+   "residSd": 20.05,
    "n_meals": 362
   }
  ],
@@ -161,47 +193,57 @@
   },
   {
    "bin": "6-7pm",
-   "est": 6.32,
-   "lo": 3.52,
-   "hi": 9.01,
+   "est": 3.88,
+   "lo": 1.3,
+   "hi": 6.46,
+   "se": 1.32,
    "people": 471,
-   "rows": 4707,
+   "rows": 4689,
+   "residSd": 21.61,
    "n_meals": 817
   },
   {
    "bin": "7-8pm",
-   "est": 11.18,
-   "lo": 7.91,
-   "hi": 14.1,
+   "est": 8.35,
+   "lo": 5.39,
+   "hi": 11.3,
+   "se": 1.51,
    "people": 471,
-   "rows": 4707,
+   "rows": 4689,
+   "residSd": 21.61,
    "n_meals": 1014
   },
   {
    "bin": "8-9pm",
-   "est": 15.89,
-   "lo": 12.24,
-   "hi": 19.71,
+   "est": 13.27,
+   "lo": 9.71,
+   "hi": 16.83,
+   "se": 1.82,
    "people": 471,
-   "rows": 4707,
+   "rows": 4689,
+   "residSd": 21.61,
    "n_meals": 964
   },
   {
    "bin": "9-10pm",
-   "est": 21.06,
-   "lo": 17.31,
-   "hi": 24.71,
+   "est": 18.2,
+   "lo": 14.6,
+   "hi": 21.8,
+   "se": 1.84,
    "people": 471,
-   "rows": 4707,
+   "rows": 4689,
+   "residSd": 21.61,
    "n_meals": 738
   },
   {
    "bin": "10pm or later",
-   "est": 28.89,
-   "lo": 24.2,
-   "hi": 34.13,
+   "est": 25.44,
+   "lo": 20.64,
+   "hi": 30.24,
+   "se": 2.45,
    "people": 471,
-   "rows": 4707,
+   "rows": 4689,
+   "residSd": 21.61,
    "n_meals": 532
   }
  ],
@@ -581,34 +623,36 @@
  },
  "robustness": {
   "negativeControl": {
-   "est": -0.39,
-   "lo": -1.35,
+   "est": -0.35,
+   "lo": -1.38,
    "hi": 0.68,
+   "se": 0.53,
    "people": 500,
-   "rows": 18214
+   "rows": 18214,
+   "residSd": 19.51
   },
   "eValue": {
-   "estimate": 3.63,
-   "ciBound": 3.39,
-   "sdUsed": 21.57
+   "estimate": 3.91,
+   "ciBound": 3.62,
+   "sdUsed": 20.05
   },
   "instrument": {
    "firstStage": {
     "est": 3.68,
     "lo": 2.48,
-    "hi": 4.96,
+    "hi": 4.95,
     "unit": "percentage points of meals with a walk"
    },
    "reducedForm": {
     "est": -1.16,
-    "lo": -4.27,
-    "hi": 2.01,
+    "lo": -4.46,
+    "hi": 2.09,
     "unit": "mg/dL"
    },
    "walkEffect": {
     "est": -31.43,
-    "lo": -121.89,
-    "hi": 59.46,
+    "lo": -127.49,
+    "hi": 61.4,
     "unit": "mg/dL per meal walked"
    },
    "people": {
@@ -621,25 +665,29 @@
    "walk": {
     "label": "same direction, not proven",
     "source": "CGMacros, walk = at least 10 straight minutes at 3+ METs (Fitbit) in the hour after the meal; meals with 50+ minutes of Fitbit data",
-    "program": -17.62,
+    "program": -17.77,
     "real": {
-     "est": -4.39,
-     "lo": -11.38,
-     "hi": 1.45,
+     "est": -3.2,
+     "lo": -6.89,
+     "hi": 0.48,
+     "se": 1.88,
      "people": 44,
-     "rows": 1330
+     "rows": 1329,
+     "residSd": 25.58
     }
    },
    "lateDinner": {
     "label": "same direction, not proven",
     "source": "CGMacros",
-    "program": 9.08,
+    "program": 9.21,
     "real": {
-     "est": 4.62,
-     "lo": -1.7,
-     "hi": 11.74,
+     "est": 2.61,
+     "lo": -5.11,
+     "hi": 10.33,
+     "se": 3.94,
      "people": 41,
-     "rows": 317
+     "rows": 314,
+     "residSd": 25.27
     }
    },
    "overnightFast": {
@@ -658,17 +706,17 @@
   "power": {
    "lateDinner": {
     "realPeople": 41,
-    "programEffect": 9.08,
-    "realEffect": 4.62,
-    "peopleForProgramEffect": 46,
-    "peopleForRealEffect": 178
+    "programEffect": 9.21,
+    "realEffect": 2.61,
+    "peopleForProgramEffect": 59,
+    "peopleForRealEffect": 733
    },
    "walk": {
     "realPeople": 44,
-    "programEffect": -17.62,
-    "realEffect": -4.39,
-    "peopleForProgramEffect": 12,
-    "peopleForRealEffect": 192
+    "programEffect": -17.77,
+    "realEffect": -3.2,
+    "peopleForProgramEffect": 4,
+    "peopleForRealEffect": 120
    }
   }
  },
@@ -682,11 +730,13 @@
    "walk10MealCount": 192,
    "walk10Meals": 1330,
    "walk10": {
-    "est": -4.387,
-    "lo": -11.375,
-    "hi": 1.446,
+    "est": -3.2,
+    "lo": -6.89,
+    "hi": 0.48,
+    "se": 1.88,
     "people": 44,
-    "rows": 1330
+    "rows": 1329,
+    "residSd": 25.58
    },
    "walkDefinition": "at least 10 straight minutes at 3+ METs (Fitbit) in the hour after the meal; meals with 50+ minutes of Fitbit data",
    "source": "CGMacros v1.0.0 (PhysioNet 2025): 45 real adults, 10 days, Libre sensor + Fitbit",
@@ -708,11 +758,13 @@
     "rows": 1334
    },
    "lateDinner": {
-    "est": 4.62,
-    "lo": -1.699,
-    "hi": 11.739,
+    "est": 2.61,
+    "lo": -5.11,
+    "hi": 10.33,
+    "se": 3.94,
     "people": 41,
-    "rows": 317
+    "rows": 314,
+    "residSd": 25.27
    },
    "carbsPer10g": {
     "est": 2.058,
@@ -722,7 +774,22 @@
     "rows": 1334
    },
    "lateDinnerCount": 93,
-   "dinnerCount": 317
+   "dinnerCount": 317,
+   "walk10Statistics": {
+    "est": -4.387,
+    "lo": -11.375,
+    "hi": 1.446,
+    "people": 44,
+    "rows": 1330
+   },
+   "lateDinnerStatistics": {
+    "est": 4.62,
+    "lo": -1.699,
+    "hi": 11.739,
+    "people": 41,
+    "rows": 317
+   },
+   "engine": "double ML (gradient boosting), same as the program; FE kept as *Statistics"
   },
   "nhanesSurvivors": {
    "source": "NHANES 2011-2014, 808 real cancer survivors; unweighted (survey weights not applied)",
@@ -807,6 +874,178 @@
    }
   },
   "methods": "Real-data cross-check for C4: do the synthetic patterns hold in real people?\n\nUsage: uv run --with pandas --with numpy python -I scripts/realworld.py <dataset_dir> <out_dir>\nWrites <out_dir>/realworld.json.\n\n- CGMacros (45 real adults, minute-level Libre sensor + Fitbit): within-person effect of\n  movement in the hour after a meal and of a late dinner (>= 20:00) on the post-meal rise.\n  Rise = max Libre glucose 0-120 min after the meal minus the reading at the meal minute.\n  Meals with another logged meal in the next 120 min are dropped. CIs: cluster bootstrap\n  over people.\n- NHANES 2011-2014 cancer survivors (real, one snapshot each): association of overnight\n  fast, last eating hour and daily movement with HbA1c, adjusted for age and sex. Survey\n  weights are NOT applied in nhanesSurvivors (describes the sample). nhanesSurvivorsWeighted applies the\n  survey weights and design (strata, PSUs) and describes US adult cancer survivors 2011-2014."
+ },
+ "engine": "double machine learning (gradient boosting), within person",
+ "statistics": {
+  "effects": {
+   "lateDinner": {
+    "est": 9.082500779738353,
+    "lo": 7.05437426274298,
+    "hi": 11.225239010010796,
+    "people": 471,
+    "rows": 4711
+   },
+   "lateDinnerIauc": {
+    "est": 12.824652090052892,
+    "lo": 9.741787967431337,
+    "hi": 15.65229845534338,
+    "people": 471,
+    "rows": 4711
+   },
+   "walk": {
+    "est": -17.618031341774376,
+    "lo": -18.977651489021095,
+    "hi": -16.263901236436492,
+    "people": 500,
+    "rows": 18218
+   },
+   "walkIauc": {
+    "est": -23.48299724679866,
+    "lo": -25.304758105357802,
+    "hi": -21.66295454502521,
+    "people": 500,
+    "rows": 18218
+   },
+   "walkAfterDinner": {
+    "est": -18.713805163241815,
+    "lo": -20.430441373733228,
+    "hi": -17.23600890160523,
+    "people": 471,
+    "rows": 4711
+   },
+   "walkAfterOtherMeals": {
+    "est": -13.460399722352522,
+    "lo": -15.548015595827525,
+    "hi": -11.497367100794774,
+    "people": 500,
+    "rows": 13323
+   },
+   "carbsPer10g": {
+    "est": 5.339381181333168,
+    "lo": 5.10775922205407,
+    "hi": 5.603111041478118,
+    "people": 500,
+    "rows": 18218
+   },
+   "fastMorningPerHour": {
+    "est": -0.44484224901357244,
+    "lo": -0.7982874198823698,
+    "hi": -0.16231160710656772,
+    "people": 389,
+    "rows": 3029
+   },
+   "fast13Morning": {
+    "est": -1.1384846511414883,
+    "lo": -2.0726160460842653,
+    "hi": -0.02811743826231268,
+    "people": 389,
+    "rows": 3029
+   }
+  },
+  "negativeControl": {
+   "est": -0.39,
+   "lo": -1.37,
+   "hi": 0.59,
+   "people": 500,
+   "rows": 18214
+  },
+  "walkDose": [
+   {
+    "bin": "none",
+    "est": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "n_meals": 16679
+   },
+   {
+    "bin": "10-19 min",
+    "est": -17.13371328365459,
+    "lo": -18.902558633828836,
+    "hi": -15.636126437994958,
+    "people": 500,
+    "rows": 18218,
+    "n_meals": 866
+   },
+   {
+    "bin": "20-29 min",
+    "est": -20.05807433513598,
+    "lo": -22.276810147861642,
+    "hi": -17.347697120844185,
+    "people": 500,
+    "rows": 18218,
+    "n_meals": 311
+   },
+   {
+    "bin": "30+ min",
+    "est": -16.792089744675735,
+    "lo": -19.075025475819857,
+    "hi": -14.446955449341251,
+    "people": 500,
+    "rows": 18218,
+    "n_meals": 362
+   }
+  ],
+  "dinnerHour": [
+   {
+    "bin": "before 6pm",
+    "est": 0.0,
+    "lo": 0.0,
+    "hi": 0.0,
+    "n_meals": 642
+   },
+   {
+    "bin": "6-7pm",
+    "est": 6.315941771421061,
+    "lo": 3.5179596888018017,
+    "hi": 9.011937959796324,
+    "people": 471,
+    "rows": 4707,
+    "n_meals": 817
+   },
+   {
+    "bin": "7-8pm",
+    "est": 11.181781952721652,
+    "lo": 7.909475133394089,
+    "hi": 14.098419075584758,
+    "people": 471,
+    "rows": 4707,
+    "n_meals": 1014
+   },
+   {
+    "bin": "8-9pm",
+    "est": 15.889185305230695,
+    "lo": 12.244172093928146,
+    "hi": 19.707360001346405,
+    "people": 471,
+    "rows": 4707,
+    "n_meals": 964
+   },
+   {
+    "bin": "9-10pm",
+    "est": 21.056494966315093,
+    "lo": 17.306784928101706,
+    "hi": 24.70990664583169,
+    "people": 471,
+    "rows": 4707,
+    "n_meals": 738
+   },
+   {
+    "bin": "10pm or later",
+    "est": 28.890035301118438,
+    "lo": 24.200818437155554,
+    "hi": 34.12509146474502,
+    "people": 471,
+    "rows": 4707,
+    "n_meals": 532
+   }
+  ]
+ },
+ "forecast": {
+  "mae": 13.99,
+  "r2": 0.62,
+  "err10": -20.47,
+  "err90": 22.35,
+  "meals": 18218
  },
  "mlCompare": {
   "generated": "2026-10-17",
@@ -1278,7 +1517,7 @@
      "mcSd": 0.9,
      "coverage95": 0.0
     },
-    "Fixed effects (statistics, used now)": {
+    "Fixed effects (statistics)": {
      "mean": -8.96,
      "bias": 1.04,
      "rmse": 1.23,
@@ -1292,7 +1531,7 @@
      "mcSd": 0.7,
      "coverage95": null
     },
-    "Double ML (gradient boosting)": {
+    "Double ML (gradient boosting, shipped)": {
      "mean": -10.2,
      "bias": -0.2,
      "rmse": 0.68,
@@ -1308,7 +1547,7 @@
      "mcSd": 1.56,
      "coverage95": 0.0
     },
-    "Fixed effects (statistics, used now)": {
+    "Fixed effects (statistics)": {
      "mean": -6.5,
      "bias": 3.5,
      "rmse": 3.57,
@@ -1322,7 +1561,7 @@
      "mcSd": 0.54,
      "coverage95": null
     },
-    "Double ML (gradient boosting)": {
+    "Double ML (gradient boosting, shipped)": {
      "mean": -9.75,
      "bias": 0.25,
      "rmse": 0.67,
@@ -1334,35 +1573,36 @@
    "reps": 20
   },
   "personalBenchmark": {
-   "peopleScoredPerRep": 298,
+   "peopleScoredPerRep": 300,
    "reps": 10,
    "rmse": {
-    "Own data only (OLS)": 10.97,
-    "Blend with cohort (empirical Bayes, used now)": 4.66,
-    "S-learner per person (gradient boosting)": 5.06
+    "Own data only (OLS)": 10.94,
+    "Blend with cohort (empirical Bayes, statistics)": 4.57,
+    "S-learner per person (gradient boosting)": 4.91,
+    "Double ML residuals, blended with cohort (shipped)": 4.72
    },
    "plantedSpreadSd": 5.0
   },
   "realEffects": {
    "walk": {
-    "Fixed effects (statistics, used now)": {
+    "Fixed effects (statistics)": {
      "est": -19.2,
      "lo": -20.5,
      "hi": -17.9
     },
-    "Double ML (gradient boosting)": {
+    "Double ML (gradient boosting, shipped)": {
      "est": -18.0,
      "lo": -19.2,
      "hi": -16.7
     }
    },
    "lateDinner": {
-    "Fixed effects (statistics, used now)": {
+    "Fixed effects (statistics)": {
      "est": 9.0,
      "lo": 6.8,
      "hi": 11.2
     },
-    "Double ML (gradient boosting)": {
+    "Double ML (gradient boosting, shipped)": {
      "est": 9.7,
      "lo": 7.4,
      "hi": 12.0
@@ -1370,7 +1610,7 @@
    },
    "note": "Same covariates for both (carbs, pre-meal sugar, hour, meal type for walks; carbs and pre-meal sugar for late dinners). FE here adds pre-meal sugar and hour, so it can differ slightly from the advice numbers."
   },
-  "seconds": 112
+  "seconds": 180
  },
  "methods": "- Meal response: baseline = last 15-min reading at or before the meal (<= 15 min earlier).\n  Rise = peak of the readings 15..120 min after the meal minus baseline. iAUC = area above\n  baseline over 0..120 min (mg/dL x h). Meals with another item of >= 100 kcal in the next\n  120 min are dropped, so the curve belongs to one meal.\n- Late dinner: dinner starting at or after 20:00. Within-person comparison (person fixed\n  effects), adjusted for carbs. Night-shift workers are left out.\n- Post-meal walk: walked_after_min > 0. Within-person, adjusted for carbs and meal type.\n  Walking was self-chosen, so this is an association, not proof.\n- Overnight fast: the randomized arm comparison (coaching + overnight fast vs coaching) on\n  week 12 minus week 0 change is the fair causal estimate. Within-person night-to-night\n  link between the overnight fast and next-morning glucose is shown as an association.\n- Cohort CIs: cluster bootstrap that resamples people. Personal CIs: bootstrap of that\n  person's meals, then empirical-Bayes shrinkage toward the cohort estimate.\n- Robustness of the walk effect (see ROBUSTNESS.md):\n  negative control = same model with the reading 15 min BEFORE the meal as outcome (a later\n  walk cannot change it); E-value (VanderWeele & Ding 2017) with the within-person residual SD;\n  instrument = randomized arm (coaching vs email tips) as encouragement to walk, Wald ratio at\n  person level. The instrument proved inconclusive (exclusion restriction fails) and is not\n  counted as support.\n- Fast by subgroup: Cochran Q test of arm x blood-sugar-group interaction, Holm adjustment across\n  all subgroup contrasts. Advice uses group-specific fast numbers only if Q p < 0.05.\n- Real-data agreement labels: agrees (same sign, CI excludes 0), same direction not proven,\n  no clear signal, disagrees (opposite sign, CI excludes 0). Power: people needed for 80% power,\n  scaling the real study's SE by sqrt(people)."
 }

@@ -41,16 +41,16 @@ How sure are we about each headline finding? This file lists the checks, how the
 **Advice tracking real data**
 - Calling "same direction, CI includes 0" agreement. Use four labels: agrees (same sign, CI excludes 0), same direction not proven, no clear signal, disagrees (opposite sign, CI excludes 0).
 
-## Results (run 2026-10-17; numbers from `public/data/cohort.json` → `robustness`, `trial.heterogeneity`, `realWorld`)
+## Results (rerun 2026-10-17 on the ML engine, double ML; numbers from `public/data/cohort.json` → `robustness`, `trial.heterogeneity`, `realWorld`)
 
 | Weak spot | Check | Result | Verdict |
 |---|---|---|---|
-| Walk effect is observational | Negative control: pre-meal reading 15 min before walk meals vs other meals, same person | -0.4 mg/dL (-1.4 to 0.7), against a walk effect of -17.6 | Passes: walk meals don't start from a different place |
-| | E-value | 3.6 (CI bound 3.4) | A hidden factor would need a risk ratio of about 3.6 with both walking and the rise to explain the effect away |
+| Walk effect is observational | Negative control: pre-meal reading 15 min before walk meals vs other meals, same person | -0.35 mg/dL (-1.38 to 0.68), against a walk effect of -17.8 (double ML for both) | Passes: walk meals don't start from a different place |
+| | E-value | 3.9 (CI bound 3.6) | A hidden factor would need a risk ratio of about 3.9 with both walking and the rise to explain the effect away |
 | | Randomized arm as instrument (coaching vs email tips) | First stage +3.7 pts of meals walked (2.5 to 5.0); walk effect -31 (-122 to 59). Dinner-only version: -61 to -98 per walked meal, which is impossible | **Inconclusive.** Coaching moves the rise through more than walking, so the exclusion restriction fails. Not counted as support |
-| | Real data with the program's walk definition (CGMacros, ≥10 min at 3+ METs within an hour) | -4.4 mg/dL (-11.4 to 1.4), 192 walk meals, 44 people | Same direction, not proven. **The interval stops short of the program's -17.6, so the real effect is probably much smaller** |
+| | Real data with the program's walk definition (CGMacros, ≥10 min at 3+ METs within an hour) | Double ML, same engine as the program: -3.2 mg/dL (-6.9 to 0.5), 1,329 meals, 44 people (fixed effects: -4.4, -11.4 to 1.4) | Same direction, not proven. **The interval stops short of the program's -17.8, so the real effect is probably much smaller** |
 | NHANES unweighted | Survey weights (exam weight for HbA1c and movement, 2-day diet weight for eating times), Rao-Wu bootstrap of PSUs within strata, domain estimate | Fast: +0.013 per hour (-0.025 to 0.048). Movement: -0.021 per 1,000 MIMS (-0.052 to 0.006) | Fast: no link, as before. **Movement loses its clear signal once weighted** |
-| Synthetic headline numbers | Power: people needed for 80% power, scaled from CGMacros | Late dinner: 46 for the program size (+9.1), 178 for the real size (+4.6). Walk: 12 for the program size, 192 for the real size | Walk: CGMacros could easily have seen the program's size, and its interval excludes it, so the program's walk number is too big for real people. Late dinner: the program's +9.1 is still inside the real interval, and confirming the real-data size would take about 180 people |
+| Synthetic headline numbers | Power: people needed for 80% power, scaled from CGMacros | Late dinner: 59 people for the program size (+9.2), about 730 for the real size (+2.6). Walk: 4 for the program size, 120 for the real size (-3.2) | Walk: CGMacros could easily have seen the program's size, and its interval excludes it, so the program's walk number is too big for real people. Late dinner: the program's +9.2 is still inside the real interval (-5.1 to 10.3); confirming an effect as small as the real estimate would take hundreds of people |
 | | Real-data label on every recommendation | walk and late dinner: same direction, not proven; overnight fast: no clear signal (NHANES); safety rules: not tested | Shown in the advice text, on a badge in the UI, and in `recommendations[].realDataCheck` |
 | Subgroup claim (new) | Cochran Q across blood-sugar groups for the fast effect on HbA1c; Holm across 10 subgroup contrasts | Q p = 0.15; type 2 diabetes p = 0.13 after Holm | **Does not hold.** Advice now uses the overall fast number (-0.03) for everyone and says the groups could not be told apart (For fasting glucose the groups do differ: Q p = 0.02. The advice is about HbA1c.) |
 
@@ -59,3 +59,7 @@ Two headline claims changed:
 - **"More movement goes with lower HbA1c in NHANES."** Retracted: the link disappears with survey weights.
 
 Two claims got firmer caveats. The walk effect points the same way in real people, but it is clearly smaller there than in the program. The late-dinner effect also points the same way, and the program's size is still possible.
+
+## Engine switch to machine learning (2026-10-17)
+
+zay, after the statistics-vs-ML benchmark: "lets use ML ... update our submission to use ML instead". Every meal-level effect now comes from double ML (`scripts/ml_effects.py`). The checks above were rerun on it: the negative control, the E-value, the real-data checks (CGMacros on the same engine) and the power numbers. The randomized-arm contrasts, the subgroup test and the survey-weighted NHANES estimates are unchanged, because they need no model. The fixed-effects regression is kept as a cross-check evidence item (`cohort_walk_fe`, `cohort_late_fe`). See ML_COMPARISON.md.

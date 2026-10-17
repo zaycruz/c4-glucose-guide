@@ -41,7 +41,8 @@ def longest_run(mask):
     return best
 
 
-def cgmacros(d):
+def cgmacros_meals(d):
+    """One row per clean CGMacros meal: rise, carbs and macros, movement in the next hour, walk10, late."""
     mm = pd.read_csv(f"{d}/CGMacros/cgmacros_minute_by_minute.csv", parse_dates=["timestamp"],
                      usecols=["participant_id", "timestamp", "glucose_libre_mg_dl", "fitbit_mets_x10"])
     meals = pd.read_csv(f"{d}/CGMacros/cgmacros_meals.csv", parse_dates=["timestamp"])
@@ -63,14 +64,20 @@ def cgmacros(d):
         hour1 = win.loc[: m.timestamp + pd.Timedelta(minutes=60)].fitbit_mets_x10 / 10
         mets = hour1.mean()
         rows.append({"participant_id": m.participant_id, "meal_type": m.meal_type, "carbs_g": m.meal_carbs_g,
+                     "calories": m.meal_calories, "protein_g": m.meal_protein_g, "fat_g": m.meal_fat_g, "fiber_g": m.meal_fiber_g,
                      "rise": win.glucose_libre_mg_dl.max() - base, "mets_1h": mets,
                      "walk10": longest_run(hour1.to_numpy() >= WALK_METS) >= WALK_MIN if hour1.notna().sum() >= 50 else np.nan,
                      "hour": m.timestamp.hour + m.timestamp.minute / 60})
     df = pd.DataFrame(rows).dropna(subset=["rise", "mets_1h", "carbs_g"])
     df["active"] = (df.mets_1h >= 1.5).astype(int)  # mean >= 1.5 METs over the hour = some walking
     df["late"] = ((df.hour >= 20) | (df.hour < 4)).astype(int)
-    din = df[df.meal_type == "dinner"]
     df["walk10"] = df.walk10.astype(float)
+    return df.reset_index(drop=True)
+
+
+def cgmacros(d):
+    df = cgmacros_meals(d)
+    din = df[df.meal_type == "dinner"]
     wk = df[df.walk10.notna()]
     walk_meals = int(wk.walk10.sum())
     out = {

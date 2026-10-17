@@ -468,7 +468,7 @@
     "mcSd": 0.9,
     "coverage95": 0.0
    },
-   "Fixed effects (statistics, used now)": {
+   "Fixed effects (statistics)": {
     "mean": -8.96,
     "bias": 1.04,
     "rmse": 1.23,
@@ -482,7 +482,7 @@
     "mcSd": 0.7,
     "coverage95": null
    },
-   "Double ML (gradient boosting)": {
+   "Double ML (gradient boosting, shipped)": {
     "mean": -10.2,
     "bias": -0.2,
     "rmse": 0.68,
@@ -498,7 +498,7 @@
     "mcSd": 1.56,
     "coverage95": 0.0
    },
-   "Fixed effects (statistics, used now)": {
+   "Fixed effects (statistics)": {
     "mean": -6.5,
     "bias": 3.5,
     "rmse": 3.57,
@@ -512,7 +512,7 @@
     "mcSd": 0.54,
     "coverage95": null
    },
-   "Double ML (gradient boosting)": {
+   "Double ML (gradient boosting, shipped)": {
     "mean": -9.75,
     "bias": 0.25,
     "rmse": 0.67,
@@ -524,35 +524,36 @@
   "reps": 20
  },
  "personalBenchmark": {
-  "peopleScoredPerRep": 298,
+  "peopleScoredPerRep": 300,
   "reps": 10,
   "rmse": {
-   "Own data only (OLS)": 10.97,
-   "Blend with cohort (empirical Bayes, used now)": 4.66,
-   "S-learner per person (gradient boosting)": 5.06
+   "Own data only (OLS)": 10.94,
+   "Blend with cohort (empirical Bayes, statistics)": 4.57,
+   "S-learner per person (gradient boosting)": 4.91,
+   "Double ML residuals, blended with cohort (shipped)": 4.72
   },
   "plantedSpreadSd": 5.0
  },
  "realEffects": {
   "walk": {
-   "Fixed effects (statistics, used now)": {
+   "Fixed effects (statistics)": {
     "est": -19.2,
     "lo": -20.5,
     "hi": -17.9
    },
-   "Double ML (gradient boosting)": {
+   "Double ML (gradient boosting, shipped)": {
     "est": -18.0,
     "lo": -19.2,
     "hi": -16.7
    }
   },
   "lateDinner": {
-   "Fixed effects (statistics, used now)": {
+   "Fixed effects (statistics)": {
     "est": 9.0,
     "lo": 6.8,
     "hi": 11.2
    },
-   "Double ML (gradient boosting)": {
+   "Double ML (gradient boosting, shipped)": {
     "est": 9.7,
     "lo": 7.4,
     "hi": 12.0
@@ -560,5 +561,5 @@
   },
   "note": "Same covariates for both (carbs, pre-meal sugar, hour, meal type for walks; carbs and pre-meal sugar for late dinners). FE here adds pre-meal sugar and hour, so it can differ slightly from the advice numbers."
  },
- "seconds": 112
+ "seconds": 180
 }
